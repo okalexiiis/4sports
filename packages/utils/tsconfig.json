@@ -3,7 +3,8 @@
   "compilerOptions": {
     "noEmit": true,
     "allowImportingTsExtensions": true,
-    "rootDir": "src"
+    "rootDir": "src",
+    "outDir": "dist"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
