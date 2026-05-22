@@ -1,14 +1,13 @@
+import { logger } from '@4sports/utils/logger'
 import { Elysia } from 'elysia'
 import { auth } from '@/shared/lib/auth'
-
-// ... otros módulos
+import { requestLogger } from '@/shared/middleware/request-logger'
 
 const app = new Elysia()
-  // Montar todas las rutas de BetterAuth en /auth/*
+  .use(requestLogger())
   .all('/auth/*', async (ctx) => {
     return auth.handler(ctx.request)
   })
-  // Tus rutas de negocio
-  .listen(process.env.PORT ?? 4000)
+  .listen(process.env['PORT'] ?? 4000)
 
-console.log(`🚀 API corriendo en ${app.server?.hostname}:${app.server?.port}`)
+logger.info(`API corriendo en ${app.server?.hostname}:${app.server?.port}`)

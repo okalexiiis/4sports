@@ -1,11 +1,12 @@
 {
-  "extends": "@4sports/config/tsconfig.react.json",
+  "extends": "../../packages/config/tsconfig.react.json",
   "compilerOptions": {
     "plugins": [{ "name": "next" }],
     "paths": {
       "@/*": ["./src/*"],
       "@4sports/types": ["../../packages/types/src"],
       "@4sports/utils": ["../../packages/utils/src"],
+      "@4sports/utils/logger": ["../../packages/utils/src/logger/index.ts"],
       "@4sports/ui": ["../../packages/ui/src"]
     }
   },

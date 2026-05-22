@@ -3,10 +3,10 @@
   "compilerOptions": {
     "types": ["node"],
     "outDir": "dist",
-    "rootDir": "src",
     "paths": {
       "@4sports/types": ["../../packages/types/src"],
       "@4sports/utils": ["../../packages/utils/src"],
+      "@4sports/utils/logger": ["../../packages/utils/src/logger/index.ts"],
       "@/*": ["./src/*"]
     }
   },
