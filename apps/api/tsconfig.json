@@ -2,10 +2,12 @@
   "extends": "../../packages/config/tsconfig.node.json",
   "compilerOptions": {
     "outDir": "dist",
+    "rootDir": "../..",
     "paths": {
       "@4sports/types": ["../../packages/types/src"],
       "@4sports/utils": ["../../packages/utils/src"],
       "@4sports/utils/logger": ["../../packages/utils/src/logger/index.ts"],
+      "@4sports/utils/result": ["../../packages/utils/src/result/index.ts"],
       "@/*": ["./src/*"]
     }
   },
