@@ -1,5 +1,5 @@
 {
-  "extends": "@4sports/config/tsconfig.react.json",
+  "extends": "../../packages/config/tsconfig.react.json",
   "compilerOptions": {
     "plugins": [{ "name": "next" }],
     "paths": {
