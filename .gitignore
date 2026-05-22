@@ -9,6 +9,8 @@ build
 .next
 out
 
+drizzle
+
 # Turbo
 .turbo
 
