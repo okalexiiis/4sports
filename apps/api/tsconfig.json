@@ -1,7 +1,6 @@
 {
   "extends": "../../packages/config/tsconfig.node.json",
   "compilerOptions": {
-    "types": ["node"],
     "outDir": "dist",
     "paths": {
       "@4sports/types": ["../../packages/types/src"],
