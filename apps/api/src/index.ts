@@ -1,13 +1,10 @@
-import { logger } from '@4sports/utils/logger'
+import { fromTypes, openapi } from '@elysia/openapi'
 import { Elysia } from 'elysia'
+import { noteRoutes } from '@/_sandbox/note/note.routes'
 import { auth } from '@/shared/lib/auth'
-import { requestLogger } from '@/shared/middleware/request-logger'
 
-const app = new Elysia()
-  .use(requestLogger())
-  .all('/auth/*', async (ctx) => {
-    return auth.handler(ctx.request)
-  })
-  .listen(process.env['PORT'] ?? 4000)
-
-logger.info(`API corriendo en ${app.server?.hostname}:${app.server?.port}`)
+new Elysia()
+  .use(openapi({ references: fromTypes(), path: '/openapi' }))
+  .use(noteRoutes)
+  .all('/auth/*', async (ctx) => auth.handler(ctx.request))
+  .listen(process.env.PORT ?? 4000)
