@@ -35,4 +35,6 @@ Thumbs.db
 
 # Bun
 bun.lockb
-\n# Biome\n.biome
+
+# pnpm lockfiles (project uses bun)
+pnpm-lock.yaml
