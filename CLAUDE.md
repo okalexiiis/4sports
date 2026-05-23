@@ -138,6 +138,16 @@ Each domain module follows this layout:
 - **No co-author trailers**: do not add `Co-Authored-By` lines. The subject line budget is tight; trailers add noise with no value here.
 - Never commit `.env` files
 
+### Pre-push / pre-PR checklist
+Always run these steps before pushing a branch or opening a PR, to avoid `pnpm-lock.yaml` conflicts on merge:
+
+```bash
+git fetch origin
+git rebase origin/development
+pnpm install
+git add pnpm-lock.yaml
+```
+
 ## Additional context
 
 For project roadmap and milestone details, read `agent_docs/project.md`.
