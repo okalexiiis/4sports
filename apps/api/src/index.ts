@@ -61,3 +61,8 @@ new Elysia()
 
 logger.info('API server running', { url: `http://localhost:${process.env.PORT ?? 4000}` })
 logger.info('OpenAPI docs', { url: `http://localhost:${process.env.PORT ?? 4000}/openapi` })
+
+const somethingBadLinted =
+  'This is a very long string that should trigger a linting error because it exceeds the maximum line length defined in the Biome configuration file. It is important to keep lines of code within a reasonable length to improve readability and maintainability of the codebase.'
+const x =
+  'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
