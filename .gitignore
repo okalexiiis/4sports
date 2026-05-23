@@ -39,3 +39,5 @@ bun.lockb
 
 # pnpm lockfiles (project uses bun)
 pnpm-lock.yaml
+
+.npmrc
