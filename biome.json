@@ -23,7 +23,7 @@
         "noNonNullAssertion": "warn"
       },
       "suspicious": {
-        "noExplicitAny": "warn"
+        "noExplicitAny": "error"
       }
     }
   },
