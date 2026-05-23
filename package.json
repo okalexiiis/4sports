@@ -10,10 +10,20 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:api": "bun --cwd apps/api run dev",
+    "dev:web": "bun --cwd apps/web run dev",
+    "dev:mobile": "bun --cwd apps/mobile run dev",
+    "dev:all": "bun run dev",
     "lint": "biome lint .",
     "format": "biome format --write .",
     "check": "biome check --write .",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "turbo run typecheck",
+    "docker:postgres": "docker compose -f docker/postgres/docker-compose.yml up -d",
+    "docker:redis": "docker compose -f docker/redis/docker-compose.yml up -d",
+    "docker:up": "docker compose -f docker/postgres/docker-compose.yml -f docker/redis/docker-compose.yml up -d",
+    "docker:down": "docker compose -f docker/postgres/docker-compose.yml -f docker/redis/docker-compose.yml down",
+    "docker:logs:postgres": "docker compose -f docker/postgres/docker-compose.yml logs -f",
+    "docker:logs:redis": "docker compose -f docker/redis/docker-compose.yml logs -f"
   },
   "dependencies": {
     "@elysia/openapi": "^1.4.15",
