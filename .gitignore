@@ -38,3 +38,6 @@ Thumbs.db
 bun.lockb
 
 .npmrc
+
+# Typescript types
+*.d.ts
