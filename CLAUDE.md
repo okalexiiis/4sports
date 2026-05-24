@@ -18,6 +18,13 @@ bun build                                # build all apps
 bun check                                # lint + format + organize imports (Biome)
 bun lint                                 # lint only
 bun format                               # format only
+
+# Local infra
+pnpm run docker:up                       # start Postgres + Redis
+pnpm run docker:obs                      # start Grafana (port 3001) + Loki + Promtail
+pnpm run docker:all                      # start all infra at once
+pnpm run docker:obs:down                 # stop observability stack
+pnpm run docker:obs:logs                 # tail observability container logs
 ```
 
 No test commands are configured yet.
@@ -30,10 +37,12 @@ No test commands are configured yet.
 apps/api      → Bun + ElysiaJS — REST API and WebSockets
 apps/web      → Next.js 14 App Router — organizer dashboard (Turbopack dev)
 apps/mobile   → Expo + React Native + NativeWind v4 + Tailwind v3 — iOS & Android
+packages/logger  → Pino-based logger; the canonical logger implementation for the monorepo
 packages/types   → Shared TypeScript types (never redefine in apps)
-packages/utils   → Shared helpers: Result<T>, DomainError, createLogger
+packages/utils   → Shared helpers: Result<T>, DomainError; re-exports logger from @4sports/logger
 packages/ui      → Shared components used by both web and mobile
 packages/config  → Shared tsconfig files (base, node, react)
+docker/          → Docker Compose files per service: postgres/, redis/, observability/ (Grafana + Loki + Promtail)
 ```
 
 ### API: use-case architecture
@@ -46,7 +55,7 @@ Business logic lives exclusively in use cases. Route handlers do nothing beyond 
 
 #### Entry point (`src/index.ts`)
 - Derives `requestId` + `requestStartedAt` globally on every request.
-- After-response hook: structured HTTP log (method, path, status, ms, requestId).
+- Mounts `requestLogger` plugin — structured HTTP log (method, path, status, ms, requestId) via Pino.
 - Global error handler: maps ElysiaJS error codes (VALIDATION → 422, NOT_FOUND → 404, PARSE → 400, fallback → 500). All errors return `{ error: { code, message, details } }`.
 - OpenAPI docs served at `/openapi`.
 - BetterAuth mounted at `/auth/*`.
@@ -91,9 +100,23 @@ Each domain module follows this layout:
       docs.ts                 → OpenAPI detail objects
 ```
 
+#### `packages/logger` (`@4sports/logger`)
+- `createLogger({ scope?, meta?, level? }): Logger` — Pino-backed; pretty in dev, JSON in prod; reads `LOG_LEVEL` env var.
+- `logger` — singleton default instance.
+- `@4sports/logger/native` — console-based wrapper for React Native (same `Logger` interface, no Pino).
+- `Logger` interface: `trace | debug | info | warn | error | fatal | child` — identical signature across all platforms.
+
 #### `packages/utils` sub-exports
 - `@4sports/utils/result` — `Result<T>`, `Ok<T>`, `Err<E>`, `ok()`, `err()`, `DomainError`
-- `@4sports/utils/logger` — `createLogger({ scope? })`, levels: `info | warn | error`
+- `@4sports/utils/logger` — re-exports everything from `@4sports/logger` (backward-compatible import path)
+
+#### Local observability (dev only)
+`pnpm run docker:obs` starts three containers:
+- **Loki** (port 3100) — log storage backend
+- **Promtail** — scrapes Docker container stdout via Docker socket, forwards to Loki
+- **Grafana** (port 3001) — pre-configured with Loki datasource; open `http://localhost:3001` → Explore → `{service="api"}`
+
+The app writes JSON to stdout only. It has no dependency on Loki or Grafana.
 
 ### Shared code rules
 
