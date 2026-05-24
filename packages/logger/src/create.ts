@@ -38,7 +38,10 @@ export function createLogger(
 
   const base = pino({
     level,
-    base: opts.scope ? { scope: opts.scope, ...opts.meta } : (opts.meta ?? {}),
+    base: opts.scope ? { service: opts.scope, ...opts.meta } : (opts.meta ?? {}),
+    formatters: {
+      level: (label) => ({ level: label }),
+    },
     transport,
   })
   return wrap(base)
