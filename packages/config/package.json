@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "echo 'pendiente'",
-    "build": "echo 'pendiente'",
-    "lint": "eslint ."
+    "lint": "biome lint .",
+    "check": "biome check --write ."
   }
 }

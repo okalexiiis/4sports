@@ -3,8 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "echo 'pendiente'",
-    "build": "echo 'pendiente'",
-    "lint": "eslint ."
+    "dev": "tsc --noEmit --watch",
+    "build": "tsc --noEmit",
+    "lint": "biome lint .",
+    "check": "biome check --write .",
+    "typecheck": "tsc --noEmit"
   }
 }

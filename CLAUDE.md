@@ -18,6 +18,13 @@ bun build                                # build all apps
 bun check                                # lint + format + organize imports (Biome)
 bun lint                                 # lint only
 bun format                               # format only
+
+# Local infra
+pnpm run docker:up                       # start Postgres + Redis
+pnpm run docker:obs                      # start Grafana (port 3001) + Loki + Promtail
+pnpm run docker:all                      # start all infra at once
+pnpm run docker:obs:down                 # stop observability stack
+pnpm run docker:obs:logs                 # tail observability container logs
 ```
 
 No test commands are configured yet.
@@ -30,21 +37,93 @@ No test commands are configured yet.
 apps/api      → Bun + ElysiaJS — REST API and WebSockets
 apps/web      → Next.js 14 App Router — organizer dashboard (Turbopack dev)
 apps/mobile   → Expo + React Native + NativeWind v4 + Tailwind v3 — iOS & Android
+packages/logger  → Pino-based logger; the canonical logger implementation for the monorepo
 packages/types   → Shared TypeScript types (never redefine in apps)
-packages/utils   → Shared helpers and Zod validation schemas
+packages/utils   → Shared helpers: Result<T>, DomainError; re-exports logger from @4sports/logger
 packages/ui      → Shared components used by both web and mobile
 packages/config  → Shared tsconfig files (base, node, react)
+docker/          → Docker Compose files per service: postgres/, redis/, observability/ (Grafana + Loki + Promtail)
 ```
 
-### API: clean architecture
+### API: use-case architecture
 
-Routes → Services → Repositories. Business logic never goes in route handlers.
+```
+HTTP routes (thin) → Use Cases (pure functions) → Repository interfaces → Implementations
+```
+
+Business logic lives exclusively in use cases. Route handlers do nothing beyond calling a use case and passing the result to `toApiResponse`. Never add logic to route handlers.
+
+#### Entry point (`src/index.ts`)
+- Derives `requestId` + `requestStartedAt` globally on every request.
+- Mounts `requestLogger` plugin — structured HTTP log (method, path, status, ms, requestId) via Pino.
+- Global error handler: maps ElysiaJS error codes (VALIDATION → 422, NOT_FOUND → 404, PARSE → 400, fallback → 500). All errors return `{ error: { code, message, details } }`.
+- OpenAPI docs served at `/openapi`.
+- BetterAuth mounted at `/auth/*`.
+
+#### API versioning (`src/shared/versioning.ts`)
+- `createVersion(n)` returns an Elysia app prefixed at `/vN`.
+- Production modules are mounted in `src/v1/index.ts` via `.use(moduleRoutes)`.
+- Sandbox routes are **not** version-prefixed through `v1`; they mount directly with their own `/sandbox/v1/...` prefix.
+
+#### Shared layer (`src/shared/`)
+| File | Purpose |
+|---|---|
+| `env.ts` | Strict env validation via `requireEnv()` — fails fast at startup |
+| `logger.ts` | Thin re-export of `@4sports/utils/logger`, scoped to `'api'` |
+| `api-response.ts` | `toApiResponse(ctx, result, meta?)` — maps `Result<T>` to HTTP responses |
+| `middleware/auth.guard.ts` | BetterAuth session check; attaches `user` + `session` to `ctx.store` |
+| `middleware/request-logger.ts` | Per-request structured logging middleware |
+| `db/client.ts` | Drizzle client (`drizzle-orm/bun-sql`) |
+| `db/redis.ts` | Redis client |
+| `db/schemas/` | Drizzle schema definitions |
+| `lib/auth.ts` | BetterAuth instance |
+| `openapi/responses.ts` | Reusable OpenAPI response shape helpers |
+
+#### Sandbox (`src/_sandbox/`)
+Reference implementation that shows the required folder structure for every domain module. Use it as a template — do not put production features in `_sandbox`.
+
+Each domain module follows this layout:
+```
+<domain>/
+  <domain>.entity.ts          → Plain interface (no class, no ORM coupling)
+  <domain>.repository.ts      → INoteRepository interface
+  in-memory-<domain>.repository.ts  → Dev/test implementation
+  errors/
+    codes.ts                  → Error code constants
+    index.ts                  → DomainError factory functions
+  use-cases/
+    <action>-<domain>.use-case.ts   → Pure async function: (repo, input) → Promise<Result<T>>
+  http/
+    v1/
+      routes.ts               → Elysia handlers (thin: call use case + toApiResponse)
+      schemas.ts              → TypeBox body/param schemas
+      docs.ts                 → OpenAPI detail objects
+```
+
+#### `packages/logger` (`@4sports/logger`)
+- `createLogger({ scope?, meta?, level? }): Logger` — Pino-backed; pretty in dev, JSON in prod; reads `LOG_LEVEL` env var.
+- `logger` — singleton default instance.
+- `@4sports/logger/native` — console-based wrapper for React Native (same `Logger` interface, no Pino).
+- `Logger` interface: `trace | debug | info | warn | error | fatal | child` — identical signature across all platforms.
+
+#### `packages/utils` sub-exports
+- `@4sports/utils/result` — `Result<T>`, `Ok<T>`, `Err<E>`, `ok()`, `err()`, `DomainError`
+- `@4sports/utils/logger` — re-exports everything from `@4sports/logger` (backward-compatible import path)
+
+#### Local observability (dev only)
+`pnpm run docker:obs` starts three containers:
+- **Loki** (port 3100) — log storage backend
+- **Promtail** — scrapes Docker container stdout via Docker socket, forwards to Loki
+- **Grafana** (port 3001) — pre-configured with Loki datasource; open `http://localhost:3001` → Explore → `{service="api"}`
+
+The app writes JSON to stdout only. It has no dependency on Loki or Grafana.
 
 ### Shared code rules
 
 - Types: always `packages/types`, imported as `@4sports/types`
 - Validation: Zod schemas live in `packages/utils`
 - Cross-platform UI: `packages/ui`, imported as `@4sports/ui`
+- Result/error handling: use `Result<T>` + `DomainError` from `@4sports/utils/result` — never throw from use cases
 
 ### Key stack decisions
 
@@ -68,10 +147,29 @@ Routes → Services → Repositories. Business logic never goes in route handler
 
 ## Git
 
-- Branch format: `feat/name`, `fix/name`, `chore/name`
-- Commits: Conventional Commits (`feat:`, `fix:`, `chore:`, `refactor:`, `docs:`)
+### Branches
+- Format: `feat/name`, `fix/name`, `chore/name`, `refactor/name`, `docs/name`
 - Never push directly to `master` or `development`
+
+### Commits — rules enforced by `commitlint.config.js`
+- **Atomic**: one logical change per commit. Never bundle unrelated changes.
+- **Subject line**: max 100 characters (header-max-length default from `@commitlint/config-conventional`).
+- **Types** (must be one of): `feat`, `fix`, `chore`, `refactor`, `docs`, `test`, `style`, `ci`
+- **Format**: `<type>: <subject>` — subject must not be empty and must not end with `.`
+- **Body**: optional; if present, must be separated from the subject by a blank line.
+- **No changelogs in commit body**: list of changed files or bullet summaries of every touched line belong in the PR description, not the commit message. The message should explain *why*, not *what*.
+- **No co-author trailers**: do not add `Co-Authored-By` lines. The subject line budget is tight; trailers add noise with no value here.
 - Never commit `.env` files
+
+### Pre-push / pre-PR checklist
+Always run these steps before pushing a branch or opening a PR, to avoid `pnpm-lock.yaml` conflicts on merge:
+
+```bash
+git fetch origin
+git rebase origin/development
+pnpm install
+git add pnpm-lock.yaml
+```
 
 ## Additional context
 

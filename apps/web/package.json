@@ -7,9 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "biome lint .",
-    "check": "biome check --write ."
+    "check": "biome check --write .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@4sports/logger": "workspace:*",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"

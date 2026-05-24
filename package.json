@@ -23,7 +23,20 @@
     "docker:up": "docker compose -f docker/postgres/docker-compose.yml -f docker/redis/docker-compose.yml up -d",
     "docker:down": "docker compose -f docker/postgres/docker-compose.yml -f docker/redis/docker-compose.yml down",
     "docker:logs:postgres": "docker compose -f docker/postgres/docker-compose.yml logs -f",
-    "docker:logs:redis": "docker compose -f docker/redis/docker-compose.yml logs -f"
+    "docker:logs:redis": "docker compose -f docker/redis/docker-compose.yml logs -f",
+    "docker:obs": "docker compose -f docker/observability/docker-compose.yml up -d",
+    "docker:obs:down": "docker compose -f docker/observability/docker-compose.yml down",
+    "docker:obs:logs": "docker compose -f docker/observability/docker-compose.yml logs -f",
+    "docker:all": "pnpm run docker:up && pnpm run docker:obs",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "biome check --write"
+    ],
+    "*.json": [
+      "biome format --write"
+    ]
   },
   "dependencies": {
     "@elysia/openapi": "^1.4.15",
@@ -34,6 +47,8 @@
     "@commitlint/cli": "^21.0.1",
     "@commitlint/config-conventional": "^21.0.1",
     "@types/bun": "^1.3.14",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.5",
     "turbo": "^2.9.10",
     "typescript": "5.9.2"
   },

@@ -1,3 +1,4 @@
+import type { DomainEventLogMeta } from '@4sports/logger'
 import type { Result } from '@4sports/utils/result'
 import { err, ok } from '@4sports/utils/result'
 import { logger } from '@/shared/logger'
@@ -9,7 +10,6 @@ export async function createNote(
   repo: INoteRepository,
   input: { title: string; content: string },
 ): Promise<Result<Note>> {
-  logger.info('Creating Note Input', input)
   if (!input.title.trim()) return err(NoteErrors.titleRequired())
   if (input.title.length > 100) return err(NoteErrors.titleTooLong(100))
 
@@ -20,5 +20,10 @@ export async function createNote(
     createdAt: new Date(),
   }
   await repo.save(note)
+  logger.debug('note created', {
+    type: 'domain_event',
+    event: 'note.create',
+    entity_id: note.id,
+  } satisfies DomainEventLogMeta)
   return ok(note)
 }
