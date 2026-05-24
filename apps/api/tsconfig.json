@@ -4,6 +4,8 @@
     "outDir": "dist",
     "rootDir": "../..",
     "paths": {
+      "@4sports/logger": ["../../packages/logger/src/index.ts"],
+      "@4sports/logger/native": ["../../packages/logger/src/native.ts"],
       "@4sports/types": ["../../packages/types/src"],
       "@4sports/utils": ["../../packages/utils/src"],
       "@4sports/utils/logger": ["../../packages/utils/src/logger/index.ts"],

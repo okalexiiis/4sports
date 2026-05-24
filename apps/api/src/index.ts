@@ -3,6 +3,7 @@ import { Elysia } from 'elysia'
 import { noteV1Routes } from '@/_sandbox/note/http/v1/routes'
 import { auth } from '@/shared/lib/auth'
 import { logger } from '@/shared/logger'
+import { requestLogger } from '@/shared/middleware/request-logger'
 import { v1 } from '@/v1/index'
 
 new Elysia()
@@ -10,17 +11,7 @@ new Elysia()
     requestStartedAt: Date.now(),
     requestId: crypto.randomUUID(),
   }))
-  .onAfterResponse({ as: 'global' }, ({ request, set, requestStartedAt, requestId }) => {
-    if (!request.url) return
-    const { pathname } = new URL(request.url)
-    const status = (set.status as number | undefined) ?? 200
-    const level = status >= 500 ? 'error' : status >= 400 ? 'warn' : 'info'
-    logger[level](`${request.method} ${pathname}`, {
-      requestId,
-      status,
-      ms: Date.now() - requestStartedAt,
-    })
-  })
+  .use(requestLogger)
   .onError({ as: 'global' }, ({ error, set, code }) => {
     if (code === 'VALIDATION') {
       set.status = 422
@@ -50,6 +41,7 @@ new Elysia()
       return { error: { code: 'PARSE_ERROR', message: 'Invalid request body' } }
     }
 
+    logger.error('Unhandled server error', { stack: error })
     set.status = 500
     return { error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } }
   })
