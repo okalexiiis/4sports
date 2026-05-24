@@ -1,4 +1,4 @@
-import type { Logger, LogLevel, LogMeta } from './types.ts'
+import type { Logger, LogLevel, LogMeta } from './types'
 
 export type { Logger, LogLevel, LogMeta }
 
