@@ -8,41 +8,35 @@ export function createLogger(
 ): Logger {
   const level = process.env.LOG_LEVEL ?? opts.level ?? 'info'
   const logFile = process.env.LOG_FILE
-
-  let transport: pino.TransportMultiOptions | pino.TransportSingleOptions | undefined
-
-  if (isDev) {
-    if (logFile) {
-      // dual transport: pretty to terminal + JSON to file for Promtail to scrape
-      transport = {
-        targets: [
-          {
-            target: 'pino-pretty',
-            options: { colorize: true, translateTime: 'SYS:standard', ignore: 'pid,hostname' },
-            level,
-          },
-          {
-            target: 'pino/file',
-            options: { destination: logFile, mkdir: true },
-            level,
-          },
-        ],
-      }
-    } else {
-      transport = {
-        target: 'pino-pretty',
-        options: { colorize: true, translateTime: 'SYS:standard', ignore: 'pid,hostname' },
-      }
-    }
-  }
+  const multiTarget = isDev && !!logFile
 
   const base = pino({
     level,
     base: opts.scope ? { service: opts.scope, ...opts.meta } : (opts.meta ?? {}),
-    formatters: {
-      level: (label) => ({ level: label }),
-    },
-    transport,
+    // formatters.level is incompatible with transport.targets (Pino hard restriction).
+    // Skip it for the multi-target dev path; Promtail maps numeric levels to strings instead.
+    ...(multiTarget ? {} : { formatters: { level: (label) => ({ level: label }) } }),
+    transport: isDev
+      ? multiTarget
+        ? {
+            targets: [
+              {
+                target: 'pino-pretty',
+                options: { colorize: true, translateTime: 'SYS:standard', ignore: 'pid,hostname' },
+                level,
+              },
+              {
+                target: 'pino/file',
+                options: { destination: logFile, mkdir: true },
+                level,
+              },
+            ],
+          }
+        : {
+            target: 'pino-pretty',
+            options: { colorize: true, translateTime: 'SYS:standard', ignore: 'pid,hostname' },
+          }
+      : undefined,
   })
   return wrap(base)
 }
