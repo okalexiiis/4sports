@@ -1,7 +1,4 @@
+import { authV1Routes } from '@/modules/auth/http/v1/routes'
 import { createVersion } from '@/shared/versioning'
 
-// Mount production modules here as they are created:
-// import { userRoutes } from '@/modules/user/http/v1/routes'
-
-export const v1 = createVersion(1)
-// .use(userRoutes)
+export const v1 = createVersion(1).use(authV1Routes)
