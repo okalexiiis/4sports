@@ -1,3 +1,4 @@
+import type { ErrorLogMeta, StartupLogMeta } from '@4sports/logger'
 import { openapi } from '@elysia/openapi'
 import { Elysia } from 'elysia'
 import { noteV1Routes } from '@/_sandbox/note/http/v1/routes'
@@ -7,10 +8,6 @@ import { requestLogger } from '@/shared/middleware/request-logger'
 import { v1 } from '@/v1/index'
 
 new Elysia()
-  .derive({ as: 'global' }, () => ({
-    requestStartedAt: Date.now(),
-    requestId: crypto.randomUUID(),
-  }))
   .use(requestLogger)
   .onError({ as: 'global' }, ({ error, set, code }) => {
     if (code === 'VALIDATION') {
@@ -41,7 +38,11 @@ new Elysia()
       return { error: { code: 'PARSE_ERROR', message: 'Invalid request body' } }
     }
 
-    logger.error('Unhandled server error', { stack: error })
+    logger.error('unhandled error', {
+      type: 'error',
+      error_code: 'INTERNAL_ERROR',
+      error_message: error.message,
+    } satisfies ErrorLogMeta)
     set.status = 500
     return { error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } }
   })
@@ -51,5 +52,5 @@ new Elysia()
   .all('/auth/*', async (ctx) => auth.handler(ctx.request))
   .listen(process.env.PORT ?? 4000)
 
-logger.info('API server running', { url: `http://localhost:${process.env.PORT ?? 4000}` })
-logger.info('OpenAPI docs', { url: `http://localhost:${process.env.PORT ?? 4000}/openapi` })
+const port = Number(process.env.PORT ?? 4000)
+logger.info('server ready', { type: 'startup', port } satisfies StartupLogMeta)
