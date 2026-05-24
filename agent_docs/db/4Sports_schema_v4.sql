@@ -38,6 +38,13 @@
 -- GAP-703  organizer_subscriptions: last_downgrade_abort_at, last_downgrade_abort_reason
 -- GAP-704  Índice de renovaciones próximas
 -- GAP-706  NUEVA TABLA: subscription_plan_history
+-- GAP-B301 team_members: is_owner, is_player + índice único de owner
+-- GAP-B302 NUEVA TABLA: player_claims (solicitudes de vinculación de perfil puente)
+-- GAP-B303 captain_invite_tokens: assigned_role, used_by
+-- GAP-B304 team_members: receives_financial_notifications
+-- GAP-B305 sports.metadata: documentado default_min_players, default_max_players
+-- GAP-B306 NUEVO ENUM: team_join_policy + cambio en teams.join_policy
+-- GAP-B307 team_invitations: is_player
 -- ============================================================
 
 -- ============================================================
@@ -57,6 +64,8 @@ CREATE EXTENSION IF NOT EXISTS "btree_gin";
 
 CREATE TYPE org_role AS ENUM ('owner', 'admin', 'organizer', 'coach', 'viewer');
 CREATE TYPE team_role AS ENUM ('captain', 'coach', 'player', 'substitute');
+-- GAP-B306: ENUM para join_policy de equipos
+CREATE TYPE team_join_policy AS ENUM ('open', 'request', 'invite_only', 'code');
 CREATE TYPE ownership_scope AS ENUM ('tournament_scoped', 'organization_scoped', 'user_scoped', 'verified_global');
 CREATE TYPE tournament_status AS ENUM ('draft', 'private', 'open_registration', 'active', 'completed', 'archived');
 CREATE TYPE registration_status AS ENUM ('pending', 'approved', 'rejected', 'waitlisted', 'withdrawn');
@@ -177,7 +186,8 @@ CREATE TABLE sports (
     slug        TEXT NOT NULL UNIQUE,
     icon_url    TEXT,
     -- metadata contiene: default_tiebreaker[], default_points_win/draw/loss,
-    -- default_metrics[], suspension_rules por tipo de evento
+    -- default_metrics[], suspension_rules por tipo de evento,
+    -- GAP-B305: default_min_players, default_max_players (defaults por deporte, el organizador puede ajustar en el torneo)
     metadata    JSONB DEFAULT '{}',
     created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -400,7 +410,7 @@ CREATE TABLE teams (
     country_code    CHAR(2),
     city            TEXT,
     gender_type     TEXT DEFAULT 'mixed',
-    join_policy     TEXT NOT NULL DEFAULT 'request',
+    join_policy     team_join_policy NOT NULL DEFAULT 'request', -- GAP-B306: tipado con ENUM
     join_code       VARCHAR(12) UNIQUE,
     is_verified     BOOLEAN NOT NULL DEFAULT FALSE,
     is_active       BOOLEAN NOT NULL DEFAULT TRUE,
@@ -438,11 +448,22 @@ CREATE TABLE players (
 );
 
 -- GAP-204: +join_type, +transfer_approved_by, +transfer_approved_at
+-- GAP-B301: +is_owner, +is_player
+-- GAP-B304: +receives_financial_notifications
 CREATE TABLE team_members (
     id                      UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     team_id                 UUID NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
     player_id               UUID NOT NULL REFERENCES players(id) ON DELETE CASCADE,
     role                    team_role NOT NULL DEFAULT 'player',
+    -- GAP-B301: dos dimensiones independientes del role visible
+    is_owner                BOOLEAN NOT NULL DEFAULT FALSE,
+    -- true = tiene privilegios exclusivos del equipo. Garantizado único por índice.
+    is_player               BOOLEAN NOT NULL DEFAULT TRUE,
+    -- true = aparece en el roster jugable, recibe convocatorias y aparece en la cédula arbitral.
+    -- false = staff técnico puro (coach que no juega).
+    -- GAP-B304: notificaciones financieras configurables para coaches
+    receives_financial_notifications BOOLEAN NOT NULL DEFAULT FALSE,
+    -- Siempre true para owner. Para coach: configurable. Para player/substitute: siempre false.
     jersey_number           INT,
     position                TEXT,
     status                  membership_status NOT NULL DEFAULT 'invited',
@@ -481,6 +502,7 @@ CREATE TABLE team_join_requests (
 );
 
 -- GAP-205: +tournament_id para invitaciones en contexto de torneo específico
+-- GAP-B307: +is_player para definir desde la invitación si el invitado aparecerá en el roster
 CREATE TABLE team_invitations (
     id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     team_id         UUID NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
@@ -490,6 +512,8 @@ CREATE TABLE team_invitations (
     invited_user_id TEXT,
     invited_email   TEXT,
     role            team_role NOT NULL DEFAULT 'player',
+    -- GAP-B307: si el invitado aparecerá en el roster jugable al aceptar
+    is_player       BOOLEAN NOT NULL DEFAULT TRUE,
     token           TEXT UNIQUE NOT NULL,
     expires_at      TIMESTAMPTZ NOT NULL DEFAULT NOW() + INTERVAL '7 days',
     accepted_at     TIMESTAMPTZ,
@@ -500,15 +524,43 @@ CREATE TABLE team_invitations (
     )
 );
 
+-- GAP-B303: +assigned_role, +used_by
 CREATE TABLE captain_invite_tokens (
     id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     team_id         UUID NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
     token           VARCHAR(64) UNIQUE NOT NULL,
     created_by      TEXT NOT NULL,
+    -- GAP-B303: qué rol recibe el receptor al usar el token
+    assigned_role   team_role NOT NULL DEFAULT 'captain',
     is_used         BOOLEAN DEFAULT FALSE,
     expires_at      TIMESTAMPTZ,
     used_at         TIMESTAMPTZ,
+    -- GAP-B303: quién usó el token
+    used_by         TEXT,                               -- user.id del receptor
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- GAP-B302: NUEVA TABLA — solicitudes de vinculación de perfil puente
+-- Almacena la solicitud pendiente mientras el staff aprueba o rechaza.
+-- Flujo A: el jugador inicia → staff aprueba.
+-- Flujo B: el staff inicia → jugador acepta (usa team_invitations con link, no esta tabla).
+CREATE TABLE player_claims (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    player_id       UUID NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+    -- el perfil puente (players.is_guest = true) que se quiere reclamar
+    claimant_id     TEXT NOT NULL,
+    -- user.id del jugador registrado que solicita la vinculación
+    team_id         UUID NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
+    -- equipo al que pertenece el perfil puente (para notificar al staff correcto)
+    status          TEXT NOT NULL DEFAULT 'pending',
+    -- 'pending' | 'approved' | 'rejected'
+    reviewed_by     TEXT,
+    -- user.id del miembro staff que aprobó o rechazó (captain o coach)
+    reviewed_at     TIMESTAMPTZ,
+    expires_at      TIMESTAMPTZ DEFAULT NOW() + INTERVAL '30 days',
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT chk_claim_unique UNIQUE (player_id, claimant_id)
+    -- un jugador no puede tener dos solicitudes activas sobre el mismo perfil puente
 );
 
 -- ============================================================
@@ -1163,6 +1215,12 @@ CREATE INDEX idx_players_guest            ON players(guest_created_by) WHERE is_
 CREATE INDEX idx_team_members_team        ON team_members(team_id);
 CREATE INDEX idx_team_members_player      ON team_members(player_id);
 CREATE INDEX idx_team_members_status      ON team_members(team_id, status);
+-- GAP-B301: índice único que garantiza solo 1 owner activo por equipo
+CREATE UNIQUE INDEX idx_team_one_owner    ON team_members(team_id) WHERE is_owner = TRUE AND status = 'active';
+-- GAP-B302: índices para player_claims
+CREATE INDEX idx_player_claims_player     ON player_claims(player_id);
+CREATE INDEX idx_player_claims_claimant   ON player_claims(claimant_id);
+CREATE INDEX idx_player_claims_status     ON player_claims(status) WHERE status = 'pending';
 
 -- Tournament registrations
 CREATE INDEX idx_treg_tournament          ON tournament_registrations(tournament_id);
@@ -1299,6 +1357,8 @@ CREATE TRIGGER set_updated_at BEFORE UPDATE ON teams
 CREATE TRIGGER set_updated_at BEFORE UPDATE ON players
     FOR EACH ROW EXECUTE FUNCTION trigger_set_updated_at();
 CREATE TRIGGER set_updated_at BEFORE UPDATE ON team_members
+    FOR EACH ROW EXECUTE FUNCTION trigger_set_updated_at();
+CREATE TRIGGER set_updated_at BEFORE UPDATE ON player_claims
     FOR EACH ROW EXECUTE FUNCTION trigger_set_updated_at();
 CREATE TRIGGER set_updated_at BEFORE UPDATE ON matches
     FOR EACH ROW EXECUTE FUNCTION trigger_set_updated_at();
