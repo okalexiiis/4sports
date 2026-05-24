@@ -2,7 +2,7 @@
   "extends": "../../packages/config/tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": false,
     "rootDir": "src",
     "outDir": "dist"
   },

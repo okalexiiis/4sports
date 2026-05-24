@@ -1,5 +1,5 @@
 import pino from 'pino'
-import type { Logger, LogLevel, LogMeta } from './types.ts'
+import type { Logger, LogLevel, LogMeta } from './types'
 
 const isDev = process.env.NODE_ENV !== 'production'
 
