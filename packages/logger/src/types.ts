@@ -13,7 +13,7 @@ export interface Logger {
 }
 
 // ── Typed log meta shapes ──────────────────────────────────────────────────
-// Use `satisfies` at call sites to get type-safety without losing LogMeta compatibility.
+// Use `satisfies` at call sites for type-safety without losing LogMeta compatibility.
 
 export type LogType = 'request' | 'startup' | 'error' | 'infra' | 'domain_event'
 
@@ -36,6 +36,8 @@ export interface ErrorLogMeta {
   request_id?: string
   error_code: string
   error_message: string
+  details?: Record<string, unknown>
+  stack?: string
 }
 
 export interface InfraLogMeta {
