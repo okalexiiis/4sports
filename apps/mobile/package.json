@@ -8,7 +8,8 @@
     "build:android": "eas build --platform android",
     "build:ios": "eas build --platform ios",
     "lint": "biome lint .",
-    "check": "biome check --write ."
+    "check": "biome check --write .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@4sports/logger": "workspace:*",
