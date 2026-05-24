@@ -27,7 +27,7 @@ bun build                 # build all apps
 
 ## Key constraints
 - Runtime: Bun — never use Node-only APIs
-- Package manager: Bun — never suggest npm, pnpm, or yarn commands
+- Package manager: pnpm — never suggest npm, bun, or yarn commands
 - Linting/formatting: Biome — never suggest ESLint or Prettier
 - TypeScript strict mode is on everywhere — no `any`, no `!` assertions without a comment
 - Monorepo packages are referenced as `@4sports/*`

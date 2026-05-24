@@ -1,5 +1,7 @@
+import type { ErrorLogMeta } from '@4sports/logger'
 import type { Result } from '@4sports/utils/result'
 import type { Context } from 'elysia'
+import { logger } from '@/shared/logger'
 
 type PaginationMeta = { page?: number; total?: number }
 
@@ -16,7 +18,18 @@ export function toApiResponse<T>(ctx: Context, result: Result<T>, meta?: Paginat
   if (result.ok) {
     return { data: result.value, ...(meta ? { meta } : {}) }
   }
+
+  const requestId = (ctx as unknown as { requestId?: string }).requestId
   ctx.set.status = resolveStatus(result.error.code)
+
+  logger.debug('domain error', {
+    type: 'error',
+    request_id: requestId,
+    error_code: result.error.code,
+    error_message: result.error.message,
+    ...(result.error.details ? { details: result.error.details } : {}),
+  } satisfies ErrorLogMeta)
+
   return {
     error: {
       code: result.error.code,

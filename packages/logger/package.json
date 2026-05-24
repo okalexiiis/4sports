@@ -1,15 +1,11 @@
 {
-  "name": "@4sports/utils",
-  "version": "0.0.1",
+  "name": "@4sports/logger",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./logger": "./src/logger/index.ts",
-    "./result": "./src/result/index.ts"
-  },
-  "dependencies": {
-    "@4sports/logger": "workspace:*"
+    "./native": "./src/native.ts"
   },
   "scripts": {
     "dev": "tsc --noEmit --watch",
@@ -17,5 +13,11 @@
     "lint": "biome lint .",
     "check": "biome check --write .",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "pino": "^9.0.0"
+  },
+  "devDependencies": {
+    "pino-pretty": "^13.0.0"
   }
 }
