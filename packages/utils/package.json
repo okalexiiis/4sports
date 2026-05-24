@@ -8,6 +8,9 @@
     "./logger": "./src/logger/index.ts",
     "./result": "./src/result/index.ts"
   },
+  "dependencies": {
+    "@4sports/logger": "workspace:*"
+  },
   "scripts": {
     "dev": "tsc --noEmit --watch",
     "build": "tsc --noEmit",
