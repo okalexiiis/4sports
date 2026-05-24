@@ -34,6 +34,9 @@ Thumbs.db
 .idea
 .claude
 
+# Logs
+logs/*.log
+
 # Bun
 bun.lockb
 
