@@ -19,7 +19,7 @@ scrape_configs:
       - json:
           expressions:
             level: level
-            scope: scope
+            type: type
       - labels:
           level:
-          scope:
+          type:
