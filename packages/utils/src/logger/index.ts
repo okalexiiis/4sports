@@ -1,5 +1,2 @@
-export { createLogger } from './create'
-export type { Logger, LogLevel, LogMeta } from './types'
-
-import { createLogger } from './create'
-export const logger = createLogger()
+export type { Logger, LogLevel, LogMeta } from '@4sports/logger'
+export { createLogger, logger } from '@4sports/logger'
