@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  loki:
+    image: grafana/loki:3.5.0
+    container_name: 4sports-loki
+    restart: unless-stopped
+    ports:
+      - '3100:3100'
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+      - loki_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:3.5.0
+    container_name: 4sports-promtail
+    restart: unless-stopped
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/config.yaml
+      - ../../apps/api/logs:/logs/api:ro
+    command: -config.file=/etc/promtail/config.yaml
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana:11.6.1
+    container_name: 4sports-grafana
+    restart: unless-stopped
+    ports:
+      - '3001:3000'
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - loki
+
+volumes:
+  loki_data:
+  grafana_data:

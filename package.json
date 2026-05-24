@@ -24,6 +24,10 @@
     "docker:down": "docker compose -f docker/postgres/docker-compose.yml -f docker/redis/docker-compose.yml down",
     "docker:logs:postgres": "docker compose -f docker/postgres/docker-compose.yml logs -f",
     "docker:logs:redis": "docker compose -f docker/redis/docker-compose.yml logs -f",
+    "docker:obs": "docker compose -f docker/observability/docker-compose.yml up -d",
+    "docker:obs:down": "docker compose -f docker/observability/docker-compose.yml down",
+    "docker:obs:logs": "docker compose -f docker/observability/docker-compose.yml logs -f",
+    "docker:all": "pnpm run docker:up && pnpm run docker:obs",
     "prepare": "husky"
   },
   "lint-staged": {
