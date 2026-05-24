@@ -64,7 +64,7 @@ new Elysia()
       type: 'error',
       request_id: requestId,
       error_code: 'INTERNAL_ERROR',
-      error_message: error.message,
+      error_message: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined,
     } satisfies ErrorLogMeta)
     set.status = 500
