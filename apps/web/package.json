@@ -10,6 +10,7 @@
     "check": "biome check --write ."
   },
   "dependencies": {
+    "@4sports/logger": "workspace:*",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"
