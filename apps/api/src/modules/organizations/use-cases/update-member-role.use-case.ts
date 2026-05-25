@@ -4,8 +4,6 @@ import { OrgErrors } from '../errors'
 import type { OrgMember } from '../organization.entity'
 import type { IOrganizationRepository } from '../organization.repository'
 
-const RESTRICTED_ROLES = new Set(['admin', 'owner'])
-
 export async function updateMemberRole(
   repo: IOrganizationRepository,
   input: {
@@ -22,8 +20,13 @@ export async function updateMemberRole(
     return err(OrgErrors.memberNotFound())
   }
 
-  // admin cannot promote to admin or owner
-  if (RESTRICTED_ROLES.has(input.role)) {
+  // owner role is only assignable via transfer-ownership (uc-010)
+  if (input.role === 'owner') {
+    return err(OrgErrors.insufficientRole())
+  }
+
+  // admin cannot promote to admin — only owner can
+  if (input.role === 'admin' && input.actorRole !== 'owner') {
     return err(OrgErrors.insufficientRole())
   }
 

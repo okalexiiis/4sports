@@ -4,8 +4,6 @@ import { OrgErrors } from '../errors'
 import type { OrgMember } from '../organization.entity'
 import type { IOrganizationRepository } from '../organization.repository'
 
-const RESTRICTED_ROLES = new Set(['owner', 'admin'])
-
 export async function inviteMember(
   repo: IOrganizationRepository,
   input: {
@@ -17,8 +15,13 @@ export async function inviteMember(
     tournament_ids: string[]
   },
 ): Promise<Result<OrgMember>> {
-  // admin cannot invite owner or another admin
-  if (RESTRICTED_ROLES.has(input.role)) {
+  // owner is never assignable via invite (only via transfer-ownership)
+  if (input.role === 'owner') {
+    return err(OrgErrors.insufficientRole())
+  }
+
+  // admin cannot invite another admin — only owner can
+  if (input.role === 'admin' && input.actorRole !== 'owner') {
     return err(OrgErrors.insufficientRole())
   }
 
