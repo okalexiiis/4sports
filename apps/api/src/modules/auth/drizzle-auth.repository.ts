@@ -41,4 +41,22 @@ export class DrizzleAuthRepository implements IAuthRepository {
 
     return rows
   }
+
+  async findMembership(userId: string, orgId: string): Promise<{ role: string } | null> {
+    const [row] = await db
+      .select({ role: organizationMembers.role })
+      .from(organizationMembers)
+      .innerJoin(organizations, eq(organizationMembers.organization_id, organizations.id))
+      .where(
+        and(
+          eq(organizationMembers.user_id, userId),
+          eq(organizationMembers.organization_id, orgId),
+          eq(organizationMembers.status, 'active'),
+          isNull(organizations.deleted_at),
+        ),
+      )
+      .limit(1)
+
+    return row ?? null
+  }
 }
