@@ -1,5 +1,9 @@
 import { Type } from '@sinclair/typebox'
 
+export const ContextBodySchema = Type.Object({
+  organization_id: Type.Union([Type.String({ format: 'uuid' }), Type.Null()]),
+})
+
 const ActiveContextSchema = Type.Object({
   organization_id: Type.String(),
   role: Type.String(),
