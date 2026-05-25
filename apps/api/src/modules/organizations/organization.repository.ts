@@ -24,4 +24,10 @@ export interface IOrganizationRepository {
   isSlugTaken(slug: string): Promise<boolean>
   findPlanBySlug(planSlug: string): Promise<{ id: string } | null>
   createOrg(userId: string, data: CreateOrgInput, planId: string): Promise<CreatedOrg>
+  findInvitationByUser(
+    orgId: string,
+    userId: string,
+  ): Promise<{ id: string; invitation_expires_at: Date | null } | null>
+  acceptInvitation(memberId: string): Promise<void>
+  rejectInvitation(memberId: string): Promise<void>
 }

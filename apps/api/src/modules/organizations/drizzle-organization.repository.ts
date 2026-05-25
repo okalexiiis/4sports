@@ -335,6 +335,42 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
     return row ?? null
   }
 
+  async findInvitationByUser(
+    orgId: string,
+    userId: string,
+  ): Promise<{ id: string; invitation_expires_at: Date | null } | null> {
+    const [row] = await db
+      .select({
+        id: organizationMembers.id,
+        invitation_expires_at: organizationMembers.invitation_expires_at,
+      })
+      .from(organizationMembers)
+      .where(
+        and(
+          eq(organizationMembers.organization_id, orgId),
+          eq(organizationMembers.user_id, userId),
+          eq(organizationMembers.status, 'invited'),
+        ),
+      )
+      .limit(1)
+
+    return row ?? null
+  }
+
+  async acceptInvitation(memberId: string): Promise<void> {
+    await db
+      .update(organizationMembers)
+      .set({ status: 'active', joined_at: new Date(), updated_at: new Date() })
+      .where(eq(organizationMembers.id, memberId))
+  }
+
+  async rejectInvitation(memberId: string): Promise<void> {
+    await db
+      .update(organizationMembers)
+      .set({ status: 'left', left_at: new Date(), updated_at: new Date() })
+      .where(eq(organizationMembers.id, memberId))
+  }
+
   async createOrg(userId: string, data: CreateOrgInput, planId: string): Promise<CreatedOrg> {
     return db.transaction(async (tx) => {
       // biome-ignore lint/style/noNonNullAssertion: slug is resolved before calling this method

@@ -3,17 +3,21 @@ import { toApiResponse } from '@/shared/api-response'
 import { authGuard } from '@/shared/middleware/auth.guard'
 import { orgGuard } from '@/shared/middleware/org.guard'
 import { DrizzleOrganizationRepository } from '../../drizzle-organization.repository'
+import { acceptInvitation } from '../../use-cases/accept-invitation.use-case'
 import { createOrganization } from '../../use-cases/create-organization.use-case'
 import { getOrganization } from '../../use-cases/get-organization.use-case'
 import { inviteMember } from '../../use-cases/invite-member.use-case'
 import { listMembers } from '../../use-cases/list-members.use-case'
+import { rejectInvitation } from '../../use-cases/reject-invitation.use-case'
 import { removeMember } from '../../use-cases/remove-member.use-case'
 import { updateMemberRole } from '../../use-cases/update-member-role.use-case'
 import {
+  acceptInvitationDetail,
   createOrganizationDetail,
   getOrganizationDetail,
   inviteMemberDetail,
   listMembersDetail,
+  rejectInvitationDetail,
   removeMemberDetail,
   updateMemberRoleDetail,
 } from './docs'
@@ -127,4 +131,26 @@ export const organizationsV1Routes = new Elysia({ tags: ['Organizations'] })
       )
     },
     { beforeHandle: [authGuard, orgGuard('admin')], detail: removeMemberDetail },
+  )
+  .post(
+    '/organizations/:orgId/invitation/accept',
+    async (ctx) => {
+      const { user } = ctx.store as AuthStore
+      return toApiResponse(
+        ctx,
+        await acceptInvitation(repo, { orgId: ctx.params.orgId, userId: user.id }),
+      )
+    },
+    { beforeHandle: authGuard, detail: acceptInvitationDetail },
+  )
+  .post(
+    '/organizations/:orgId/invitation/reject',
+    async (ctx) => {
+      const { user } = ctx.store as AuthStore
+      return toApiResponse(
+        ctx,
+        await rejectInvitation(repo, { orgId: ctx.params.orgId, userId: user.id }),
+      )
+    },
+    { beforeHandle: authGuard, detail: rejectInvitationDetail },
   )
