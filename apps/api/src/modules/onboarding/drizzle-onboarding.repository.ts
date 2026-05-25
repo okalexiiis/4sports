@@ -58,7 +58,8 @@ export class DrizzleOnboardingRepository implements IOnboardingRepository {
         onboarding_completed_at: profiles.onboarding_completed_at,
       })
 
-    // biome-ignore lint/style/noNonNullAssertion: insert always returns a row; schema allows null but we always insert non-null
+    // biome-ignore lint/style/noNonNullAssertion: insert always returns a row
+    // The schema allows null for username but we always insert with a non-null value
     return row! as PlayerProfile
   }
 
@@ -122,15 +123,9 @@ export class DrizzleOnboardingRepository implements IOnboardingRepository {
         })
         .returning({ id: organizations.id, name: organizations.name, slug: organizations.slug })
 
-      // biome-ignore lint/style/noNonNullAssertion: insert always returns a row
-      const newOrgId = org!.id
-      // biome-ignore lint/style/noNonNullAssertion: insert always returns a row
-      const newProfile = profile! as PlayerProfile
-      // biome-ignore lint/style/noNonNullAssertion: insert always returns a row
-      const newOrg = org!
-
+      // biome-ignore lint/style/noNonNullAssertion: inserts always return rows
       await tx.insert(organizationMembers).values({
-        organization_id: newOrgId,
+        organization_id: org!.id,
         user_id: userId,
         role: 'owner',
         status: 'active',
@@ -140,15 +135,21 @@ export class DrizzleOnboardingRepository implements IOnboardingRepository {
       const farFuture = new Date()
       farFuture.setFullYear(farFuture.getFullYear() + 100)
 
+      // biome-ignore lint/style/noNonNullAssertion: inserts always return rows
       await tx.insert(organizerSubscriptions).values({
-        organization_id: newOrgId,
+        organization_id: org!.id,
         plan_id: planId,
         status: 'active',
         billing_cycle: 'monthly',
         current_period_end: farFuture,
       })
 
-      return { profile: newProfile, organization: newOrg }
+      return {
+        // biome-ignore lint/style/noNonNullAssertion: inserts always return rows
+        profile: profile! as PlayerProfile,
+        // biome-ignore lint/style/noNonNullAssertion: inserts always return rows
+        organization: org!,
+      }
     })
   }
 }
