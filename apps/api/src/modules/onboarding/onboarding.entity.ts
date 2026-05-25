@@ -19,3 +19,32 @@ export interface UsernameCheckResult {
   available: boolean
   suggestions: string[]
 }
+
+export interface SlugCheckResult {
+  available: boolean
+  suggestions: string[]
+}
+
+export interface OrgOnboardingInput {
+  profile: {
+    username: string
+    city?: string
+    country_code?: string
+  }
+  organization: {
+    name: string
+    slug?: string
+    city?: string
+    country_code?: string
+  }
+  plan: string
+}
+
+export interface OrgCreated {
+  profile: PlayerProfile
+  organization: {
+    id: string
+    name: string
+    slug: string
+  }
+}

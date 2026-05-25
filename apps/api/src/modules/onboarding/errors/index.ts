@@ -13,4 +13,6 @@ export const OnboardingErrors = {
     }),
   slugTaken: (suggestions: string[]) =>
     new DomainError(OnboardingErrorCodes.SLUG_TAKEN, 'Slug is already taken', { suggestions }),
+  planNotFound: () =>
+    new DomainError(OnboardingErrorCodes.PLAN_NOT_FOUND, 'Subscription plan not found'),
 }

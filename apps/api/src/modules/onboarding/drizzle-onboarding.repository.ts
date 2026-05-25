@@ -1,7 +1,18 @@
 import { eq, ilike } from 'drizzle-orm'
 import { db } from '@/shared/db/client'
-import { profiles } from '@/shared/db/schemas'
-import type { PlayerOnboardingInput, PlayerProfile } from './onboarding.entity'
+import {
+  organizationMembers,
+  organizations,
+  organizerSubscriptions,
+  profiles,
+  subscriptionPlans,
+} from '@/shared/db/schemas'
+import type {
+  OrgCreated,
+  OrgOnboardingInput,
+  PlayerOnboardingInput,
+  PlayerProfile,
+} from './onboarding.entity'
 import type { IOnboardingRepository } from './onboarding.repository'
 
 export class DrizzleOnboardingRepository implements IOnboardingRepository {
@@ -50,5 +61,95 @@ export class DrizzleOnboardingRepository implements IOnboardingRepository {
     // biome-ignore lint/style/noNonNullAssertion: insert always returns a row
     // The schema allows null for username but we always insert with a non-null value
     return row! as PlayerProfile
+  }
+
+  async isSlugTaken(slug: string): Promise<boolean> {
+    const [row] = await db
+      .select({ id: organizations.id })
+      .from(organizations)
+      .where(eq(organizations.slug, slug))
+      .limit(1)
+
+    return row !== undefined
+  }
+
+  async findPlanIdBySlug(planSlug: string): Promise<string | null> {
+    const [row] = await db
+      .select({ id: subscriptionPlans.id })
+      .from(subscriptionPlans)
+      .where(eq(subscriptionPlans.slug, planSlug))
+      .limit(1)
+
+    return row?.id ?? null
+  }
+
+  async createOrgWithOwner(
+    userId: string,
+    data: OrgOnboardingInput,
+    planId: string,
+  ): Promise<OrgCreated> {
+    return db.transaction(async (tx) => {
+      const [profile] = await tx
+        .insert(profiles)
+        .values({
+          user_id: userId,
+          username: data.profile.username,
+          city: data.profile.city ?? null,
+          country_code: data.profile.country_code ?? null,
+          initial_intent: 'organizer',
+          onboarding_completed_at: new Date(),
+        })
+        .returning({
+          id: profiles.id,
+          username: profiles.username,
+          city: profiles.city,
+          country_code: profiles.country_code,
+          initial_intent: profiles.initial_intent,
+          onboarding_completed_at: profiles.onboarding_completed_at,
+        })
+
+      // slug is always resolved before calling this method
+      // biome-ignore lint/style/noNonNullAssertion: slug is resolved in the use-case before this call
+      const resolvedSlug = data.organization.slug!
+
+      const [org] = await tx
+        .insert(organizations)
+        .values({
+          name: data.organization.name,
+          slug: resolvedSlug,
+          city: data.organization.city ?? null,
+          country_code: data.organization.country_code ?? null,
+          created_by: userId,
+        })
+        .returning({ id: organizations.id, name: organizations.name, slug: organizations.slug })
+
+      // biome-ignore lint/style/noNonNullAssertion: inserts always return rows
+      await tx.insert(organizationMembers).values({
+        organization_id: org!.id,
+        user_id: userId,
+        role: 'owner',
+        status: 'active',
+        joined_at: new Date(),
+      })
+
+      const farFuture = new Date()
+      farFuture.setFullYear(farFuture.getFullYear() + 100)
+
+      // biome-ignore lint/style/noNonNullAssertion: inserts always return rows
+      await tx.insert(organizerSubscriptions).values({
+        organization_id: org!.id,
+        plan_id: planId,
+        status: 'active',
+        billing_cycle: 'monthly',
+        current_period_end: farFuture,
+      })
+
+      return {
+        // biome-ignore lint/style/noNonNullAssertion: inserts always return rows
+        profile: profile! as PlayerProfile,
+        // biome-ignore lint/style/noNonNullAssertion: inserts always return rows
+        organization: org!,
+      }
+    })
   }
 }
