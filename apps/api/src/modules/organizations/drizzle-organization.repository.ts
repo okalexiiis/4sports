@@ -1,8 +1,15 @@
-import { and, count, eq, isNull } from 'drizzle-orm'
+import { and, count, eq, isNull, sql } from 'drizzle-orm'
 import { pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 import { db } from '@/shared/db/client'
-import { organizationMembers, organizations } from '@/shared/db/schemas'
-import type { ListMembersResult, OrgWithRole } from './organization.entity'
+import { auditLogs, organizationMembers, organizations } from '@/shared/db/schemas'
+import type {
+  AuditLogInput,
+  InviteMemberInput,
+  ListMembersResult,
+  OrgMember,
+  OrgWithRole,
+  UpdateRoleInput,
+} from './organization.entity'
 import type { IOrganizationRepository } from './organization.repository'
 
 // Minimal read-only reference to BetterAuth's user table for join queries
@@ -97,5 +104,195 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
         has_prev: page > 1,
       },
     }
+  }
+
+  async findMemberById(orgId: string, memberId: string): Promise<OrgMember | null> {
+    const [row] = await db
+      .select({
+        id: organizationMembers.id,
+        role: organizationMembers.role,
+        status: organizationMembers.status,
+        tournament_ids: organizationMembers.tournament_ids,
+        joined_at: organizationMembers.joined_at,
+        user_name: betterAuthUsers.name,
+        user_email: betterAuthUsers.email,
+        user_image: betterAuthUsers.image,
+      })
+      .from(organizationMembers)
+      .innerJoin(betterAuthUsers, eq(betterAuthUsers.id, organizationMembers.user_id))
+      .where(
+        and(eq(organizationMembers.id, memberId), eq(organizationMembers.organization_id, orgId)),
+      )
+      .limit(1)
+
+    if (!row) return null
+
+    return {
+      id: row.id,
+      user: { name: row.user_name, email: row.user_email, avatar_url: row.user_image },
+      role: row.role,
+      status: row.status,
+      tournament_ids: (row.tournament_ids ?? []) as string[],
+      joined_at: row.joined_at,
+    }
+  }
+
+  async findMemberByEmail(orgId: string, email: string): Promise<{ status: string } | null> {
+    const [row] = await db
+      .select({ status: organizationMembers.status })
+      .from(organizationMembers)
+      .innerJoin(betterAuthUsers, eq(betterAuthUsers.id, organizationMembers.user_id))
+      .where(and(eq(organizationMembers.organization_id, orgId), eq(betterAuthUsers.email, email)))
+      .limit(1)
+
+    return row ?? null
+  }
+
+  async findUserByEmail(email: string): Promise<{ id: string } | null> {
+    const [row] = await db
+      .select({ id: betterAuthUsers.id })
+      .from(betterAuthUsers)
+      .where(eq(betterAuthUsers.email, email))
+      .limit(1)
+
+    return row ?? null
+  }
+
+  async countActiveOwners(orgId: string): Promise<number> {
+    const [row] = await db
+      .select({ count: count() })
+      .from(organizationMembers)
+      .where(
+        and(
+          eq(organizationMembers.organization_id, orgId),
+          eq(organizationMembers.role, 'owner'),
+          eq(organizationMembers.status, 'active'),
+        ),
+      )
+
+    return Number(row?.count ?? 0)
+  }
+
+  async inviteMember(orgId: string, userId: string, data: InviteMemberInput): Promise<OrgMember> {
+    const expiresAt = new Date()
+    expiresAt.setDate(expiresAt.getDate() + 7)
+
+    const [member] = await db
+      .insert(organizationMembers)
+      .values({
+        organization_id: orgId,
+        user_id: userId,
+        role: data.role as 'owner' | 'admin' | 'organizer' | 'coach' | 'viewer',
+        tournament_ids: data.tournament_ids,
+        invited_by: data.invitedBy,
+        status: 'invited',
+        invitation_expires_at: expiresAt,
+      })
+      .returning({
+        id: organizationMembers.id,
+        role: organizationMembers.role,
+        status: organizationMembers.status,
+        tournament_ids: organizationMembers.tournament_ids,
+        joined_at: organizationMembers.joined_at,
+      })
+
+    const [userRow] = await db
+      .select({
+        name: betterAuthUsers.name,
+        email: betterAuthUsers.email,
+        image: betterAuthUsers.image,
+      })
+      .from(betterAuthUsers)
+      .where(eq(betterAuthUsers.id, userId))
+      .limit(1)
+
+    return {
+      // biome-ignore lint/style/noNonNullAssertion: insert always returns a row
+      id: member!.id,
+      user: {
+        name: userRow?.name ?? null,
+        email: userRow?.email ?? '',
+        avatar_url: userRow?.image ?? null,
+      },
+      // biome-ignore lint/style/noNonNullAssertion: insert always returns a row
+      role: member!.role,
+      // biome-ignore lint/style/noNonNullAssertion: insert always returns a row
+      status: member!.status,
+      // biome-ignore lint/style/noNonNullAssertion: insert always returns a row
+      tournament_ids: (member!.tournament_ids ?? []) as string[],
+      joined_at: null,
+    }
+  }
+
+  async updateMemberRole(memberId: string, data: UpdateRoleInput): Promise<OrgMember> {
+    const [updated] = await db
+      .update(organizationMembers)
+      .set({
+        role: data.role as 'owner' | 'admin' | 'organizer' | 'coach' | 'viewer',
+        tournament_ids: data.tournament_ids,
+        updated_at: new Date(),
+      })
+      .where(eq(organizationMembers.id, memberId))
+      .returning({
+        id: organizationMembers.id,
+        user_id: organizationMembers.user_id,
+        role: organizationMembers.role,
+        status: organizationMembers.status,
+        tournament_ids: organizationMembers.tournament_ids,
+        joined_at: organizationMembers.joined_at,
+      })
+
+    const [userRow] = await db
+      .select({
+        name: betterAuthUsers.name,
+        email: betterAuthUsers.email,
+        image: betterAuthUsers.image,
+      })
+      .from(betterAuthUsers)
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      .where(eq(betterAuthUsers.id, updated!.user_id))
+      .limit(1)
+
+    return {
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      id: updated!.id,
+      user: {
+        name: userRow?.name ?? null,
+        email: userRow?.email ?? '',
+        avatar_url: userRow?.image ?? null,
+      },
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      role: updated!.role,
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      status: updated!.status,
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      tournament_ids: (updated!.tournament_ids ?? []) as string[],
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      joined_at: updated!.joined_at,
+    }
+  }
+
+  async removeMember(memberId: string): Promise<void> {
+    await db
+      .update(organizationMembers)
+      .set({ status: 'left', left_at: new Date(), updated_at: new Date() })
+      .where(eq(organizationMembers.id, memberId))
+  }
+
+  async createAuditLog(data: AuditLogInput): Promise<void> {
+    await db.insert(auditLogs).values({
+      organization_id: data.organization_id,
+      actor_user_id: data.actor_user_id,
+      actor_role: data.actor_role,
+      action: data.action,
+      entity_type: data.entity_type,
+      entity_id: data.entity_id,
+      before_data: data.before_data ?? null,
+      after_data: data.after_data ?? null,
+      diff:
+        data.before_data && data.after_data
+          ? { before: data.before_data, after: data.after_data }
+          : null,
+    })
   }
 }

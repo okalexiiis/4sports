@@ -31,3 +31,14 @@ export const MembersQuerySchema = Type.Object({
   page: Type.Optional(Type.String()),
   limit: Type.Optional(Type.String()),
 })
+
+export const InviteMemberBodySchema = Type.Object({
+  email: Type.String({ format: 'email' }),
+  role: Type.Union([Type.Literal('organizer'), Type.Literal('coach'), Type.Literal('viewer')]),
+  tournament_ids: Type.Array(Type.String({ format: 'uuid' })),
+})
+
+export const UpdateMemberRoleBodySchema = Type.Object({
+  role: Type.Union([Type.Literal('organizer'), Type.Literal('coach'), Type.Literal('viewer')]),
+  tournament_ids: Type.Array(Type.String({ format: 'uuid' })),
+})

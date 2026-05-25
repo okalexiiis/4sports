@@ -39,3 +39,25 @@ export interface ListMembersResult {
     has_prev: boolean
   }
 }
+
+export interface InviteMemberInput {
+  role: string
+  tournament_ids: string[]
+  invitedBy: string
+}
+
+export interface UpdateRoleInput {
+  role: string
+  tournament_ids: string[]
+}
+
+export interface AuditLogInput {
+  organization_id: string
+  actor_user_id: string
+  actor_role: string
+  action: 'update' | 'delete'
+  entity_type: string
+  entity_id: string
+  before_data?: Record<string, unknown>
+  after_data?: Record<string, unknown>
+}
