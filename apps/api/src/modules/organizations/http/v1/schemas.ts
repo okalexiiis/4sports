@@ -71,3 +71,11 @@ export const UpdateMemberRoleBodySchema = Type.Object({
   ]),
   tournament_ids: Type.Array(Type.String({ format: 'uuid' })),
 })
+
+export const SuspendMemberBodySchema = Type.Object({
+  action: Type.Union([Type.Literal('suspend'), Type.Literal('reactivate')]),
+})
+
+export const TransferOwnershipBodySchema = Type.Object({
+  new_owner_member_id: Type.String({ format: 'uuid' }),
+})

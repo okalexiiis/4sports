@@ -371,6 +371,36 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
       .where(eq(organizationMembers.id, memberId))
   }
 
+  async updateMemberStatus(memberId: string, status: 'suspended' | 'active'): Promise<void> {
+    await db
+      .update(organizationMembers)
+      .set({ status, updated_at: new Date() })
+      .where(eq(organizationMembers.id, memberId))
+  }
+
+  async transferOwnership(
+    orgId: string,
+    newOwnerMemberId: string,
+    currentOwnerUserId: string,
+  ): Promise<void> {
+    await db.transaction(async (tx) => {
+      await tx
+        .update(organizationMembers)
+        .set({ role: 'owner', updated_at: new Date() })
+        .where(eq(organizationMembers.id, newOwnerMemberId))
+
+      await tx
+        .update(organizationMembers)
+        .set({ role: 'admin', updated_at: new Date() })
+        .where(
+          and(
+            eq(organizationMembers.organization_id, orgId),
+            eq(organizationMembers.user_id, currentOwnerUserId),
+          ),
+        )
+    })
+  }
+
   async createOrg(userId: string, data: CreateOrgInput, planId: string): Promise<CreatedOrg> {
     return db.transaction(async (tx) => {
       // biome-ignore lint/style/noNonNullAssertion: slug is resolved before calling this method

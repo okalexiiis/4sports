@@ -10,6 +10,8 @@ import { inviteMember } from '../../use-cases/invite-member.use-case'
 import { listMembers } from '../../use-cases/list-members.use-case'
 import { rejectInvitation } from '../../use-cases/reject-invitation.use-case'
 import { removeMember } from '../../use-cases/remove-member.use-case'
+import { suspendMember } from '../../use-cases/suspend-member.use-case'
+import { transferOwnership } from '../../use-cases/transfer-ownership.use-case'
 import { updateMemberRole } from '../../use-cases/update-member-role.use-case'
 import {
   acceptInvitationDetail,
@@ -19,12 +21,16 @@ import {
   listMembersDetail,
   rejectInvitationDetail,
   removeMemberDetail,
+  suspendMemberDetail,
+  transferOwnershipDetail,
   updateMemberRoleDetail,
 } from './docs'
 import {
   CreateOrgBodySchema,
   InviteMemberBodySchema,
   MembersQuerySchema,
+  SuspendMemberBodySchema,
+  TransferOwnershipBodySchema,
   UpdateMemberRoleBodySchema,
 } from './schemas'
 
@@ -131,6 +137,47 @@ export const organizationsV1Routes = new Elysia({ tags: ['Organizations'] })
       )
     },
     { beforeHandle: [authGuard, orgGuard('admin')], detail: removeMemberDetail },
+  )
+  .patch(
+    '/organizations/:orgId/members/:memberId',
+    async (ctx) => {
+      const { user, membership } = ctx.store as AuthStore
+      return toApiResponse(
+        ctx,
+        await suspendMember(repo, {
+          orgId: ctx.params.orgId,
+          memberId: ctx.params.memberId,
+          actorUserId: user.id,
+          actorRole: membership?.role ?? 'admin',
+          action: ctx.body.action,
+        }),
+      )
+    },
+    {
+      beforeHandle: [authGuard, orgGuard('admin')],
+      body: SuspendMemberBodySchema,
+      detail: suspendMemberDetail,
+    },
+  )
+  .post(
+    '/organizations/:orgId/transfer-ownership',
+    async (ctx) => {
+      const { user, membership } = ctx.store as AuthStore
+      return toApiResponse(
+        ctx,
+        await transferOwnership(repo, {
+          orgId: ctx.params.orgId,
+          newOwnerMemberId: ctx.body.new_owner_member_id,
+          actorUserId: user.id,
+          actorRole: membership?.role ?? 'owner',
+        }),
+      )
+    },
+    {
+      beforeHandle: [authGuard, orgGuard('owner')],
+      body: TransferOwnershipBodySchema,
+      detail: transferOwnershipDetail,
+    },
   )
   .post(
     '/organizations/:orgId/invitation/accept',

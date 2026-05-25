@@ -30,4 +30,10 @@ export interface IOrganizationRepository {
   ): Promise<{ id: string; invitation_expires_at: Date | null } | null>
   acceptInvitation(memberId: string): Promise<void>
   rejectInvitation(memberId: string): Promise<void>
+  updateMemberStatus(memberId: string, status: 'suspended' | 'active'): Promise<void>
+  transferOwnership(
+    orgId: string,
+    newOwnerMemberId: string,
+    currentOwnerUserId: string,
+  ): Promise<void>
 }
