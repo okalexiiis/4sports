@@ -1,5 +1,5 @@
 import { ApiResponses } from '@/shared/openapi/responses'
-import { OrgMemberSchema, OrgSchema } from './schemas'
+import { CreatedOrgSchema, OrgMemberSchema, OrgSchema } from './schemas'
 
 export const getOrganizationDetail = {
   summary: 'Get organization',
@@ -57,5 +57,63 @@ export const removeMemberDetail = {
     401: ApiResponses.unauthorized('No active session'),
     403: ApiResponses.forbidden('Insufficient role or last owner protection'),
     404: ApiResponses.notFound('Member not found'),
+  },
+}
+
+export const createOrganizationDetail = {
+  summary: 'Create additional organization',
+  description:
+    'Creates a new organization for a user who already has a profile. Auto-generates slug from name if not provided.',
+  responses: {
+    200: ApiResponses.success(CreatedOrgSchema, 'Organization created'),
+    401: ApiResponses.unauthorized('No active session'),
+    404: ApiResponses.notFound('User profile or subscription plan not found'),
+    409: ApiResponses.conflict('Slug already taken'),
+  },
+}
+
+export const acceptInvitationDetail = {
+  summary: 'Accept organization invitation',
+  description: 'Accepts a pending invitation to join an organization. Sets status to active.',
+  responses: {
+    200: ApiResponses.success(CreatedOrgSchema, 'Invitation accepted'),
+    401: ApiResponses.unauthorized('No active session'),
+    404: ApiResponses.notFound('Invitation not found'),
+    409: ApiResponses.conflict('Invitation has expired'),
+  },
+}
+
+export const rejectInvitationDetail = {
+  summary: 'Reject organization invitation',
+  description: 'Rejects a pending invitation to join an organization. Sets status to left.',
+  responses: {
+    200: ApiResponses.success(CreatedOrgSchema, 'Invitation rejected'),
+    401: ApiResponses.unauthorized('No active session'),
+    404: ApiResponses.notFound('Invitation not found'),
+  },
+}
+
+export const suspendMemberDetail = {
+  summary: 'Suspend or reactivate a member',
+  description:
+    'Suspends or reactivates a member. Admin cannot suspend another admin. Writes to audit_logs.',
+  responses: {
+    200: ApiResponses.success(OrgMemberSchema, 'Member status updated'),
+    401: ApiResponses.unauthorized('No active session'),
+    403: ApiResponses.forbidden('Insufficient role'),
+    404: ApiResponses.notFound('Member not found'),
+  },
+}
+
+export const transferOwnershipDetail = {
+  summary: 'Transfer organization ownership',
+  description:
+    'Transfers ownership to an active member. Current owner becomes admin. Writes to audit_logs.',
+  responses: {
+    200: ApiResponses.success(CreatedOrgSchema, 'Ownership transferred'),
+    401: ApiResponses.unauthorized('No active session'),
+    403: ApiResponses.forbidden('Only the owner can transfer ownership'),
+    404: ApiResponses.notFound('Target member not found'),
+    409: ApiResponses.conflict('Target member is already the owner'),
   },
 }

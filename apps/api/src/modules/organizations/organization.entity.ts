@@ -61,3 +61,17 @@ export interface AuditLogInput {
   before_data?: Record<string, unknown>
   after_data?: Record<string, unknown>
 }
+
+export interface CreateOrgInput {
+  name: string
+  slug?: string
+  city?: string
+  country_code?: string
+  plan: string
+}
+
+export interface CreatedOrg {
+  id: string
+  name: string
+  slug: string
+}

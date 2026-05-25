@@ -1,5 +1,7 @@
 import type {
   AuditLogInput,
+  CreatedOrg,
+  CreateOrgInput,
   InviteMemberInput,
   ListMembersResult,
   OrgMember,
@@ -18,4 +20,8 @@ export interface IOrganizationRepository {
   updateMemberRole(memberId: string, data: UpdateRoleInput): Promise<OrgMember>
   removeMember(memberId: string): Promise<void>
   createAuditLog(data: AuditLogInput): Promise<void>
+  hasProfile(userId: string): Promise<boolean>
+  isSlugTaken(slug: string): Promise<boolean>
+  findPlanBySlug(planSlug: string): Promise<{ id: string } | null>
+  createOrg(userId: string, data: CreateOrgInput, planId: string): Promise<CreatedOrg>
 }

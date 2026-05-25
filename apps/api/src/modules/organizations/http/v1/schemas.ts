@@ -1,5 +1,24 @@
 import { Type } from '@sinclair/typebox'
 
+export const CreateOrgBodySchema = Type.Object({
+  name: Type.String({ minLength: 2, maxLength: 120 }),
+  slug: Type.Optional(Type.String({ maxLength: 80 })),
+  city: Type.Optional(Type.String({ maxLength: 80 })),
+  country_code: Type.Optional(Type.String({ minLength: 2, maxLength: 2 })),
+  plan: Type.Union([
+    Type.Literal('free'),
+    Type.Literal('starter'),
+    Type.Literal('pro'),
+    Type.Literal('elite'),
+  ]),
+})
+
+export const CreatedOrgSchema = Type.Object({
+  id: Type.String({ format: 'uuid' }),
+  name: Type.String(),
+  slug: Type.String(),
+})
+
 export const OrgSchema = Type.Object({
   id: Type.String({ format: 'uuid' }),
   name: Type.String(),
