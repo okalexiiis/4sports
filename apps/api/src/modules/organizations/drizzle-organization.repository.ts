@@ -1,4 +1,4 @@
-import { and, count, eq, isNull, sql } from 'drizzle-orm'
+import { and, count, eq, isNull } from 'drizzle-orm'
 import { pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 import { db } from '@/shared/db/client'
 import { auditLogs, organizationMembers, organizations } from '@/shared/db/schemas'
