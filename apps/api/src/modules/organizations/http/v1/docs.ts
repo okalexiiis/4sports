@@ -2,6 +2,19 @@ import { Type } from '@sinclair/typebox'
 import { ApiResponses } from '@/shared/openapi/responses'
 import { OrgMemberSchema, OrgSchema } from './schemas'
 
+export const createOrganizationDetail = {
+  summary: 'Create organization',
+  description:
+    'Creates a new organization for the authenticated user. Also creates an owner membership and a subscription. User must have an existing profile.',
+  responses: {
+    200: ApiResponses.success(OrgSchema, 'Organization created'),
+    401: ApiResponses.unauthorized('No active session'),
+    404: ApiResponses.notFound('Plan not found'),
+    409: ApiResponses.conflict('Slug already in use'),
+    422: ApiResponses.validation('Validation error'),
+  },
+}
+
 export const getOrganizationDetail = {
   summary: 'Get organization',
   description:
@@ -71,5 +84,29 @@ export const transferOwnershipDetail = {
     403: ApiResponses.forbidden('Only the owner can transfer ownership'),
     404: ApiResponses.notFound('Target member not found'),
     409: ApiResponses.conflict('Target is already owner or not active'),
+  }
+  
+export const suspendMemberDetail = {
+  summary: 'Suspend a member',
+  description: 'Sets member status to suspended. Cannot suspend the owner. Writes to audit_logs.',
+  responses: {
+    200: ApiResponses.success(OrgMemberSchema, 'Member suspended'),
+    401: ApiResponses.unauthorized('No active session'),
+    403: ApiResponses.forbidden('Cannot suspend the owner or insufficient role'),
+    404: ApiResponses.notFound('Member not found'),
+    409: ApiResponses.conflict('Member is not active'),
+  },
+}
+
+export const reactivateMemberDetail = {
+  summary: 'Reactivate a member',
+  description:
+    'Sets member status back to active. Only works on suspended members. Writes to audit_logs.',
+  responses: {
+    200: ApiResponses.success(OrgMemberSchema, 'Member reactivated'),
+    401: ApiResponses.unauthorized('No active session'),
+    403: ApiResponses.forbidden('Insufficient role'),
+    404: ApiResponses.notFound('Member not found'),
+    409: ApiResponses.conflict('Member is not suspended'),
   },
 }

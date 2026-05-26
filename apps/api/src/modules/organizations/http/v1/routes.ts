@@ -3,16 +3,21 @@ import { toApiResponse } from '@/shared/api-response'
 import { authGuard } from '@/shared/middleware/auth.guard'
 import { orgGuard } from '@/shared/middleware/org.guard'
 import { DrizzleOrganizationRepository } from '../../drizzle-organization.repository'
+import { createOrganization } from '../../use-cases/create-organization.use-case'
 import { getOrganization } from '../../use-cases/get-organization.use-case'
 import { inviteMember } from '../../use-cases/invite-member.use-case'
 import { listMembers } from '../../use-cases/list-members.use-case'
+import { reactivateMember } from '../../use-cases/reactivate-member.use-case'
 import { removeMember } from '../../use-cases/remove-member.use-case'
 import { transferOwnership } from '../../use-cases/transfer-ownership.use-case'
+import { suspendMember } from '../../use-cases/suspend-member.use-case'
 import { updateMemberRole } from '../../use-cases/update-member-role.use-case'
 import {
+  createOrganizationDetail,
   getOrganizationDetail,
   inviteMemberDetail,
   listMembersDetail,
+  reactivateMemberDetail,
   removeMemberDetail,
   transferOwnershipDetail,
   updateMemberRoleDetail,
@@ -21,6 +26,13 @@ import {
   InviteMemberBodySchema,
   MembersQuerySchema,
   TransferOwnershipBodySchema,
+  suspendMemberDetail,
+  updateMemberRoleDetail,
+} from './docs'
+import {
+  CreateOrgBodySchema,
+  InviteMemberBodySchema,
+  MembersQuerySchema,
   UpdateMemberRoleBodySchema,
 } from './schemas'
 
@@ -29,6 +41,25 @@ const repo = new DrizzleOrganizationRepository()
 type AuthStore = { user: { id: string }; membership?: { id: string; role: string } }
 
 export const organizationsV1Routes = new Elysia({ tags: ['Organizations'] })
+  .post(
+    '/organizations',
+    async (ctx) => {
+      const { user } = ctx.store as AuthStore
+      return toApiResponse(
+        ctx,
+        await createOrganization(repo, {
+          userId: user.id,
+          name: ctx.body.name,
+          slug: ctx.body.slug,
+          description: ctx.body.description,
+          city: ctx.body.city,
+          country_code: ctx.body.country_code,
+          plan: ctx.body.plan,
+        }),
+      )
+    },
+    { beforeHandle: [authGuard], body: CreateOrgBodySchema, detail: createOrganizationDetail },
+  )
   .get(
     '/organizations/:orgId',
     async (ctx) => {
@@ -122,6 +153,7 @@ export const organizationsV1Routes = new Elysia({ tags: ['Organizations'] })
   )
   .post(
     '/organizations/:orgId/transfer-ownership',
+    '/organizations/:orgId/members/:memberId/suspend',
     async (ctx) => {
       const { user, membership } = ctx.store as AuthStore
       return toApiResponse(
@@ -140,4 +172,29 @@ export const organizationsV1Routes = new Elysia({ tags: ['Organizations'] })
       body: TransferOwnershipBodySchema,
       detail: transferOwnershipDetail,
     },
+        await suspendMember(repo, {
+          orgId: ctx.params.orgId,
+          memberId: ctx.params.memberId,
+          actorUserId: user.id,
+          actorRole: membership?.role ?? 'admin',
+        }),
+      )
+    },
+    { beforeHandle: [authGuard, orgGuard('admin')], detail: suspendMemberDetail },
+  )
+  .post(
+    '/organizations/:orgId/members/:memberId/reactivate',
+    async (ctx) => {
+      const { user, membership } = ctx.store as AuthStore
+      return toApiResponse(
+        ctx,
+        await reactivateMember(repo, {
+          orgId: ctx.params.orgId,
+          memberId: ctx.params.memberId,
+          actorUserId: user.id,
+          actorRole: membership?.role ?? 'admin',
+        }),
+      )
+    },
+    { beforeHandle: [authGuard, orgGuard('admin')], detail: reactivateMemberDetail },
   )
