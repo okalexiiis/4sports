@@ -1,4 +1,5 @@
-import { pgTable, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm'
+import { index, pgTable, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core'
 import { membershipStatusEnum, orgRoleEnum } from './enums'
 import { organizations } from './organizations'
 
@@ -9,7 +10,8 @@ export const organizationMembers = pgTable(
     organization_id: uuid('organization_id')
       .notNull()
       .references(() => organizations.id, { onDelete: 'cascade' }),
-    user_id: text('user_id').notNull(),
+    user_id: text('user_id'),
+    invited_email: text('invited_email'),
     role: orgRoleEnum('role').notNull().default('viewer'),
     tournament_ids: uuid('tournament_ids').array().default([]),
     invited_by: text('invited_by'),
@@ -22,5 +24,10 @@ export const organizationMembers = pgTable(
     created_at: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updated_at: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => [unique().on(t.organization_id, t.user_id)],
+  (t) => [
+    unique().on(t.organization_id, t.user_id),
+    index('uq_org_member_invited_email')
+      .on(t.organization_id, t.invited_email)
+      .where(sql`${t.invited_email} IS NOT NULL AND ${t.user_id} IS NULL`),
+  ],
 )
