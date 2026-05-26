@@ -1,3 +1,4 @@
+import { Type } from '@sinclair/typebox'
 import { ApiResponses } from '@/shared/openapi/responses'
 import { OrgMemberSchema, OrgSchema } from './schemas'
 
@@ -57,5 +58,18 @@ export const removeMemberDetail = {
     401: ApiResponses.unauthorized('No active session'),
     403: ApiResponses.forbidden('Insufficient role or last owner protection'),
     404: ApiResponses.notFound('Member not found'),
+  },
+}
+
+export const transferOwnershipDetail = {
+  summary: 'Transfer organization ownership',
+  description:
+    'Atomically demotes the current owner to admin and promotes the target member to owner. Writes two audit_log entries.',
+  responses: {
+    200: ApiResponses.success(Type.Null(), 'Ownership transferred'),
+    401: ApiResponses.unauthorized('No active session'),
+    403: ApiResponses.forbidden('Only the owner can transfer ownership'),
+    404: ApiResponses.notFound('Target member not found'),
+    409: ApiResponses.conflict('Target is already owner or not active'),
   },
 }

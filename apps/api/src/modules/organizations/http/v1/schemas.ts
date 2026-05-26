@@ -42,3 +42,7 @@ export const UpdateMemberRoleBodySchema = Type.Object({
   role: Type.Union([Type.Literal('organizer'), Type.Literal('coach'), Type.Literal('viewer')]),
   tournament_ids: Type.Array(Type.String({ format: 'uuid' })),
 })
+
+export const TransferOwnershipBodySchema = Type.Object({
+  new_owner_member_id: Type.String({ format: 'uuid' }),
+})
