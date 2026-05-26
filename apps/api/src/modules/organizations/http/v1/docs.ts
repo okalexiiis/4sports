@@ -59,3 +59,28 @@ export const removeMemberDetail = {
     404: ApiResponses.notFound('Member not found'),
   },
 }
+
+export const suspendMemberDetail = {
+  summary: 'Suspend a member',
+  description: 'Sets member status to suspended. Cannot suspend the owner. Writes to audit_logs.',
+  responses: {
+    200: ApiResponses.success(OrgMemberSchema, 'Member suspended'),
+    401: ApiResponses.unauthorized('No active session'),
+    403: ApiResponses.forbidden('Cannot suspend the owner or insufficient role'),
+    404: ApiResponses.notFound('Member not found'),
+    409: ApiResponses.conflict('Member is not active'),
+  },
+}
+
+export const reactivateMemberDetail = {
+  summary: 'Reactivate a member',
+  description:
+    'Sets member status back to active. Only works on suspended members. Writes to audit_logs.',
+  responses: {
+    200: ApiResponses.success(OrgMemberSchema, 'Member reactivated'),
+    401: ApiResponses.unauthorized('No active session'),
+    403: ApiResponses.forbidden('Insufficient role'),
+    404: ApiResponses.notFound('Member not found'),
+    409: ApiResponses.conflict('Member is not suspended'),
+  },
+}
