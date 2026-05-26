@@ -7,14 +7,18 @@ import { createOrganization } from '../../use-cases/create-organization.use-case
 import { getOrganization } from '../../use-cases/get-organization.use-case'
 import { inviteMember } from '../../use-cases/invite-member.use-case'
 import { listMembers } from '../../use-cases/list-members.use-case'
+import { reactivateMember } from '../../use-cases/reactivate-member.use-case'
 import { removeMember } from '../../use-cases/remove-member.use-case'
+import { suspendMember } from '../../use-cases/suspend-member.use-case'
 import { updateMemberRole } from '../../use-cases/update-member-role.use-case'
 import {
   createOrganizationDetail,
   getOrganizationDetail,
   inviteMemberDetail,
   listMembersDetail,
+  reactivateMemberDetail,
   removeMemberDetail,
+  suspendMemberDetail,
   updateMemberRoleDetail,
 } from './docs'
 import {
@@ -138,4 +142,36 @@ export const organizationsV1Routes = new Elysia({ tags: ['Organizations'] })
       )
     },
     { beforeHandle: [authGuard, orgGuard('admin')], detail: removeMemberDetail },
+  )
+  .post(
+    '/organizations/:orgId/members/:memberId/suspend',
+    async (ctx) => {
+      const { user, membership } = ctx.store as AuthStore
+      return toApiResponse(
+        ctx,
+        await suspendMember(repo, {
+          orgId: ctx.params.orgId,
+          memberId: ctx.params.memberId,
+          actorUserId: user.id,
+          actorRole: membership?.role ?? 'admin',
+        }),
+      )
+    },
+    { beforeHandle: [authGuard, orgGuard('admin')], detail: suspendMemberDetail },
+  )
+  .post(
+    '/organizations/:orgId/members/:memberId/reactivate',
+    async (ctx) => {
+      const { user, membership } = ctx.store as AuthStore
+      return toApiResponse(
+        ctx,
+        await reactivateMember(repo, {
+          orgId: ctx.params.orgId,
+          memberId: ctx.params.memberId,
+          actorUserId: user.id,
+          actorRole: membership?.role ?? 'admin',
+        }),
+      )
+    },
+    { beforeHandle: [authGuard, orgGuard('admin')], detail: reactivateMemberDetail },
   )
