@@ -45,7 +45,8 @@ export const UpdateMemberRoleBodySchema = Type.Object({
 
 export const TransferOwnershipBodySchema = Type.Object({
   new_owner_member_id: Type.String({ format: 'uuid' }),
-}
+})
+
 export const CreateOrgBodySchema = Type.Object({
   name: Type.String({ minLength: 2, maxLength: 120 }),
   slug: Type.Optional(Type.String({ maxLength: 80 })),

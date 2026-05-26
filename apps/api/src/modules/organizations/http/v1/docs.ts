@@ -84,8 +84,9 @@ export const transferOwnershipDetail = {
     403: ApiResponses.forbidden('Only the owner can transfer ownership'),
     404: ApiResponses.notFound('Target member not found'),
     409: ApiResponses.conflict('Target is already owner or not active'),
-  }
-  
+  },
+}
+
 export const suspendMemberDetail = {
   summary: 'Suspend a member',
   description: 'Sets member status to suspended. Cannot suspend the owner. Writes to audit_logs.',

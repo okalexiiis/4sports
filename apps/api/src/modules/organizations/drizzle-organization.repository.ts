@@ -381,7 +381,8 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
         .set({ role: 'owner', updated_at: new Date() })
         .where(eq(organizationMembers.id, newOwnerMemberId))
     })
-      
+  }
+
   async suspendMember(memberId: string): Promise<OrgMember> {
     const [updated] = await db
       .update(organizationMembers)

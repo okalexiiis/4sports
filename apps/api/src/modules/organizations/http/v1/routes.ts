@@ -9,8 +9,8 @@ import { inviteMember } from '../../use-cases/invite-member.use-case'
 import { listMembers } from '../../use-cases/list-members.use-case'
 import { reactivateMember } from '../../use-cases/reactivate-member.use-case'
 import { removeMember } from '../../use-cases/remove-member.use-case'
-import { transferOwnership } from '../../use-cases/transfer-ownership.use-case'
 import { suspendMember } from '../../use-cases/suspend-member.use-case'
+import { transferOwnership } from '../../use-cases/transfer-ownership.use-case'
 import { updateMemberRole } from '../../use-cases/update-member-role.use-case'
 import {
   createOrganizationDetail,
@@ -19,20 +19,15 @@ import {
   listMembersDetail,
   reactivateMemberDetail,
   removeMemberDetail,
-  transferOwnershipDetail,
-  updateMemberRoleDetail,
-} from './docs'
-import {
-  InviteMemberBodySchema,
-  MembersQuerySchema,
-  TransferOwnershipBodySchema,
   suspendMemberDetail,
+  transferOwnershipDetail,
   updateMemberRoleDetail,
 } from './docs'
 import {
   CreateOrgBodySchema,
   InviteMemberBodySchema,
   MembersQuerySchema,
+  TransferOwnershipBodySchema,
   UpdateMemberRoleBodySchema,
 } from './schemas'
 
@@ -153,7 +148,6 @@ export const organizationsV1Routes = new Elysia({ tags: ['Organizations'] })
   )
   .post(
     '/organizations/:orgId/transfer-ownership',
-    '/organizations/:orgId/members/:memberId/suspend',
     async (ctx) => {
       const { user, membership } = ctx.store as AuthStore
       return toApiResponse(
@@ -172,6 +166,13 @@ export const organizationsV1Routes = new Elysia({ tags: ['Organizations'] })
       body: TransferOwnershipBodySchema,
       detail: transferOwnershipDetail,
     },
+  )
+  .post(
+    '/organizations/:orgId/members/:memberId/suspend',
+    async (ctx) => {
+      const { user, membership } = ctx.store as AuthStore
+      return toApiResponse(
+        ctx,
         await suspendMember(repo, {
           orgId: ctx.params.orgId,
           memberId: ctx.params.memberId,
