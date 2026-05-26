@@ -279,6 +279,24 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
       .where(eq(organizationMembers.id, memberId))
   }
 
+  async transferOwnership(
+    _orgId: string,
+    currentOwnerMemberId: string,
+    newOwnerMemberId: string,
+  ): Promise<void> {
+    await db.transaction(async (tx) => {
+      await tx
+        .update(organizationMembers)
+        .set({ role: 'admin', updated_at: new Date() })
+        .where(eq(organizationMembers.id, currentOwnerMemberId))
+
+      await tx
+        .update(organizationMembers)
+        .set({ role: 'owner', updated_at: new Date() })
+        .where(eq(organizationMembers.id, newOwnerMemberId))
+    })
+  }
+
   async createAuditLog(data: AuditLogInput): Promise<void> {
     await db.insert(auditLogs).values({
       organization_id: data.organization_id,
