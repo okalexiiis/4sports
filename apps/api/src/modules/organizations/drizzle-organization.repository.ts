@@ -11,6 +11,7 @@ import {
 import type {
   AuditLogInput,
   CreateOrgInput,
+  InvitationRecord,
   InviteMemberInput,
   ListMembersResult,
   OrgMember,
@@ -512,5 +513,80 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
           ? { before: data.before_data, after: data.after_data }
           : null,
     })
+  }
+
+  async findInvitationById(memberId: string): Promise<InvitationRecord | null> {
+    const [row] = await db
+      .select({
+        id: organizationMembers.id,
+        organization_id: organizationMembers.organization_id,
+        user_id: organizationMembers.user_id,
+        status: organizationMembers.status,
+        invitation_expires_at: organizationMembers.invitation_expires_at,
+      })
+      .from(organizationMembers)
+      .where(eq(organizationMembers.id, memberId))
+      .limit(1)
+
+    if (!row) return null
+
+    return {
+      id: row.id,
+      organization_id: row.organization_id,
+      user_id: row.user_id,
+      invited_email: null,
+      status: row.status,
+      invitation_expires_at: row.invitation_expires_at,
+    }
+  }
+
+  async acceptInvitation(memberId: string, userId: string): Promise<OrgMember> {
+    const [updated] = await db
+      .update(organizationMembers)
+      .set({ status: 'active', joined_at: new Date(), updated_at: new Date() })
+      .where(eq(organizationMembers.id, memberId))
+      .returning({
+        id: organizationMembers.id,
+        user_id: organizationMembers.user_id,
+        role: organizationMembers.role,
+        status: organizationMembers.status,
+        tournament_ids: organizationMembers.tournament_ids,
+        joined_at: organizationMembers.joined_at,
+      })
+
+    const [userRow] = await db
+      .select({
+        name: betterAuthUsers.name,
+        email: betterAuthUsers.email,
+        image: betterAuthUsers.image,
+      })
+      .from(betterAuthUsers)
+      .where(eq(betterAuthUsers.id, userId))
+      .limit(1)
+
+    return {
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      id: updated!.id,
+      user: {
+        name: userRow?.name ?? null,
+        email: userRow?.email ?? '',
+        avatar_url: userRow?.image ?? null,
+      },
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      role: updated!.role,
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      status: updated!.status,
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      tournament_ids: (updated!.tournament_ids ?? []) as string[],
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      joined_at: updated!.joined_at,
+    }
+  }
+
+  async rejectInvitation(memberId: string): Promise<void> {
+    await db
+      .update(organizationMembers)
+      .set({ status: 'left', left_at: new Date(), updated_at: new Date() })
+      .where(eq(organizationMembers.id, memberId))
   }
 }
