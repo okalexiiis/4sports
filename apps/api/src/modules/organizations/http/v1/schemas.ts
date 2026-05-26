@@ -42,3 +42,17 @@ export const UpdateMemberRoleBodySchema = Type.Object({
   role: Type.Union([Type.Literal('organizer'), Type.Literal('coach'), Type.Literal('viewer')]),
   tournament_ids: Type.Array(Type.String({ format: 'uuid' })),
 })
+
+export const CreateOrgBodySchema = Type.Object({
+  name: Type.String({ minLength: 2, maxLength: 120 }),
+  slug: Type.Optional(Type.String({ maxLength: 80 })),
+  description: Type.Optional(Type.String({ maxLength: 500 })),
+  city: Type.Optional(Type.String({ maxLength: 80 })),
+  country_code: Type.Optional(Type.String({ minLength: 2, maxLength: 2 })),
+  plan: Type.Union([
+    Type.Literal('free'),
+    Type.Literal('starter'),
+    Type.Literal('pro'),
+    Type.Literal('elite'),
+  ]),
+})
