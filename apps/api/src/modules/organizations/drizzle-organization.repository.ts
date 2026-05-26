@@ -279,6 +279,94 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
       .where(eq(organizationMembers.id, memberId))
   }
 
+  async suspendMember(memberId: string): Promise<OrgMember> {
+    const [updated] = await db
+      .update(organizationMembers)
+      .set({ status: 'suspended', updated_at: new Date() })
+      .where(eq(organizationMembers.id, memberId))
+      .returning({
+        id: organizationMembers.id,
+        user_id: organizationMembers.user_id,
+        role: organizationMembers.role,
+        status: organizationMembers.status,
+        tournament_ids: organizationMembers.tournament_ids,
+        joined_at: organizationMembers.joined_at,
+      })
+
+    const [userRow] = await db
+      .select({
+        name: betterAuthUsers.name,
+        email: betterAuthUsers.email,
+        image: betterAuthUsers.image,
+      })
+      .from(betterAuthUsers)
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      .where(eq(betterAuthUsers.id, updated!.user_id))
+      .limit(1)
+
+    return {
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      id: updated!.id,
+      user: {
+        name: userRow?.name ?? null,
+        email: userRow?.email ?? '',
+        avatar_url: userRow?.image ?? null,
+      },
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      role: updated!.role,
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      status: updated!.status,
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      tournament_ids: (updated!.tournament_ids ?? []) as string[],
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      joined_at: updated!.joined_at,
+    }
+  }
+
+  async reactivateMember(memberId: string): Promise<OrgMember> {
+    const [updated] = await db
+      .update(organizationMembers)
+      .set({ status: 'active', updated_at: new Date() })
+      .where(eq(organizationMembers.id, memberId))
+      .returning({
+        id: organizationMembers.id,
+        user_id: organizationMembers.user_id,
+        role: organizationMembers.role,
+        status: organizationMembers.status,
+        tournament_ids: organizationMembers.tournament_ids,
+        joined_at: organizationMembers.joined_at,
+      })
+
+    const [userRow] = await db
+      .select({
+        name: betterAuthUsers.name,
+        email: betterAuthUsers.email,
+        image: betterAuthUsers.image,
+      })
+      .from(betterAuthUsers)
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      .where(eq(betterAuthUsers.id, updated!.user_id))
+      .limit(1)
+
+    return {
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      id: updated!.id,
+      user: {
+        name: userRow?.name ?? null,
+        email: userRow?.email ?? '',
+        avatar_url: userRow?.image ?? null,
+      },
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      role: updated!.role,
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      status: updated!.status,
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      tournament_ids: (updated!.tournament_ids ?? []) as string[],
+      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+      joined_at: updated!.joined_at,
+    }
+  }
+
   async createAuditLog(data: AuditLogInput): Promise<void> {
     await db.insert(auditLogs).values({
       organization_id: data.organization_id,
