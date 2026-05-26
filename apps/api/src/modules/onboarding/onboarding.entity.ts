@@ -34,6 +34,7 @@ export interface OrgOnboardingInput {
   organization: {
     name: string
     slug?: string
+    description?: string
     city?: string
     country_code?: string
   }
