@@ -40,6 +40,15 @@ export interface ListMembersResult {
   }
 }
 
+export interface InvitationRecord {
+  id: string
+  organization_id: string
+  user_id: string | null
+  invited_email: string | null
+  status: string
+  invitation_expires_at: Date | null
+}
+
 export interface InviteMemberInput {
   role: string
   tournament_ids: string[]

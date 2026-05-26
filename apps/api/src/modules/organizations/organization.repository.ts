@@ -1,6 +1,7 @@
 import type {
   AuditLogInput,
   CreateOrgInput,
+  InvitationRecord,
   InviteMemberInput,
   ListMembersResult,
   OrgMember,
@@ -29,4 +30,7 @@ export interface IOrganizationRepository {
   suspendMember(memberId: string): Promise<OrgMember>
   reactivateMember(memberId: string): Promise<OrgMember>
   createAuditLog(data: AuditLogInput): Promise<void>
+  findInvitationById(memberId: string): Promise<InvitationRecord | null>
+  acceptInvitation(memberId: string, userId: string): Promise<OrgMember>
+  rejectInvitation(memberId: string): Promise<void>
 }
