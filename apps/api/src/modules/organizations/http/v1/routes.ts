@@ -10,6 +10,7 @@ import { listMembers } from '../../use-cases/list-members.use-case'
 import { reactivateMember } from '../../use-cases/reactivate-member.use-case'
 import { removeMember } from '../../use-cases/remove-member.use-case'
 import { suspendMember } from '../../use-cases/suspend-member.use-case'
+import { transferOwnership } from '../../use-cases/transfer-ownership.use-case'
 import { updateMemberRole } from '../../use-cases/update-member-role.use-case'
 import {
   createOrganizationDetail,
@@ -19,18 +20,20 @@ import {
   reactivateMemberDetail,
   removeMemberDetail,
   suspendMemberDetail,
+  transferOwnershipDetail,
   updateMemberRoleDetail,
 } from './docs'
 import {
   CreateOrgBodySchema,
   InviteMemberBodySchema,
   MembersQuerySchema,
+  TransferOwnershipBodySchema,
   UpdateMemberRoleBodySchema,
 } from './schemas'
 
 const repo = new DrizzleOrganizationRepository()
 
-type AuthStore = { user: { id: string }; membership?: { role: string } }
+type AuthStore = { user: { id: string }; membership?: { id: string; role: string } }
 
 export const organizationsV1Routes = new Elysia({ tags: ['Organizations'] })
   .post(
@@ -142,6 +145,27 @@ export const organizationsV1Routes = new Elysia({ tags: ['Organizations'] })
       )
     },
     { beforeHandle: [authGuard, orgGuard('admin')], detail: removeMemberDetail },
+  )
+  .post(
+    '/organizations/:orgId/transfer-ownership',
+    async (ctx) => {
+      const { user, membership } = ctx.store as AuthStore
+      return toApiResponse(
+        ctx,
+        await transferOwnership(repo, {
+          orgId: ctx.params.orgId,
+          actorMemberId: membership?.id ?? '',
+          actorUserId: user.id,
+          actorRole: membership?.role ?? 'owner',
+          newOwnerMemberId: ctx.body.new_owner_member_id,
+        }),
+      )
+    },
+    {
+      beforeHandle: [authGuard, orgGuard('owner')],
+      body: TransferOwnershipBodySchema,
+      detail: transferOwnershipDetail,
+    },
   )
   .post(
     '/organizations/:orgId/members/:memberId/suspend',
