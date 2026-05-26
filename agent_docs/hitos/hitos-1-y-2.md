@@ -39,7 +39,7 @@ La API sigue capas estrictas. **Las capas no se mezclan.**
 ```mermaid
 flowchart LR
     A([Request]) --> B[Routes\nElysia]
-    B --> C[Service\nLógica de negocio]
+    B --> C[Use Case\nLógica de negocio]
     C --> D[Repository\nDrizzle queries]
     D --> E[(PostgreSQL)]
     C --> F[(Redis)]
@@ -51,7 +51,7 @@ flowchart LR
     style F fill:#F1EFE8,stroke:#5F5E5A,color:#444441
 ```
 
-**Regla:** las rutas solo llaman a servicios. Los servicios solo llaman a repositorios. Los repositorios solo hacen queries con Drizzle. Si algo necesita Redis, lo maneja el servicio — nunca la ruta ni el repositorio.
+**Regla:** las rutas solo llaman a casos de uso. Los casos de uso solo llaman a repositorios. Los repositorios solo hacen queries con Drizzle. Si algo necesita Redis, lo maneja el caso de uso — nunca la ruta ni el repositorio.
 
 ---
 
@@ -59,27 +59,62 @@ flowchart LR
 
 ```
 apps/api/src/
+├── v1/
+│   └── index.ts                 ← agrega todas las rutas bajo /v1
 ├── modules/
-│   ├── auth/
-│   │   ├── auth.routes.ts
-│   │   ├── auth.service.ts
-│   │   ├── auth.repository.ts
-│   │   └── auth.schema.ts       ← validación Typebox
-│   ├── organizations/
-│   ├── tournaments/
-│   ├── teams/
-│   ├── players/
-│   └── matches/
+│   ├── auth/                    ← /v1/me, /v1/context
+│   │   ├── auth.entity.ts       ← tipo de dominio
+│   │   ├── auth.repository.ts   ← interface
+│   │   ├── drizzle-auth.repository.ts ← impl Drizzle
+│   │   ├── errors/
+│   │   │   ├── codes.ts
+│   │   │   └── index.ts
+│   │   ├── http/v1/
+│   │   │   ├── routes.ts
+│   │   │   ├── schemas.ts       ← validación TypeBox
+│   │   │   └── docs.ts          ← OpenAPI
+│   │   └── use-cases/
+│   │       ├── get-me.use-case.ts
+│   │       └── set-context.use-case.ts
+│   ├── onboarding/              ← /v1/onboarding/player|organizer, /v1/check-username|slug
+│   │   ├── onboarding.entity.ts
+│   │   ├── onboarding.repository.ts
+│   │   ├── drizzle-onboarding.repository.ts
+│   │   ├── errors/
+│   │   ├── http/v1/
+│   │   │   ├── routes.ts
+│   │   │   ├── schemas.ts
+│   │   │   └── docs.ts
+│   │   └── use-cases/
+│   └── organizations/           ← /v1/organizations/:orgId[/members]
+│       ├── organization.entity.ts
+│       ├── organization.repository.ts
+│       ├── drizzle-organization.repository.ts
+│       ├── errors/
+│       ├── http/v1/
+│       │   ├── routes.ts
+│       │   ├── schemas.ts
+│       │   └── docs.ts
+│       └── use-cases/
 ├── shared/
+│   ├── api-response.ts          ← formato estándar de respuesta
+│   ├── env.ts                   ← variables de entorno
+│   ├── logger.ts                ← instancia de log
+│   ├── versioning.ts            ← prefijo /v{N}
 │   ├── middleware/
 │   │   ├── auth.guard.ts        ← valida sesión BetterAuth
 │   │   ├── org.guard.ts         ← valida scope de organización
-│   │   └── error.handler.ts
+│   │   ├── feature.guard.ts     ← valida feature del plan
+│   │   └── request-logger.ts    ← requestId + log de duración
 │   ├── db/
 │   │   ├── client.ts            ← instancia Drizzle
-│   │   └── redis.ts             ← instancia Redis
-│   └── lib/
-│       └── r2.ts                ← cliente Cloudflare R2
+│   │   ├── redis.ts             ← instancia Redis
+│   │   ├── schemas/             ← tablas Drizzle (profiles, organizations, ...)
+│   │   └── seeds/               ← datos iniciales (planes, permisos, ...)
+│   ├── lib/
+│   │   └── auth.ts              ← configuración BetterAuth
+│   └── openapi/
+│       └── responses.ts         ← helpers OpenAPI
 └── index.ts
 ```
 
@@ -90,16 +125,16 @@ apps/api/src/
 ### URLs
 
 ```
-/api/v1/{recurso}
-/api/v1/{recurso}/{id}
-/api/v1/{recurso}/{id}/{sub-recurso}
+/v1/{recurso}
+/v1/{recurso}/{id}
+/v1/{recurso}/{id}/{sub-recurso}
 ```
 
 Ejemplos:
 ```
-GET  /api/v1/organizations
-GET  /api/v1/organizations/:orgId/tournaments
-POST /api/v1/tournaments/:tournamentId/teams
+GET  /v1/organizations
+GET  /v1/organizations/:orgId/tournaments
+POST /v1/tournaments/:tournamentId/teams
 ```
 
 ### Formato de respuesta — siempre el mismo
@@ -158,7 +193,7 @@ sequenceDiagram
 
     C->>BA: POST /auth/sign-in
     BA-->>C: Cookie de sesión
-    C->>API: GET /api/v1/me
+    C->>API: GET /v1/me
     API->>R: Verificar sesión
     R-->>API: user.id válido
     API->>DB: SELECT profiles WHERE user_id
@@ -170,7 +205,7 @@ sequenceDiagram
 
 ### Endpoints — Auth y perfil
 
-#### `GET /api/v1/me`
+#### `GET /v1/me`
 Retorna el usuario actual con su perfil, organizaciones activas y contexto seleccionado.
 
 **Requiere:** sesión activa.
@@ -204,7 +239,7 @@ Retorna el usuario actual con su perfil, organizaciones activas y contexto selec
 
 ---
 
-#### `POST /api/v1/onboarding/player`
+#### `POST /v1/onboarding/player`
 Completa el onboarding del jugador.
 
 **Body:**
@@ -225,7 +260,7 @@ Completa el onboarding del jugador.
 
 ---
 
-#### `POST /api/v1/onboarding/organizer`
+#### `POST /v1/onboarding/organizer`
 Completa el onboarding del organizador en un solo request. Crea perfil + organización + membership + suscripción.
 
 **Body:**
@@ -255,7 +290,7 @@ Completa el onboarding del organizador en un solo request. Crea perfil + organiz
 
 ---
 
-#### `PUT /api/v1/context`
+#### `PUT /v1/context`
 Cambia la organización activa del usuario (selector de contexto).
 
 **Body:**
@@ -272,7 +307,7 @@ Cambia la organización activa del usuario (selector de contexto).
 
 ### Endpoints — Organizaciones y miembros
 
-#### `GET /api/v1/organizations/:orgId`
+#### `GET /v1/organizations/:orgId`
 Retorna la organización y el rol del usuario en ella.
 
 **Reglas del backend:**
@@ -281,7 +316,7 @@ Retorna la organización y el rol del usuario en ella.
 
 ---
 
-#### `POST /api/v1/organizations/:orgId/members`
+#### `POST /v1/organizations/:orgId/members`
 Invita a un nuevo miembro.
 
 **Requiere:** rol `owner` o `admin` en la organización.
@@ -304,7 +339,7 @@ Invita a un nuevo miembro.
 
 ---
 
-#### `PUT /api/v1/organizations/:orgId/members/:memberId`
+#### `PUT /v1/organizations/:orgId/members/:memberId`
 Cambia el rol de un miembro.
 
 **Requiere:** rol `owner` o `admin`.
@@ -321,7 +356,7 @@ Cambia el rol de un miembro.
 
 ---
 
-#### `DELETE /api/v1/organizations/:orgId/members/:memberId`
+#### `DELETE /v1/organizations/:orgId/members/:memberId`
 Remueve a un miembro.
 
 **Reglas del backend:**
@@ -339,19 +374,19 @@ Remueve a un miembro.
 **Pantalla: Selección de contexto (al login con múltiples orgs)**
 
 ```
-GET /api/v1/me
+GET /v1/me
 → Usar organizations[] para mostrar la lista
 → Cada org muestra: name, logo_url, role, slug
-→ Al elegir: PUT /api/v1/context
+→ Al elegir: PUT /v1/context
 ```
 
 **Pantalla: Onboarding jugador (2 pasos)**
 ```
 Paso 1: Datos personales
-  POST /api/v1/onboarding/player
+  POST /v1/onboarding/player
 
 Validación en tiempo real de username:
-  GET /api/v1/check-username?username=carlos
+  GET /v1/check-username?username=carlos
   → { available: true | false, suggestions: [...] }
 ```
 
@@ -359,17 +394,17 @@ Validación en tiempo real de username:
 ```
 Paso 1: Datos personales
 Paso 2: Datos de organización
-  GET /api/v1/check-slug?slug=liga-verano → { available: true | false }
+  GET /v1/check-slug?slug=liga-verano → { available: true | false }
 Paso 3: Elegir plan
-  POST /api/v1/onboarding/organizer (todo en un request al confirmar)
+  POST /v1/onboarding/organizer (todo en un request al confirmar)
 ```
 
 **Pantalla: Panel de miembros**
 ```
-GET  /api/v1/organizations/:orgId/members
-POST /api/v1/organizations/:orgId/members
-PUT  /api/v1/organizations/:orgId/members/:memberId
-DEL  /api/v1/organizations/:orgId/members/:memberId
+GET  /v1/organizations/:orgId/members
+POST /v1/organizations/:orgId/members
+PUT  /v1/organizations/:orgId/members/:memberId
+DEL  /v1/organizations/:orgId/members/:memberId
 ```
 
 **Datos del miembro para la tabla:**
@@ -406,7 +441,7 @@ flowchart TD
 
 ### Endpoints — Torneos
 
-#### `POST /api/v1/organizations/:orgId/tournaments`
+#### `POST /v1/organizations/:orgId/tournaments`
 Crea un torneo en borrador.
 
 **Requiere:** rol `owner`, `admin`, u `organizer` con el torneo en su `tournament_ids`.
@@ -452,7 +487,7 @@ Crea un torneo en borrador.
 
 ---
 
-#### `PUT /api/v1/tournaments/:tournamentId`
+#### `PUT /v1/tournaments/:tournamentId`
 Actualiza cualquier campo del torneo mientras esté en borrador.
 
 **Reglas del backend:**
@@ -462,7 +497,7 @@ Actualiza cualquier campo del torneo mientras esté en borrador.
 
 ---
 
-#### `POST /api/v1/tournaments/:tournamentId/publish`
+#### `POST /v1/tournaments/:tournamentId/publish`
 Publica el torneo. Transición de `draft` → `open_registration` o `private`.
 
 **Body:**
@@ -490,7 +525,7 @@ Publica el torneo. Transición de `draft` → `open_registration` o `private`.
 
 ---
 
-#### `GET /api/v1/tournaments/:tournamentId`
+#### `GET /v1/tournaments/:tournamentId`
 Retorna el torneo completo.
 
 **Respuesta diferenciada por rol:**
@@ -500,7 +535,7 @@ Retorna el torneo completo.
 
 ---
 
-#### `GET /api/v1/organizations/:orgId/tournaments`
+#### `GET /v1/organizations/:orgId/tournaments`
 Lista todos los torneos de la organización.
 
 **Query params:**
@@ -512,7 +547,7 @@ Lista todos los torneos de la organización.
 
 ---
 
-#### `GET /api/v1/tournaments` *(público)*
+#### `GET /v1/tournaments` *(público)*
 Directorio público de torneos. Solo torneos con `is_public = true` y `status` en `open_registration` o `active`.
 
 **Query params:**
@@ -527,7 +562,7 @@ Directorio público de torneos. Solo torneos con `is_public = true` y `status` e
 
 ### Endpoints — Equipos e inscripciones
 
-#### `POST /api/v1/teams`
+#### `POST /v1/teams`
 Crea un equipo nuevo.
 
 **Body:**
@@ -549,7 +584,7 @@ Crea un equipo nuevo.
 
 ---
 
-#### `POST /api/v1/tournaments/:tournamentId/registrations`
+#### `POST /v1/tournaments/:tournamentId/registrations`
 Inscribe un equipo en un torneo.
 
 **Body:**
@@ -568,7 +603,7 @@ Inscribe un equipo en un torneo.
 
 ---
 
-#### `PUT /api/v1/tournaments/:tournamentId/registrations/:registrationId`
+#### `PUT /v1/tournaments/:tournamentId/registrations/:registrationId`
 Aprueba, rechaza o pone en espera una inscripción.
 
 **Requiere:** rol organizador sobre el torneo.
@@ -589,7 +624,7 @@ Aprueba, rechaza o pone en espera una inscripción.
 
 ---
 
-#### `POST /api/v1/teams/:teamId/players`
+#### `POST /v1/teams/:teamId/players`
 Agrega un jugador al equipo (perfil puente o usuario existente).
 
 **Body — perfil puente:**
@@ -621,7 +656,7 @@ Agrega un jugador al equipo (perfil puente o usuario existente).
 
 ---
 
-#### `POST /api/v1/players/:playerId/claim`
+#### `POST /v1/players/:playerId/claim`
 El jugador real reclama un perfil puente. También puede ser iniciado por el capitán o el coach enviando una invitación de vinculación al jugador.
 
 **Body:**
@@ -636,7 +671,7 @@ El jugador real reclama un perfil puente. También puede ser iniciado por el cap
 
 ---
 
-#### `PUT /api/v1/players/:playerId/claim/:claimId`
+#### `PUT /v1/players/:playerId/claim/:claimId`
 El capitán **o coach** aprueba o rechaza la reclamación de un perfil puente.
 
 **Body:**
@@ -698,30 +733,30 @@ flowchart TD
 
 #### Pantalla: Asistente de creación de torneo
 
-El asistente guarda el progreso en cada paso con un `PUT /api/v1/tournaments/:id`. Cada paso actualiza `wizard_step`.
+El asistente guarda el progreso en cada paso con un `PUT /v1/tournaments/:id`. Cada paso actualiza `wizard_step`.
 
 ```
 Paso 1 — Info básica:
-  POST /api/v1/organizations/:orgId/tournaments
+  POST /v1/organizations/:orgId/tournaments
   → Retorna el torneo con id. Guardar id en el estado local.
-  → Mostrar slugs sugeridos: GET /api/v1/check-slug?slug=...
+  → Mostrar slugs sugeridos: GET /v1/check-slug?slug=...
 
 Paso 2 — Formato:
-  GET /api/v1/sports → lista de deportes con sus defaults
-  GET /api/v1/tournament-formats → lista de formatos disponibles por plan
-  PUT /api/v1/tournaments/:id
+  GET /v1/sports → lista de deportes con sus defaults
+  GET /v1/tournament-formats → lista de formatos disponibles por plan
+  PUT /v1/tournaments/:id
 
 Paso 3 — Elegibilidad:
-  PUT /api/v1/tournaments/:id
+  PUT /v1/tournaments/:id
 
 Paso 4 — Inscripciones:
-  PUT /api/v1/tournaments/:id
+  PUT /v1/tournaments/:id
 
 Paso 5 — Campos de jugadores:
-  PUT /api/v1/tournaments/:id
+  PUT /v1/tournaments/:id
 
 Paso 6 — Publicar:
-  POST /api/v1/tournaments/:id/publish
+  POST /v1/tournaments/:id/publish
   → Si 422: mostrar lista de errores por campo
   → Si 200: redirigir al panel del torneo
 ```
@@ -749,13 +784,13 @@ Paso 6 — Publicar:
 #### Pantalla: Gestión de inscripciones
 
 ```
-GET /api/v1/tournaments/:id/registrations?status=pending
+GET /v1/tournaments/:id/registrations?status=pending
 → Lista de equipos pendientes de aprobación
 
-GET /api/v1/tournaments/:id/registrations?status=approved
+GET /v1/tournaments/:id/registrations?status=approved
 → Lista de equipos aprobados
 
-PUT /api/v1/tournaments/:id/registrations/:registrationId
+PUT /v1/tournaments/:id/registrations/:registrationId
 → Aprobar / Rechazar / Lista de espera
 ```
 
@@ -783,13 +818,13 @@ PUT /api/v1/tournaments/:id/registrations/:registrationId
 #### Pantalla: Plantilla del equipo
 
 ```
-GET  /api/v1/teams/:teamId/members
+GET  /v1/teams/:teamId/members
 → Lista de jugadores con status, rol y alertas de elegibilidad
 
-POST /api/v1/teams/:teamId/players
+POST /v1/teams/:teamId/players
 → Agregar jugador (perfil puente o usuario existente)
 
-DELETE /api/v1/teams/:teamId/members/:memberId
+DELETE /v1/teams/:teamId/members/:memberId
 → Remover jugador del equipo
 ```
 
@@ -820,7 +855,8 @@ Aplica en todas las rutas protegidas. Verifica la sesión de BetterAuth y adjunt
 
 ```typescript
 // Uso en rutas:
-app.use('/api/v1', authGuard)
+// Las rutas se agregan directamente en el grupo v1:
+// authV1Routes ya usa authGuard como beforeHandle interno
 ```
 
 ### `org.guard.ts`
@@ -863,7 +899,7 @@ sequenceDiagram
     participant API as API
     participant R2 as Cloudflare R2
 
-    C->>API: POST /api/v1/upload/presigned
+    C->>API: POST /v1/upload/presigned
     Note right of C: { type: "avatar", file_name: "foto.jpg" }
     API->>R2: Generar URL prefirmada (PUT)
     R2-->>API: presigned_url (válida 5 min)

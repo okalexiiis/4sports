@@ -300,7 +300,7 @@ Push notifications	Firebase FCM	Push a iOS y Android
 Infraestructura	Railway (API) + Cloudflare Pages (Web)	Zero-ops, deploys automáticos, SSL
 
 11.2 Arquitectura de la API
-La API sigue arquitectura limpia por capas. Cada módulo tiene exactamente la misma estructura: routes → service → repository → schema. Las capas no se mezclan: las rutas solo llaman a servicios, los servicios solo llaman a repositorios, los repositorios solo hacen queries con Drizzle.
+La API sigue arquitectura limpia por capas. Cada módulo tiene exactamente la misma estructura: routes → use-case → repository → entity. Las capas no se mezclan: las rutas solo llaman a casos de uso, los casos de uso solo llaman a repositorios, los repositorios solo hacen queries con Drizzle.
 11.3 Decisiones de base de datos relevantes para el producto
 Decisión	Impacto en producto
 Dinero en centavos (INT)	$500 MXN = 50000. Nunca floats. División por 100 solo al mostrar al usuario.
