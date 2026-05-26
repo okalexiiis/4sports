@@ -1,9 +1,16 @@
 import { and, count, eq, isNull } from 'drizzle-orm'
 import { pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 import { db } from '@/shared/db/client'
-import { auditLogs, organizationMembers, organizations } from '@/shared/db/schemas'
+import {
+  auditLogs,
+  organizationMembers,
+  organizations,
+  organizerSubscriptions,
+  subscriptionPlans,
+} from '@/shared/db/schemas'
 import type {
   AuditLogInput,
+  CreateOrgInput,
   InviteMemberInput,
   ListMembersResult,
   OrgMember,
@@ -50,6 +57,85 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
       .limit(1)
 
     return row ?? null
+  }
+
+  async isSlugTaken(slug: string): Promise<boolean> {
+    const [row] = await db
+      .select({ id: organizations.id })
+      .from(organizations)
+      .where(eq(organizations.slug, slug))
+      .limit(1)
+
+    return row !== undefined
+  }
+
+  async findPlanIdBySlug(plan: string): Promise<string | null> {
+    const [row] = await db
+      .select({ id: subscriptionPlans.id })
+      .from(subscriptionPlans)
+      .where(eq(subscriptionPlans.slug, plan))
+      .limit(1)
+
+    return row?.id ?? null
+  }
+
+  async createOrganization(
+    userId: string,
+    data: CreateOrgInput,
+    planId: string,
+  ): Promise<OrgWithRole> {
+    return db.transaction(async (tx) => {
+      // biome-ignore lint/style/noNonNullAssertion: slug is resolved before this call
+      const resolvedSlug = data.slug!
+
+      const [org] = await tx
+        .insert(organizations)
+        .values({
+          name: data.name,
+          slug: resolvedSlug,
+          description: data.description ?? null,
+          city: data.city ?? null,
+          country_code: data.country_code ?? null,
+          created_by: userId,
+        })
+        .returning({
+          id: organizations.id,
+          name: organizations.name,
+          slug: organizations.slug,
+          description: organizations.description,
+          logo_url: organizations.logo_url,
+          website_url: organizations.website_url,
+          country_code: organizations.country_code,
+          city: organizations.city,
+          is_verified: organizations.is_verified,
+          created_at: organizations.created_at,
+        })
+
+      // biome-ignore lint/style/noNonNullAssertion: insert always returns a row
+      const newOrgId = org!.id
+
+      await tx.insert(organizationMembers).values({
+        organization_id: newOrgId,
+        user_id: userId,
+        role: 'owner',
+        status: 'active',
+        joined_at: new Date(),
+      })
+
+      const farFuture = new Date()
+      farFuture.setFullYear(farFuture.getFullYear() + 100)
+
+      await tx.insert(organizerSubscriptions).values({
+        organization_id: newOrgId,
+        plan_id: planId,
+        status: 'active',
+        billing_cycle: 'monthly',
+        current_period_end: farFuture,
+      })
+
+      // biome-ignore lint/style/noNonNullAssertion: insert always returns a row
+      return { ...org!, role: 'owner' }
+    })
   }
 
   async listMembers(orgId: string, page: number, limit: number): Promise<ListMembersResult> {

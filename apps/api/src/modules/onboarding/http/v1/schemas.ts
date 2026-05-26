@@ -36,6 +36,7 @@ export const OrgOnboardingBodySchema = Type.Object({
   organization: Type.Object({
     name: Type.String({ minLength: 2, maxLength: 120 }),
     slug: Type.Optional(Type.String({ maxLength: 80 })),
+    description: Type.Optional(Type.String({ maxLength: 500 })),
     city: Type.Optional(Type.String({ maxLength: 80 })),
     country_code: Type.Optional(Type.String({ minLength: 2, maxLength: 2 })),
   }),

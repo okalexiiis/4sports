@@ -51,6 +51,15 @@ export interface UpdateRoleInput {
   tournament_ids: string[]
 }
 
+export interface CreateOrgInput {
+  name: string
+  slug?: string
+  description?: string
+  city?: string
+  country_code?: string
+  plan: string
+}
+
 export interface AuditLogInput {
   organization_id: string
   actor_user_id: string
