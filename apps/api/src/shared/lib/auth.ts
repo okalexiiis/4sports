@@ -5,6 +5,8 @@ import { redis } from '@/shared/db/redis'
 import { env } from '@/shared/env'
 
 export const auth = betterAuth({
+  secret: env.BETTER_AUTH_SECRET,
+  baseURL: env.API_URL,
   database: drizzleAdapter(db, {
     provider: 'pg',
   }),
