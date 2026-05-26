@@ -18,7 +18,7 @@ export interface IOrganizationRepository {
   findMemberByEmail(orgId: string, email: string): Promise<{ status: string } | null>
   findUserByEmail(email: string): Promise<{ id: string } | null>
   countActiveOwners(orgId: string): Promise<number>
-  inviteMember(orgId: string, userId: string, data: InviteMemberInput): Promise<OrgMember>
+  inviteMember(orgId: string, userId: string | null, data: InviteMemberInput): Promise<OrgMember>
   updateMemberRole(memberId: string, data: UpdateRoleInput): Promise<OrgMember>
   removeMember(memberId: string): Promise<void>
   transferOwnership(

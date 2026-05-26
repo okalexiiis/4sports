@@ -1,4 +1,4 @@
-import { and, count, eq, isNull } from 'drizzle-orm'
+import { and, count, eq, isNull, or, sql } from 'drizzle-orm'
 import { pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 import { db } from '@/shared/db/client'
 import {
@@ -49,7 +49,7 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
         organizationMembers,
         and(
           eq(organizationMembers.organization_id, organizations.id),
-          eq(organizationMembers.user_id, requestingUserId),
+          sql`${organizationMembers.user_id} = ${requestingUserId}`,
           eq(organizationMembers.status, 'active'),
         ),
       )
@@ -145,6 +145,7 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
       db
         .select({
           id: organizationMembers.id,
+          invited_email: organizationMembers.invited_email,
           role: organizationMembers.role,
           status: organizationMembers.status,
           tournament_ids: organizationMembers.tournament_ids,
@@ -154,7 +155,7 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
           user_image: betterAuthUsers.image,
         })
         .from(organizationMembers)
-        .innerJoin(betterAuthUsers, eq(betterAuthUsers.id, organizationMembers.user_id))
+        .leftJoin(betterAuthUsers, sql`${betterAuthUsers.id} = ${organizationMembers.user_id}`)
         .where(eq(organizationMembers.organization_id, orgId))
         .limit(limit)
         .offset(offset),
@@ -172,9 +173,9 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
       members: members.map((m) => ({
         id: m.id,
         user: {
-          name: m.user_name,
-          email: m.user_email,
-          avatar_url: m.user_image,
+          name: m.user_name ?? null,
+          email: m.user_email ?? m.invited_email ?? '',
+          avatar_url: m.user_image ?? null,
         },
         role: m.role,
         status: m.status,
@@ -196,6 +197,7 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
     const [row] = await db
       .select({
         id: organizationMembers.id,
+        invited_email: organizationMembers.invited_email,
         role: organizationMembers.role,
         status: organizationMembers.status,
         tournament_ids: organizationMembers.tournament_ids,
@@ -205,7 +207,7 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
         user_image: betterAuthUsers.image,
       })
       .from(organizationMembers)
-      .innerJoin(betterAuthUsers, eq(betterAuthUsers.id, organizationMembers.user_id))
+      .leftJoin(betterAuthUsers, sql`${betterAuthUsers.id} = ${organizationMembers.user_id}`)
       .where(
         and(eq(organizationMembers.id, memberId), eq(organizationMembers.organization_id, orgId)),
       )
@@ -215,7 +217,11 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
 
     return {
       id: row.id,
-      user: { name: row.user_name, email: row.user_email, avatar_url: row.user_image },
+      user: {
+        name: row.user_name ?? null,
+        email: row.user_email ?? row.invited_email ?? '',
+        avatar_url: row.user_image ?? null,
+      },
       role: row.role,
       status: row.status,
       tournament_ids: (row.tournament_ids ?? []) as string[],
@@ -227,8 +233,13 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
     const [row] = await db
       .select({ status: organizationMembers.status })
       .from(organizationMembers)
-      .innerJoin(betterAuthUsers, eq(betterAuthUsers.id, organizationMembers.user_id))
-      .where(and(eq(organizationMembers.organization_id, orgId), eq(betterAuthUsers.email, email)))
+      .leftJoin(betterAuthUsers, sql`${betterAuthUsers.id} = ${organizationMembers.user_id}`)
+      .where(
+        and(
+          eq(organizationMembers.organization_id, orgId),
+          or(eq(betterAuthUsers.email, email), eq(organizationMembers.invited_email, email)),
+        ),
+      )
       .limit(1)
 
     return row ?? null
@@ -259,7 +270,11 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
     return Number(row?.count ?? 0)
   }
 
-  async inviteMember(orgId: string, userId: string, data: InviteMemberInput): Promise<OrgMember> {
+  async inviteMember(
+    orgId: string,
+    userId: string | null,
+    data: InviteMemberInput,
+  ): Promise<OrgMember> {
     const expiresAt = new Date()
     expiresAt.setDate(expiresAt.getDate() + 7)
 
@@ -268,6 +283,7 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
       .values({
         organization_id: orgId,
         user_id: userId,
+        invited_email: userId === null ? (data.invited_email ?? null) : null,
         role: data.role as 'owner' | 'admin' | 'organizer' | 'coach' | 'viewer',
         tournament_ids: data.tournament_ids,
         invited_by: data.invitedBy,
@@ -282,22 +298,27 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
         joined_at: organizationMembers.joined_at,
       })
 
-    const [userRow] = await db
-      .select({
-        name: betterAuthUsers.name,
-        email: betterAuthUsers.email,
-        image: betterAuthUsers.image,
-      })
-      .from(betterAuthUsers)
-      .where(eq(betterAuthUsers.id, userId))
-      .limit(1)
+    let userRow: { name: string; email: string; image: string | null } | undefined
+
+    if (userId !== null) {
+      const [row] = await db
+        .select({
+          name: betterAuthUsers.name,
+          email: betterAuthUsers.email,
+          image: betterAuthUsers.image,
+        })
+        .from(betterAuthUsers)
+        .where(eq(betterAuthUsers.id, userId))
+        .limit(1)
+      userRow = row
+    }
 
     return {
       // biome-ignore lint/style/noNonNullAssertion: insert always returns a row
       id: member!.id,
       user: {
         name: userRow?.name ?? null,
-        email: userRow?.email ?? '',
+        email: userRow?.email ?? data.invited_email ?? '',
         avatar_url: userRow?.image ?? null,
       },
       // biome-ignore lint/style/noNonNullAssertion: insert always returns a row
@@ -328,16 +349,17 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
         joined_at: organizationMembers.joined_at,
       })
 
-    const [userRow] = await db
-      .select({
-        name: betterAuthUsers.name,
-        email: betterAuthUsers.email,
-        image: betterAuthUsers.image,
-      })
-      .from(betterAuthUsers)
-      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
-      .where(eq(betterAuthUsers.id, updated!.user_id))
-      .limit(1)
+    const [userRow] = updated?.user_id
+      ? await db
+          .select({
+            name: betterAuthUsers.name,
+            email: betterAuthUsers.email,
+            image: betterAuthUsers.image,
+          })
+          .from(betterAuthUsers)
+          .where(sql`${betterAuthUsers.id} = ${updated.user_id}`)
+          .limit(1)
+      : []
 
     return {
       // biome-ignore lint/style/noNonNullAssertion: update always returns a row
