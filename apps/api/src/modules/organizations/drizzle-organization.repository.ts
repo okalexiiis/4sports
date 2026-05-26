@@ -419,16 +419,18 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
         joined_at: organizationMembers.joined_at,
       })
 
-    const [userRow] = await db
-      .select({
-        name: betterAuthUsers.name,
-        email: betterAuthUsers.email,
-        image: betterAuthUsers.image,
-      })
-      .from(betterAuthUsers)
-      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
-      .where(eq(betterAuthUsers.id, updated!.user_id))
-      .limit(1)
+    let userRow: { name: string; email: string; image: string | null } | undefined
+    if (updated?.user_id) {
+      ;[userRow] = await db
+        .select({
+          name: betterAuthUsers.name,
+          email: betterAuthUsers.email,
+          image: betterAuthUsers.image,
+        })
+        .from(betterAuthUsers)
+        .where(sql`${betterAuthUsers.id} = ${updated.user_id}`)
+        .limit(1)
+    }
 
     return {
       // biome-ignore lint/style/noNonNullAssertion: update always returns a row
@@ -463,16 +465,18 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
         joined_at: organizationMembers.joined_at,
       })
 
-    const [userRow] = await db
-      .select({
-        name: betterAuthUsers.name,
-        email: betterAuthUsers.email,
-        image: betterAuthUsers.image,
-      })
-      .from(betterAuthUsers)
-      // biome-ignore lint/style/noNonNullAssertion: update always returns a row
-      .where(eq(betterAuthUsers.id, updated!.user_id))
-      .limit(1)
+    let userRow: { name: string; email: string; image: string | null } | undefined
+    if (updated?.user_id) {
+      ;[userRow] = await db
+        .select({
+          name: betterAuthUsers.name,
+          email: betterAuthUsers.email,
+          image: betterAuthUsers.image,
+        })
+        .from(betterAuthUsers)
+        .where(sql`${betterAuthUsers.id} = ${updated.user_id}`)
+        .limit(1)
+    }
 
     return {
       // biome-ignore lint/style/noNonNullAssertion: update always returns a row
