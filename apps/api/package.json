@@ -13,7 +13,8 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:drop": "drizzle-kit drop",
-    "db:seed": "bun run src/shared/db/seeds/index.ts"
+    "db:seed": "bun run src/shared/db/seeds/index.ts",
+    "db:generate:auth": "bunx --bun @better-auth/cli generate --config ./src/shared/lib/auth.ts --output ./src/shared/db/schemas/auth.schema.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.797.0",
