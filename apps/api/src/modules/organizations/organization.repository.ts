@@ -21,5 +21,7 @@ export interface IOrganizationRepository {
   inviteMember(orgId: string, userId: string, data: InviteMemberInput): Promise<OrgMember>
   updateMemberRole(memberId: string, data: UpdateRoleInput): Promise<OrgMember>
   removeMember(memberId: string): Promise<void>
+  suspendMember(memberId: string): Promise<OrgMember>
+  reactivateMember(memberId: string): Promise<OrgMember>
   createAuditLog(data: AuditLogInput): Promise<void>
 }
