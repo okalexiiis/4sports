@@ -3,25 +3,51 @@ import { toApiResponse } from '@/shared/api-response'
 import { authGuard } from '@/shared/middleware/auth.guard'
 import { orgGuard } from '@/shared/middleware/org.guard'
 import { DrizzleOrganizationRepository } from '../../drizzle-organization.repository'
+import { createOrganization } from '../../use-cases/create-organization.use-case'
 import { getOrganization } from '../../use-cases/get-organization.use-case'
 import { inviteMember } from '../../use-cases/invite-member.use-case'
 import { listMembers } from '../../use-cases/list-members.use-case'
 import { removeMember } from '../../use-cases/remove-member.use-case'
 import { updateMemberRole } from '../../use-cases/update-member-role.use-case'
 import {
+  createOrganizationDetail,
   getOrganizationDetail,
   inviteMemberDetail,
   listMembersDetail,
   removeMemberDetail,
   updateMemberRoleDetail,
 } from './docs'
-import { InviteMemberBodySchema, MembersQuerySchema, UpdateMemberRoleBodySchema } from './schemas'
+import {
+  CreateOrgBodySchema,
+  InviteMemberBodySchema,
+  MembersQuerySchema,
+  UpdateMemberRoleBodySchema,
+} from './schemas'
 
 const repo = new DrizzleOrganizationRepository()
 
 type AuthStore = { user: { id: string }; membership?: { role: string } }
 
 export const organizationsV1Routes = new Elysia({ tags: ['Organizations'] })
+  .post(
+    '/organizations',
+    async (ctx) => {
+      const { user } = ctx.store as AuthStore
+      return toApiResponse(
+        ctx,
+        await createOrganization(repo, {
+          userId: user.id,
+          name: ctx.body.name,
+          slug: ctx.body.slug,
+          description: ctx.body.description,
+          city: ctx.body.city,
+          country_code: ctx.body.country_code,
+          plan: ctx.body.plan,
+        }),
+      )
+    },
+    { beforeHandle: [authGuard], body: CreateOrgBodySchema, detail: createOrganizationDetail },
+  )
   .get(
     '/organizations/:orgId',
     async (ctx) => {
