@@ -117,6 +117,7 @@ export class DrizzleOnboardingRepository implements IOnboardingRepository {
         .values({
           name: data.organization.name,
           slug: resolvedSlug,
+          description: data.organization.description ?? null,
           city: data.organization.city ?? null,
           country_code: data.organization.country_code ?? null,
           created_by: userId,
