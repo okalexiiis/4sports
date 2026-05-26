@@ -44,6 +44,7 @@ export interface InviteMemberInput {
   role: string
   tournament_ids: string[]
   invitedBy: string
+  invited_email?: string
 }
 
 export interface UpdateRoleInput {

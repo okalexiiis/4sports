@@ -32,11 +32,6 @@ export async function inviteMember(
     )
   }
 
-  const targetUser = await repo.findUserByEmail(input.email)
-  if (!targetUser) {
-    return err(new DomainError('ORG_NOT_FOUND', 'No user found with that email address'))
-  }
-
   const existing = await repo.findMemberByEmail(input.orgId, input.email)
 
   if (existing) {
@@ -58,10 +53,13 @@ export async function inviteMember(
     }
   }
 
-  const member = await repo.inviteMember(input.orgId, targetUser.id, {
+  const targetUser = await repo.findUserByEmail(input.email)
+
+  const member = await repo.inviteMember(input.orgId, targetUser?.id ?? null, {
     role: input.role,
     tournament_ids: input.tournament_ids,
     invitedBy: input.actorUserId,
+    invited_email: targetUser === null ? input.email : undefined,
   })
 
   return ok(member)
