@@ -4,6 +4,7 @@ import { OrgMemberSchema, OrgSchema } from './schemas'
 
 export const createOrganizationDetail = {
   summary: 'Create organization',
+  security: [{ cookieAuth: [] }],
   description:
     'Creates a new organization for the authenticated user. Also creates an owner membership and a subscription. User must have an existing profile.',
   responses: {
@@ -17,6 +18,7 @@ export const createOrganizationDetail = {
 
 export const getOrganizationDetail = {
   summary: 'Get organization',
+  security: [{ cookieAuth: [] }],
   description:
     "Returns org details and the requesting user's role. Requires active member context.",
   responses: {
@@ -29,6 +31,7 @@ export const getOrganizationDetail = {
 
 export const listMembersDetail = {
   summary: 'List organization members',
+  security: [{ cookieAuth: [] }],
   description:
     'Returns a paginated list of organization members. Response data includes members array and meta pagination object.',
   responses: {
@@ -40,6 +43,7 @@ export const listMembersDetail = {
 
 export const inviteMemberDetail = {
   summary: 'Invite a member',
+  security: [{ cookieAuth: [] }],
   description:
     'Invites a user by email. Admin cannot invite owner or another admin. Returns 409 with can_resend if a pending invite exists.',
   responses: {
@@ -52,6 +56,7 @@ export const inviteMemberDetail = {
 
 export const updateMemberRoleDetail = {
   summary: 'Update member role',
+  security: [{ cookieAuth: [] }],
   description:
     'Changes a member role. Admin cannot promote to admin or owner. Writes to audit_logs.',
   responses: {
@@ -64,6 +69,7 @@ export const updateMemberRoleDetail = {
 
 export const removeMemberDetail = {
   summary: 'Remove a member',
+  security: [{ cookieAuth: [] }],
   description:
     'Sets member status to left. Admin cannot remove another admin. Writes to audit_logs.',
   responses: {
@@ -76,6 +82,7 @@ export const removeMemberDetail = {
 
 export const transferOwnershipDetail = {
   summary: 'Transfer organization ownership',
+  security: [{ cookieAuth: [] }],
   description:
     'Atomically demotes the current owner to admin and promotes the target member to owner. Writes two audit_log entries.',
   responses: {
@@ -89,6 +96,7 @@ export const transferOwnershipDetail = {
 
 export const suspendMemberDetail = {
   summary: 'Suspend a member',
+  security: [{ cookieAuth: [] }],
   description: 'Sets member status to suspended. Cannot suspend the owner. Writes to audit_logs.',
   responses: {
     200: ApiResponses.success(OrgMemberSchema, 'Member suspended'),
@@ -101,6 +109,7 @@ export const suspendMemberDetail = {
 
 export const reactivateMemberDetail = {
   summary: 'Reactivate a member',
+  security: [{ cookieAuth: [] }],
   description:
     'Sets member status back to active. Only works on suspended members. Writes to audit_logs.',
   responses: {

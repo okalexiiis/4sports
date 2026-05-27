@@ -4,6 +4,7 @@ import { MeSchema } from './schemas'
 
 export const getMeDetail = {
   summary: 'Get current user identity',
+  security: [{ cookieAuth: [] }],
   description:
     'Returns the authenticated user, profile, org memberships, and active org context resolved from Redis. onboarding_pending is true when no profile row exists yet.',
   responses: {
@@ -19,6 +20,7 @@ const ActiveContextSchema = Type.Union([
 
 export const setContextDetail = {
   summary: 'Set active organization context',
+  security: [{ cookieAuth: [] }],
   description:
     'Switches the active organization context persisted in Redis. Pass null to switch to player mode (clears context). Returns the new active context.',
   responses: {

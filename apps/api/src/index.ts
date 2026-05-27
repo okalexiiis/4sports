@@ -70,7 +70,25 @@ new Elysia()
     set.status = 500
     return { error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } }
   })
-  .use(openapi({ path: '/openapi' }))
+  .use(
+    openapi({
+      path: '/openapi',
+      documentation: {
+        info: { title: '4Sports API', version: '1' },
+        components: {
+          securitySchemes: {
+            cookieAuth: {
+              type: 'apiKey',
+              in: 'cookie',
+              name: 'better-auth.session_token',
+              description:
+                'Session cookie issued by BetterAuth. Obtain via POST /auth/sign-in/email',
+            },
+          },
+        },
+      },
+    }),
+  )
   .use(v1)
   .use(noteV1Routes)
   .all('/auth/*', async (ctx) => auth.handler(ctx.request))

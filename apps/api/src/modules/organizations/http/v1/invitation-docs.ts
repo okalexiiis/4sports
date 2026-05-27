@@ -3,6 +3,7 @@ import { OrgMemberSchema } from './schemas'
 
 export const acceptInvitationDetail = {
   summary: 'Accept an invitation',
+  security: [{ cookieAuth: [] }],
   description:
     'Accepts a pending invitation. Sets membership status to active and records joined_at. Returns 403 if the invitation belongs to another user, 409 if already processed, 410 if expired.',
   responses: {
@@ -17,6 +18,7 @@ export const acceptInvitationDetail = {
 
 export const rejectInvitationDetail = {
   summary: 'Reject an invitation',
+  security: [{ cookieAuth: [] }],
   description:
     'Rejects a pending invitation. Sets membership status to left. Returns 403 if the invitation belongs to another user, 409 if already processed.',
   responses: {
