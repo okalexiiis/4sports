@@ -66,6 +66,7 @@ function rowToTournament(row: {
   format_id: string | null
   format_name: string | null
   format_slug: string | null
+  format_plan_required: string | null
 }): Tournament {
   return {
     id: row.id,
@@ -106,7 +107,12 @@ function rowToTournament(row: {
         : null,
     format:
       row.format_id && row.format_name && row.format_slug
-        ? { id: row.format_id, name: row.format_name, slug: row.format_slug }
+        ? {
+            id: row.format_id,
+            name: row.format_name,
+            slug: row.format_slug,
+            plan_required: row.format_plan_required ?? 'free',
+          }
         : null,
     created_by: row.created_by,
     created_at: row.created_at,
@@ -152,6 +158,7 @@ const tournamentSelect = {
   format_id: tournamentFormats.id,
   format_name: tournamentFormats.name,
   format_slug: tournamentFormats.slug,
+  format_plan_required: tournamentFormats.plan_required,
 }
 
 export class DrizzleTournamentRepository implements ITournamentRepository {
@@ -448,6 +455,36 @@ export class DrizzleTournamentRepository implements ITournamentRepository {
           eq(tournaments.id, tournamentId),
           inArray(organizerSubscriptions.status, ['active', 'trialing']),
           isNull(tournaments.deleted_at),
+        ),
+      )
+      .limit(1)
+
+    if (!row) return null
+
+    return {
+      orgId: row.orgId,
+      planSlug: row.planSlug,
+      planFeatures: (row.planFeatures as Record<string, unknown>) ?? {},
+    }
+  }
+
+  async findOrgPlanContext(orgId: string): Promise<OrgContext | null> {
+    const [row] = await db
+      .select({
+        orgId: organizations.id,
+        planSlug: subscriptionPlans.slug,
+        planFeatures: subscriptionPlans.features,
+      })
+      .from(organizations)
+      .innerJoin(
+        organizerSubscriptions,
+        eq(organizerSubscriptions.organization_id, organizations.id),
+      )
+      .innerJoin(subscriptionPlans, eq(organizerSubscriptions.plan_id, subscriptionPlans.id))
+      .where(
+        and(
+          eq(organizations.id, orgId),
+          inArray(organizerSubscriptions.status, ['active', 'trialing']),
         ),
       )
       .limit(1)

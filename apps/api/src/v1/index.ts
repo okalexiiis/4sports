@@ -4,6 +4,7 @@ import { invitationsV1Routes } from '@/modules/organizations/http/v1/invitation-
 import { organizationsV1Routes } from '@/modules/organizations/http/v1/routes'
 import { sportsV1Routes } from '@/modules/sports/http/v1/routes'
 import { tournamentFormatsV1Routes } from '@/modules/tournament-formats/http/v1/routes'
+import { tournamentsV1Routes } from '@/modules/tournaments/http/v1/routes'
 import { uploadV1Routes } from '@/modules/upload/http/v1/routes'
 import { createVersion } from '@/shared/versioning'
 
@@ -14,4 +15,5 @@ export const v1 = createVersion(1)
   .use(invitationsV1Routes)
   .use(sportsV1Routes)
   .use(tournamentFormatsV1Routes)
+  .use(tournamentsV1Routes)
   .use(uploadV1Routes)
