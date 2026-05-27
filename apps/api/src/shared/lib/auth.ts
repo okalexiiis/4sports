@@ -1,14 +1,19 @@
 import { drizzleAdapter } from '@better-auth/drizzle-adapter'
 import { betterAuth } from 'better-auth'
+import { openAPI } from 'better-auth/plugins'
 import { db } from '@/shared/db/client'
 import { redis } from '@/shared/db/redis'
+import * as schema from '@/shared/db/schemas'
 import { env } from '@/shared/env'
 
 export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.API_URL,
+  basePath: '/auth',
+  plugins: [openAPI()],
   database: drizzleAdapter(db, {
     provider: 'pg',
+    schema,
   }),
 
   // Sesiones en Redis (no en PostgreSQL)
