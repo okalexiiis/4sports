@@ -3,6 +3,7 @@ import { PresignedUrlResponseSchema } from './schemas'
 
 export const getPresignedUrlDetail = {
   summary: 'Get presigned upload URL',
+  security: [{ cookieAuth: [] }],
   description:
     'Returns a presigned PUT URL for uploading directly to Cloudflare R2 (valid 300s). ' +
     'Allowed content types: image/jpeg, image/png, image/webp, image/gif, application/pdf. ' +

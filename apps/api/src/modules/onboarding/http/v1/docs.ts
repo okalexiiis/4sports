@@ -8,6 +8,7 @@ import {
 
 export const completePlayerOnboardingDetail = {
   summary: 'Complete player onboarding',
+  security: [{ cookieAuth: [] }],
   description:
     'Creates the profile row for a first-time player. Returns 409 if onboarding is already complete or if the username is taken (includes suggestions).',
   responses: {
@@ -19,6 +20,7 @@ export const completePlayerOnboardingDetail = {
 
 export const checkUsernameDetail = {
   summary: 'Check username availability',
+  security: [{ cookieAuth: [] }],
   description: 'Real-time check for username uniqueness. Returns suggestions when taken.',
   responses: {
     200: ApiResponses.success(UsernameCheckSchema, 'Availability result'),
@@ -28,6 +30,7 @@ export const checkUsernameDetail = {
 
 export const completeOrgOnboardingDetail = {
   summary: 'Complete organizer onboarding',
+  security: [{ cookieAuth: [] }],
   description:
     'Atomically creates profile, organization, owner membership, and free subscription in a single transaction. Returns 409 with suggestions if username or slug is taken.',
   responses: {
@@ -39,6 +42,7 @@ export const completeOrgOnboardingDetail = {
 
 export const checkSlugDetail = {
   summary: 'Check slug availability',
+  security: [{ cookieAuth: [] }],
   description: 'Real-time check for organization slug uniqueness. Returns suggestions when taken.',
   responses: {
     200: ApiResponses.success(SlugCheckSchema, 'Availability result'),
