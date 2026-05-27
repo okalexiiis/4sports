@@ -3,7 +3,14 @@ import type { Result } from '@4sports/utils/result'
 import type { Context } from 'elysia'
 import { logger } from '@/shared/logger'
 
-type PaginationMeta = { page?: number; total?: number }
+type PaginationMeta = {
+  page?: number
+  limit?: number
+  total?: number
+  total_pages?: number
+  has_next?: boolean
+  has_prev?: boolean
+}
 
 function resolveStatus(code: string): number {
   if (code.includes('NOT_FOUND')) return 404

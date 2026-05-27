@@ -1,0 +1,5 @@
+export const AuthErrorCodes = {
+  UNAUTHORIZED: 'AUTH_UNAUTHORIZED',
+  ORG_NOT_FOUND: 'AUTH_ORG_NOT_FOUND',
+  ORG_FORBIDDEN: 'AUTH_ORG_FORBIDDEN',
+} as const

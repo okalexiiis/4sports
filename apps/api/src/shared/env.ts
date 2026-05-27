@@ -7,6 +7,8 @@ function requireEnv(key: string): string {
 export const env = {
   DATABASE_URL: requireEnv('DATABASE_URL'),
   REDIS_URL: requireEnv('REDIS_URL'),
+  BETTER_AUTH_SECRET: requireEnv('BETTER_AUTH_SECRET'),
+  API_URL: requireEnv('API_URL'),
   GOOGLE_CLIENT_ID: requireEnv('GOOGLE_CLIENT_ID'),
   GOOGLE_CLIENT_SECRET: requireEnv('GOOGLE_CLIENT_SECRET'),
   FACEBOOK_CLIENT_ID: requireEnv('FACEBOOK_CLIENT_ID'),

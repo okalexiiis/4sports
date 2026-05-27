@@ -1,0 +1,9 @@
+import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+
+export const permissions = pgTable('permissions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull().unique(),
+  description: text('description'),
+  module: text('module').notNull(),
+  created_at: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+})

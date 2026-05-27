@@ -1,4 +1,9 @@
-# Hitos 1 y 2: Autenticación, Roles, Torneos y Equipos
+# 4Sports — Documento Técnico del Equipo
+## Hitos 1 y 2: Autenticación, Roles, Torneos y Equipos
+
+> Para: Alexis, Josue, Garib, Ivan
+> Complementa el PRD — este documento es sobre **cómo se construye**, no sobre qué se construye.
+> El schema completo vive en `schema_v4.sql`. Los casos de uso detallados están en los bloques de UC.
 
 ---
 
@@ -15,7 +20,7 @@ Cada sección tiene tres partes:
 ## Stack de referencia rápida
 
 | Capa | Tecnología | Nota |
-| --- | --- | --- |
+|---|---|---|
 | Runtime | Bun | Todo corre sobre Bun — no Node |
 | API | ElysiaJS | REST + WebSockets nativos |
 | ORM | Drizzle | SQL-first, sin magic |
@@ -33,9 +38,9 @@ La API sigue capas estrictas. **Las capas no se mezclan.**
 
 ```mermaid
 flowchart LR
-    A([Request]) --> B[Routes\\nElysia]
-    B --> C[Service\\nLógica de negocio]
-    C --> D[Repository\\nDrizzle queries]
+    A([Request]) --> B[Routes\nElysia]
+    B --> C[Use Case\nLógica de negocio]
+    C --> D[Repository\nDrizzle queries]
     D --> E[(PostgreSQL)]
     C --> F[(Redis)]
 
@@ -46,7 +51,7 @@ flowchart LR
     style F fill:#F1EFE8,stroke:#5F5E5A,color:#444441
 ```
 
-**Regla:** las rutas solo llaman a servicios. Los servicios solo llaman a repositorios. Los repositorios solo hacen queries con Drizzle. Si algo necesita Redis, lo maneja el servicio — nunca la ruta ni el repositorio.
+**Regla:** las rutas solo llaman a casos de uso. Los casos de uso solo llaman a repositorios. Los repositorios solo hacen queries con Drizzle. Si algo necesita Redis, lo maneja el caso de uso — nunca la ruta ni el repositorio.
 
 ---
 
@@ -54,27 +59,62 @@ flowchart LR
 
 ```
 apps/api/src/
+├── v1/
+│   └── index.ts                 ← agrega todas las rutas bajo /v1
 ├── modules/
-│   ├── auth/
-│   │   ├── auth.routes.ts
-│   │   ├── auth.service.ts
-│   │   ├── auth.repository.ts
-│   │   └── auth.schema.ts       ← validación Typebox
-│   ├── organizations/
-│   ├── tournaments/
-│   ├── teams/
-│   ├── players/
-│   └── matches/
+│   ├── auth/                    ← /v1/me, /v1/context
+│   │   ├── auth.entity.ts       ← tipo de dominio
+│   │   ├── auth.repository.ts   ← interface
+│   │   ├── drizzle-auth.repository.ts ← impl Drizzle
+│   │   ├── errors/
+│   │   │   ├── codes.ts
+│   │   │   └── index.ts
+│   │   ├── http/v1/
+│   │   │   ├── routes.ts
+│   │   │   ├── schemas.ts       ← validación TypeBox
+│   │   │   └── docs.ts          ← OpenAPI
+│   │   └── use-cases/
+│   │       ├── get-me.use-case.ts
+│   │       └── set-context.use-case.ts
+│   ├── onboarding/              ← /v1/onboarding/player|organizer, /v1/check-username|slug
+│   │   ├── onboarding.entity.ts
+│   │   ├── onboarding.repository.ts
+│   │   ├── drizzle-onboarding.repository.ts
+│   │   ├── errors/
+│   │   ├── http/v1/
+│   │   │   ├── routes.ts
+│   │   │   ├── schemas.ts
+│   │   │   └── docs.ts
+│   │   └── use-cases/
+│   └── organizations/           ← /v1/organizations/:orgId[/members]
+│       ├── organization.entity.ts
+│       ├── organization.repository.ts
+│       ├── drizzle-organization.repository.ts
+│       ├── errors/
+│       ├── http/v1/
+│       │   ├── routes.ts
+│       │   ├── schemas.ts
+│       │   └── docs.ts
+│       └── use-cases/
 ├── shared/
+│   ├── api-response.ts          ← formato estándar de respuesta
+│   ├── env.ts                   ← variables de entorno
+│   ├── logger.ts                ← instancia de log
+│   ├── versioning.ts            ← prefijo /v{N}
 │   ├── middleware/
 │   │   ├── auth.guard.ts        ← valida sesión BetterAuth
 │   │   ├── org.guard.ts         ← valida scope de organización
-│   │   └── error.handler.ts
+│   │   ├── feature.guard.ts     ← valida feature del plan
+│   │   └── request-logger.ts    ← requestId + log de duración
 │   ├── db/
 │   │   ├── client.ts            ← instancia Drizzle
-│   │   └── redis.ts             ← instancia Redis
-│   └── lib/
-│       └── r2.ts                ← cliente Cloudflare R2
+│   │   ├── redis.ts             ← instancia Redis
+│   │   ├── schemas/             ← tablas Drizzle (profiles, organizations, ...)
+│   │   └── seeds/               ← datos iniciales (planes, permisos, ...)
+│   ├── lib/
+│   │   └── auth.ts              ← configuración BetterAuth
+│   └── openapi/
+│       └── responses.ts         ← helpers OpenAPI
 └── index.ts
 ```
 
@@ -85,23 +125,21 @@ apps/api/src/
 ### URLs
 
 ```
-/api/v1/{recurso}
-/api/v1/{recurso}/{id}
-/api/v1/{recurso}/{id}/{sub-recurso}
+/v1/{recurso}
+/v1/{recurso}/{id}
+/v1/{recurso}/{id}/{sub-recurso}
 ```
 
 Ejemplos:
-
 ```
-GET  /api/v1/organizations
-GET  /api/v1/organizations/:orgId/tournaments
-POST /api/v1/tournaments/:tournamentId/teams
+GET  /v1/organizations
+GET  /v1/organizations/:orgId/tournaments
+POST /v1/tournaments/:tournamentId/teams
 ```
 
 ### Formato de respuesta — siempre el mismo
 
 **Éxito:**
-
 ```json
 {
   "data": { ... },
@@ -110,7 +148,6 @@ POST /api/v1/tournaments/:tournamentId/teams
 ```
 
 **Error:**
-
 ```json
 {
   "error": {
@@ -124,7 +161,7 @@ POST /api/v1/tournaments/:tournamentId/teams
 ### Códigos de error más usados
 
 | Código HTTP | Cuándo |
-| --- | --- |
+|---|---|
 | 400 | Datos inválidos en el body |
 | 401 | Sin sesión activa |
 | 403 | Sin permisos para esa operación |
@@ -156,7 +193,7 @@ sequenceDiagram
 
     C->>BA: POST /auth/sign-in
     BA-->>C: Cookie de sesión
-    C->>API: GET /api/v1/me
+    C->>API: GET /v1/me
     API->>R: Verificar sesión
     R-->>API: user.id válido
     API->>DB: SELECT profiles WHERE user_id
@@ -168,21 +205,19 @@ sequenceDiagram
 
 ### Endpoints — Auth y perfil
 
-### `GET /api/v1/me`
-
+#### `GET /v1/me`
 Retorna el usuario actual con su perfil, organizaciones activas y contexto seleccionado.
 
 **Requiere:** sesión activa.
 
 **Respuesta:**
-
 ```json
 {
   "data": {
     "user": { "id": "...", "email": "...", "name": "..." },
     "profile": {
       "username": "alexis_mx",
-      "avatar_url": "<https://r2>.../avatar.jpg",
+      "avatar_url": "https://r2.../avatar.jpg",
       "city": "Hermosillo",
       "initial_intent": "organizer",
       "onboarding_completed_at": "2025-06-01T..."
@@ -199,18 +234,15 @@ Retorna el usuario actual con su perfil, organizaciones activas y contexto selec
 ```
 
 **Reglas del backend:**
-
 - Si `profile` es `null`: el usuario no completó el onboarding. El cliente debe redirigir al flujo de onboarding.
 - `active_context` viene de Redis. Si no existe en Redis (primera sesión), el backend lo calcula: si tiene 1 org → selecciona automáticamente. Si tiene 0 orgs → contexto de jugador. Si tiene 2+ orgs → retorna `null` y el cliente muestra el selector.
 
 ---
 
-### `POST /api/v1/onboarding/player`
-
+#### `POST /v1/onboarding/player`
 Completa el onboarding del jugador.
 
 **Body:**
-
 ```json
 {
   "username": "carlos_delantero",
@@ -222,19 +254,16 @@ Completa el onboarding del jugador.
 ```
 
 **Reglas del backend:**
-
 - `username` único global — validar contra `profiles.username` antes de insertar.
 - Si `username` está tomado: `409` con sugerencias de variantes (`carlos_delantero_2`).
 - Al completar: `profiles.onboarding_completed_at = NOW()`, `initial_intent = 'player'`.
 
 ---
 
-### `POST /api/v1/onboarding/organizer`
-
+#### `POST /v1/onboarding/organizer`
 Completa el onboarding del organizador en un solo request. Crea perfil + organización + membership + suscripción.
 
 **Body:**
-
 ```json
 {
   "profile": {
@@ -253,7 +282,6 @@ Completa el onboarding del organizador en un solo request. Crea perfil + organiz
 ```
 
 **Reglas del backend:**
-
 - Todo en una transacción atómica. Si algo falla, se hace rollback completo.
 - Orden: crear `profiles` → crear `organizations` → crear `organization_members` (owner) → crear `organizer_subscriptions`.
 - Si `slug` ya existe: `409`. El cliente debe ofrecer variantes.
@@ -262,18 +290,15 @@ Completa el onboarding del organizador en un solo request. Crea perfil + organiz
 
 ---
 
-### `PUT /api/v1/context`
-
+#### `PUT /v1/context`
 Cambia la organización activa del usuario (selector de contexto).
 
 **Body:**
-
 ```json
 { "organization_id": "uuid-de-la-org" }
 ```
 
 **Reglas del backend:**
-
 - Validar que el usuario es miembro activo de esa organización.
 - Guardar en Redis: `context:{user_id}` = `{ organization_id, role }`.
 - Si `organization_id = null`: contexto de jugador.
@@ -282,25 +307,21 @@ Cambia la organización activa del usuario (selector de contexto).
 
 ### Endpoints — Organizaciones y miembros
 
-### `GET /api/v1/organizations/:orgId`
-
+#### `GET /v1/organizations/:orgId`
 Retorna la organización y el rol del usuario en ella.
 
 **Reglas del backend:**
-
 - Solo miembros activos pueden ver la organización.
 - `403` si el usuario no es miembro.
 
 ---
 
-### `POST /api/v1/organizations/:orgId/members`
-
+#### `POST /v1/organizations/:orgId/members`
 Invita a un nuevo miembro.
 
 **Requiere:** rol `owner` o `admin` en la organización.
 
 **Body:**
-
 ```json
 {
   "email": "josue@ejemplo.com",
@@ -310,7 +331,6 @@ Invita a un nuevo miembro.
 ```
 
 **Reglas del backend:**
-
 - Si el email ya es miembro activo: `409`.
 - Si el email ya tiene invitación pendiente: ofrecer reenvío, no crear duplicado.
 - Un `admin` no puede invitar a `owner` ni a otro `admin` — `403`.
@@ -319,32 +339,27 @@ Invita a un nuevo miembro.
 
 ---
 
-### `PUT /api/v1/organizations/:orgId/members/:memberId`
-
+#### `PUT /v1/organizations/:orgId/members/:memberId`
 Cambia el rol de un miembro.
 
 **Requiere:** rol `owner` o `admin`.
 
 **Body:**
-
 ```json
 { "role": "admin", "tournament_ids": [] }
 ```
 
 **Reglas del backend:**
-
 - No se puede degradar al único `owner` de la organización.
 - Un `admin` no puede promover a `owner` ni a otro `admin`.
 - Registrar en `audit_logs`.
 
 ---
 
-### `DELETE /api/v1/organizations/:orgId/members/:memberId`
-
+#### `DELETE /v1/organizations/:orgId/members/:memberId`
 Remueve a un miembro.
 
 **Reglas del backend:**
-
 - No se puede remover al único `owner`.
 - `admin` no puede remover a otro `admin`.
 - `organization_members.status = 'left'`, `left_at = NOW()`.
@@ -354,49 +369,45 @@ Remueve a un miembro.
 
 ### Contrato del frontend — Hito 1
 
-### Pantallas y datos que necesitan
+#### Pantallas y datos que necesitan
 
 **Pantalla: Selección de contexto (al login con múltiples orgs)**
 
 ```
-GET /api/v1/me
+GET /v1/me
 → Usar organizations[] para mostrar la lista
 → Cada org muestra: name, logo_url, role, slug
-→ Al elegir: PUT /api/v1/context
+→ Al elegir: PUT /v1/context
 ```
 
 **Pantalla: Onboarding jugador (2 pasos)**
-
 ```
 Paso 1: Datos personales
-  POST /api/v1/onboarding/player
+  POST /v1/onboarding/player
 
 Validación en tiempo real de username:
-  GET /api/v1/check-username?username=carlos
+  GET /v1/check-username?username=carlos
   → { available: true | false, suggestions: [...] }
 ```
 
 **Pantalla: Onboarding organizador (3 pasos)**
-
 ```
 Paso 1: Datos personales
 Paso 2: Datos de organización
-  GET /api/v1/check-slug?slug=liga-verano → { available: true | false }
+  GET /v1/check-slug?slug=liga-verano → { available: true | false }
 Paso 3: Elegir plan
-  POST /api/v1/onboarding/organizer (todo en un request al confirmar)
+  POST /v1/onboarding/organizer (todo en un request al confirmar)
 ```
 
 **Pantalla: Panel de miembros**
-
 ```
-GET  /api/v1/organizations/:orgId/members
-POST /api/v1/organizations/:orgId/members
-PUT  /api/v1/organizations/:orgId/members/:memberId
-DEL  /api/v1/organizations/:orgId/members/:memberId
+GET  /v1/organizations/:orgId/members
+POST /v1/organizations/:orgId/members
+PUT  /v1/organizations/:orgId/members/:memberId
+DEL  /v1/organizations/:orgId/members/:memberId
 ```
 
 **Datos del miembro para la tabla:**
-
 ```json
 {
   "id": "...",
@@ -416,28 +427,26 @@ DEL  /api/v1/organizations/:orgId/members/:memberId
 
 ```mermaid
 flowchart TD
-    A([Organizador]) --> B[POST /tournaments\\nstatus = draft]
+    A([Organizador]) --> B[POST /tournaments\nstatus = draft]
     B --> C{¿Publica?}
-    C -->|No| D[Edita en borrador\\nPUT /tournaments/:id]
+    C -->|No| D[Edita en borrador\nPUT /tournaments/:id]
     C -->|Sí| E[POST /tournaments/:id/publish]
-    E --> F{Validaciones\\npre-publicación}
+    E --> F{Validaciones\npre-publicación}
     F -->|Falla| G[422 con detalle]
-    F -->|OK| H[status = open_registration\\ncreated_under_plan estampado]
-    H --> I[Notificaciones\\na miembros de la org]
+    F -->|OK| H[status = open_registration\ncreated_under_plan estampado]
+    H --> I[Notificaciones\na miembros de la org]
 ```
 
 ---
 
 ### Endpoints — Torneos
 
-### `POST /api/v1/organizations/:orgId/tournaments`
-
+#### `POST /v1/organizations/:orgId/tournaments`
 Crea un torneo en borrador.
 
 **Requiere:** rol `owner`, `admin`, u `organizer` con el torneo en su `tournament_ids`.
 
 **Body:**
-
 ```json
 {
   "name": "Liga Verano 2025",
@@ -470,7 +479,6 @@ Crea un torneo en borrador.
 ```
 
 **Reglas del backend:**
-
 - Verificar límite de torneos activos del plan: `org_has_feature(orgId, 'max_active_tournaments')`.
 - Verificar que el formato está disponible en el plan: Round Robin y Single Elimination siempre disponibles. Double Elimination requiere Starter+. Modo Mundial requiere Pro+.
 - Generar `slug` automático desde `name`. Si existe: agregar sufijo numérico.
@@ -479,24 +487,20 @@ Crea un torneo en borrador.
 
 ---
 
-### `PUT /api/v1/tournaments/:tournamentId`
-
+#### `PUT /v1/tournaments/:tournamentId`
 Actualiza cualquier campo del torneo mientras esté en borrador.
 
 **Reglas del backend:**
-
 - Solo editable si `status = 'draft'`.
 - Si `status` es cualquier otro: `422 TOURNAMENT_NOT_DRAFT`.
 - Actualizar `wizard_step` según qué sección se está guardando.
 
 ---
 
-### `POST /api/v1/tournaments/:tournamentId/publish`
-
+#### `POST /v1/tournaments/:tournamentId/publish`
 Publica el torneo. Transición de `draft` → `open_registration` o `private`.
 
 **Body:**
-
 ```json
 { "visibility": "public" }
 ```
@@ -506,39 +510,35 @@ Publica el torneo. Transición de `draft` → `open_registration` o `private`.
 1. Verificar que el torneo existe y está en `draft`.
 2. Verificar que el actor tiene permisos sobre el torneo.
 3. Validaciones pre-publicación:
-    - `format_id` asignado.
-    - `sport_id` asignado.
-    - `settings.tiebreaker` no vacío.
-    - Plan activo cubre el formato elegido.
-    - Límite de torneos simultáneos no superado.
+   - `format_id` asignado.
+   - `sport_id` asignado.
+   - `settings.tiebreaker` no vacío.
+   - Plan activo cubre el formato elegido.
+   - Límite de torneos simultáneos no superado.
 4. Si alguna validación falla: `422` con el array de errores específicos.
 5. Si todas pasan:
-    - `tournaments.status = 'open_registration'` (si `visibility = 'public'`) o `'private'`.
-    - `tournaments.created_under_plan = plan_slug_actual` — **inmutable desde aquí**.
-    - Generar `join_code` si no existe.
-    - Crear `tournament_metrics` defaults del deporte si no existen.
-    - Notificar a miembros de la org con rol ≥ `organizer`.
+   - `tournaments.status = 'open_registration'` (si `visibility = 'public'`) o `'private'`.
+   - `tournaments.created_under_plan = plan_slug_actual` — **inmutable desde aquí**.
+   - Generar `join_code` si no existe.
+   - Crear `tournament_metrics` defaults del deporte si no existen.
+   - Notificar a miembros de la org con rol ≥ `organizer`.
 
 ---
 
-### `GET /api/v1/tournaments/:tournamentId`
-
+#### `GET /v1/tournaments/:tournamentId`
 Retorna el torneo completo.
 
 **Respuesta diferenciada por rol:**
-
-- Sin sesión / fanático: campos públicos únicamente. Sin `settings` internos, sin finanzas.
+- Sin sesión / fanático: campos públicos únicamente. Sin `settings` internos, sin finanzas. Los torneos con `status = 'completed'` o `'archived'` **son accesibles sin cuenta** si el organizador configuró el torneo como público — resultados, campeones y estadísticas son visibles para cualquier visitante.
 - Capitán / jugador: agrega estado de inscripción del equipo.
 - Organizador / Admin / Owner: vista completa incluyendo configuración interna.
 
 ---
 
-### `GET /api/v1/organizations/:orgId/tournaments`
-
+#### `GET /v1/organizations/:orgId/tournaments`
 Lista todos los torneos de la organización.
 
 **Query params:**
-
 ```
 ?status=active        → filtrar por estado
 ?tags=Femenil         → filtrar por tag
@@ -547,12 +547,10 @@ Lista todos los torneos de la organización.
 
 ---
 
-### `GET /api/v1/tournaments` *(público)*
-
+#### `GET /v1/tournaments` *(público)*
 Directorio público de torneos. Solo torneos con `is_public = true` y `status` en `open_registration` o `active`.
 
 **Query params:**
-
 ```
 ?sport=futbol
 ?city=Hermosillo
@@ -564,12 +562,10 @@ Directorio público de torneos. Solo torneos con `is_public = true` y `status` e
 
 ### Endpoints — Equipos e inscripciones
 
-### `POST /api/v1/teams`
-
+#### `POST /v1/teams`
 Crea un equipo nuevo.
 
 **Body:**
-
 ```json
 {
   "name": "Tigres FC",
@@ -582,25 +578,21 @@ Crea un equipo nuevo.
 ```
 
 **Reglas del backend:**
-
 - `scope = 'tournament_scoped'` por default.
 - Crear `team_members` para el creador con `role = 'captain'`, `status = 'active'`.
 - `owned_by_user_id = user.id`.
 
 ---
 
-### `POST /api/v1/tournaments/:tournamentId/registrations`
-
+#### `POST /v1/tournaments/:tournamentId/registrations`
 Inscribe un equipo en un torneo.
 
 **Body:**
-
 ```json
 { "team_id": "uuid-del-equipo" }
 ```
 
 **Reglas del backend:**
-
 - Verificar que el torneo tiene `status = 'open_registration'`.
 - Verificar que el actor es capitán del equipo.
 - Verificar que el equipo no está ya inscrito en el torneo: `UNIQUE (tournament_id, team_id)`.
@@ -611,14 +603,12 @@ Inscribe un equipo en un torneo.
 
 ---
 
-### `PUT /api/v1/tournaments/:tournamentId/registrations/:registrationId`
-
+#### `PUT /v1/tournaments/:tournamentId/registrations/:registrationId`
 Aprueba, rechaza o pone en espera una inscripción.
 
 **Requiere:** rol organizador sobre el torneo.
 
 **Body:**
-
 ```json
 {
   "status": "approved",
@@ -627,7 +617,6 @@ Aprueba, rechaza o pone en espera una inscripción.
 ```
 
 **Reglas del backend:**
-
 - Solo transiciones válidas: `pending → approved | rejected | waitlisted`.
 - Si `approved`: generar `fee_invoices` para todos los `fee_items` de tipo `per_team`.
 - Notificar al capitán con el resultado.
@@ -635,12 +624,10 @@ Aprueba, rechaza o pone en espera una inscripción.
 
 ---
 
-### `POST /api/v1/teams/:teamId/players`
-
+#### `POST /v1/teams/:teamId/players`
 Agrega un jugador al equipo (perfil puente o usuario existente).
 
 **Body — perfil puente:**
-
 ```json
 {
   "type": "guest",
@@ -653,7 +640,6 @@ Agrega un jugador al equipo (perfil puente o usuario existente).
 ```
 
 **Body — usuario existente:**
-
 ```json
 {
   "type": "user",
@@ -664,47 +650,41 @@ Agrega un jugador al equipo (perfil puente o usuario existente).
 ```
 
 **Reglas del backend:**
-
 - Para `guest`: crear `players` con `is_guest = true`, `guest_created_by = user.id`. Crear `team_members` con `status = 'active'` (no requiere aceptación).
 - Para `user`: crear `team_invitations`. El jugador debe aceptar antes de aparecer en el roster activo.
 - Validar elegibilidad del jugador si hay torneo activo asociado al equipo.
 
 ---
 
-### `POST /api/v1/players/:playerId/claim`
-
-El jugador real reclama un perfil puente.
+#### `POST /v1/players/:playerId/claim`
+El jugador real reclama un perfil puente. También puede ser iniciado por el capitán o el coach enviando una invitación de vinculación al jugador.
 
 **Body:**
-
 ```json
 { "team_id": "uuid-del-equipo" }
 ```
 
 **Reglas del backend:**
-
 - Verificar que `players.is_guest = true` y `players.user_id IS NULL`.
-- Crear notificación al capitán del equipo para que apruebe.
-- No vincular hasta que el capitán apruebe — `players.user_id` sigue siendo `null`.
+- Crear notificación al capitán **y al coach** del equipo para que apruebe cualquiera de ellos.
+- No vincular hasta que el capitán o coach apruebe — `players.user_id` sigue siendo `null`.
 
 ---
 
-### `PUT /api/v1/players/:playerId/claim/:claimId`
-
-El capitán aprueba o rechaza la reclamación de un perfil puente.
+#### `PUT /v1/players/:playerId/claim/:claimId`
+El capitán **o coach** aprueba o rechaza la reclamación de un perfil puente.
 
 **Body:**
-
 ```json
 { "approved": true }
 ```
 
 **Reglas del backend:**
-
+- Actor válido: `team_members.role IN ('captain', 'coach')` del equipo al que pertenece el perfil.
 - Si `approved = true`:
-    - `players.user_id = user.id` del reclamante.
-    - `players.is_guest = false`.
-    - Historial intacto — no recalcular estadísticas pasadas.
+  - `players.user_id = user.id` del reclamante.
+  - `players.is_guest = false`.
+  - Historial intacto — no recalcular estadísticas pasadas.
 - Si `approved = false`: la reclamación queda rechazada. El perfil puente permanece sin cambios.
 
 ---
@@ -717,11 +697,11 @@ El motor corre en dos momentos: al inscribir el equipo y al abrir el partido.
 flowchart TD
     A([Validar jugador]) --> B{¿Jugador existe en la plataforma?}
     B -->|No| Z1[❌ Bloquear]
-    B -->|Sí| C{¿Inscrito en el roster\\ndel equipo para ESTE torneo?}
+    B -->|Sí| C{¿Inscrito en el roster\ndel equipo para ESTE torneo?}
     C -->|No| Z2[❌ Bloquear]
-    C -->|Sí| D{¿Sanción activa\\nen ESTA organización?}
+    C -->|Sí| D{¿Sanción activa\nen ESTA organización?}
     D -->|Sí| Z3[❌ Bloquear]
-    D -->|No| E{¿Cumple edad y género\\ndel torneo actual?}
+    D -->|No| E{¿Cumple edad y género\ndel torneo actual?}
     E -->|No| Z4[❌ Bloquear]
     E -->|Sí| F[✅ Autorizado]
 
@@ -735,7 +715,7 @@ flowchart TD
 **Comportamiento según `validation_mode`:**
 
 | Modo | Comportamiento al inscribir equipo |
-| --- | --- |
+|---|---|
 | `strict` | Bloquea la inscripción si algún jugador verificado no cumple. No se puede enviar. |
 | `flexible` | Permite enviar con datos incompletos. El organizador revisa manualmente. |
 | `hybrid` | Bloquea jugadores verificados que no cumplen. Marca con alerta los perfiles puente sin datos suficientes. |
@@ -743,7 +723,7 @@ flowchart TD
 **Comportamiento según `eligibility_mode`:**
 
 | Modo | Comportamiento |
-| --- | --- |
+|---|---|
 | `flexible` | Un jugador puede estar en múltiples equipos del mismo torneo. |
 | `strict` | Si el `user_id` ya está en otro equipo del mismo torneo → bloqueo automático. |
 
@@ -751,38 +731,37 @@ flowchart TD
 
 ### Contrato del frontend — Hito 2
 
-### Pantalla: Asistente de creación de torneo
+#### Pantalla: Asistente de creación de torneo
 
-El asistente guarda el progreso en cada paso con un `PUT /api/v1/tournaments/:id`. Cada paso actualiza `wizard_step`.
+El asistente guarda el progreso en cada paso con un `PUT /v1/tournaments/:id`. Cada paso actualiza `wizard_step`.
 
 ```
 Paso 1 — Info básica:
-  POST /api/v1/organizations/:orgId/tournaments
+  POST /v1/organizations/:orgId/tournaments
   → Retorna el torneo con id. Guardar id en el estado local.
-  → Mostrar slugs sugeridos: GET /api/v1/check-slug?slug=...
+  → Mostrar slugs sugeridos: GET /v1/check-slug?slug=...
 
 Paso 2 — Formato:
-  GET /api/v1/sports → lista de deportes con sus defaults
-  GET /api/v1/tournament-formats → lista de formatos disponibles por plan
-  PUT /api/v1/tournaments/:id
+  GET /v1/sports → lista de deportes con sus defaults
+  GET /v1/tournament-formats → lista de formatos disponibles por plan
+  PUT /v1/tournaments/:id
 
 Paso 3 — Elegibilidad:
-  PUT /api/v1/tournaments/:id
+  PUT /v1/tournaments/:id
 
 Paso 4 — Inscripciones:
-  PUT /api/v1/tournaments/:id
+  PUT /v1/tournaments/:id
 
 Paso 5 — Campos de jugadores:
-  PUT /api/v1/tournaments/:id
+  PUT /v1/tournaments/:id
 
 Paso 6 — Publicar:
-  POST /api/v1/tournaments/:id/publish
+  POST /v1/tournaments/:id/publish
   → Si 422: mostrar lista de errores por campo
   → Si 200: redirigir al panel del torneo
 ```
 
 **Datos del torneo para la vista de panel:**
-
 ```json
 {
   "id": "...",
@@ -802,21 +781,20 @@ Paso 6 — Publicar:
 
 ---
 
-### Pantalla: Gestión de inscripciones
+#### Pantalla: Gestión de inscripciones
 
 ```
-GET /api/v1/tournaments/:id/registrations?status=pending
+GET /v1/tournaments/:id/registrations?status=pending
 → Lista de equipos pendientes de aprobación
 
-GET /api/v1/tournaments/:id/registrations?status=approved
+GET /v1/tournaments/:id/registrations?status=approved
 → Lista de equipos aprobados
 
-PUT /api/v1/tournaments/:id/registrations/:registrationId
+PUT /v1/tournaments/:id/registrations/:registrationId
 → Aprobar / Rechazar / Lista de espera
 ```
 
 **Datos de la inscripción para la tarjeta de revisión:**
-
 ```json
 {
   "id": "...",
@@ -837,21 +815,20 @@ PUT /api/v1/tournaments/:id/registrations/:registrationId
 
 ---
 
-### Pantalla: Plantilla del equipo
+#### Pantalla: Plantilla del equipo
 
 ```
-GET  /api/v1/teams/:teamId/members
+GET  /v1/teams/:teamId/members
 → Lista de jugadores con status, rol y alertas de elegibilidad
 
-POST /api/v1/teams/:teamId/players
+POST /v1/teams/:teamId/players
 → Agregar jugador (perfil puente o usuario existente)
 
-DELETE /api/v1/teams/:teamId/members/:memberId
+DELETE /v1/teams/:teamId/members/:memberId
 → Remover jugador del equipo
 ```
 
 **Datos del jugador para la tarjeta del roster:**
-
 ```json
 {
   "player_id": "...",
@@ -874,19 +851,18 @@ DELETE /api/v1/teams/:teamId/members/:memberId
 ## Middleware y guards — referencia para Josue
 
 ### `auth.guard.ts`
-
 Aplica en todas las rutas protegidas. Verifica la sesión de BetterAuth y adjunta `user` al contexto.
 
-```tsx
+```typescript
 // Uso en rutas:
-app.use('/api/v1', authGuard)
+// Las rutas se agregan directamente en el grupo v1:
+// authV1Routes ya usa authGuard como beforeHandle interno
 ```
 
 ### `org.guard.ts`
-
 Verifica que el usuario tiene el rol mínimo requerido en la organización del contexto activo.
 
-```tsx
+```typescript
 // Uso:
 .get('/organizations/:orgId', handler, { beforeHandle: [orgGuard('viewer')] })
 .post('/organizations/:orgId/tournaments', handler, { beforeHandle: [orgGuard('organizer')] })
@@ -894,7 +870,6 @@ Verifica que el usuario tiene el rol mínimo requerido en la organización del c
 ```
 
 **Lógica interna del guard:**
-
 1. Leer `organization_id` del contexto activo en Redis.
 2. Verificar que coincide con el `:orgId` del path.
 3. Verificar que `organization_members.status = 'active'`.
@@ -902,10 +877,9 @@ Verifica que el usuario tiene el rol mínimo requerido en la organización del c
 5. Si el rol es `organizer`: verificar que el torneo está en su `tournament_ids[]`.
 
 ### `feature.guard.ts`
-
 Verifica que el plan activo de la organización soporta la feature requerida.
 
-```tsx
+```typescript
 .post('/tournaments/:id/publish', handler, {
   beforeHandle: [featureGuard('can_use_world_cup_format')]
 })
@@ -925,7 +899,7 @@ sequenceDiagram
     participant API as API
     participant R2 as Cloudflare R2
 
-    C->>API: POST /api/v1/upload/presigned
+    C->>API: POST /v1/upload/presigned
     Note right of C: { type: "avatar", file_name: "foto.jpg" }
     API->>R2: Generar URL prefirmada (PUT)
     R2-->>API: presigned_url (válida 5 min)
@@ -933,11 +907,10 @@ sequenceDiagram
     C->>R2: PUT presigned_url (subir el archivo directo)
     R2-->>C: 200 OK
     C->>API: Usar public_url en el campo correspondiente
-    Note right of C: avatar_url = "<https://r2>.../foto.jpg"
+    Note right of C: avatar_url = "https://r2.../foto.jpg"
 ```
 
 **Tipos de upload válidos:**
-
 ```
 avatar       → profiles.avatar_url
 org_logo     → organizations.logo_url
@@ -956,13 +929,11 @@ dispute_evidence  → match_disputes.evidence_urls[]
 Todos los endpoints de lista usan el mismo formato:
 
 **Query params:**
-
 ```
 ?page=1&limit=20
 ```
 
 **Respuesta:**
-
 ```json
 {
   "data": [...],
@@ -982,7 +953,6 @@ Todos los endpoints de lista usan el mismo formato:
 ## Notas para Garib e Ivan
 
 ### Estado de carga
-
 Todos los requests pueden estar en 3 estados: `loading`, `success`, `error`. Usar TanStack Query en web y el mismo patrón en mobile.
 
 ```
@@ -992,15 +962,12 @@ success → renderizar data
 ```
 
 ### Campos opcionales y nulls
-
 La API puede retornar `null` en campos opcionales. El frontend debe manejar esto sin crashes:
-
 - `avatar_url: null` → mostrar avatar placeholder
 - `logo_url: null` → mostrar iniciales del nombre
 - `eligibility_alerts: []` → no mostrar sección de alertas
 
 ### Deep links en mobile
-
 Las notificaciones incluyen `action_url`. En Expo Router, mapearlo a la ruta correspondiente:
 
 ```
@@ -1011,7 +978,6 @@ Las notificaciones incluyen `action_url`. En Expo Router, mapearlo a la ruta cor
 ```
 
 ### Formato de fechas
-
 La API siempre retorna fechas en ISO 8601 UTC. El frontend convierte a hora local del usuario para mostrar. Nunca mostrar la fecha raw.
 
 ```
@@ -1021,7 +987,6 @@ La API siempre retorna fechas en ISO 8601 UTC. El frontend convierte a hora loca
 ```
 
 ### Errores de validación (422)
-
 Cuando el backend retorna `422`, el `details` tiene la información por campo:
 
 ```json
@@ -1091,7 +1056,6 @@ Hito 2 (agrega):
 Estos datos deben existir en la BD antes de que cualquier usuario pueda usar el sistema:
 
 **`subscription_plans`**
-
 ```sql
 INSERT INTO subscription_plans (name, slug, price_monthly, features) VALUES
   ('Free',    'free',    0,      '{"max_active_tournaments": 2, "can_use_world_cup_format": false, "can_accept_online_payments": false}'),
@@ -1099,11 +1063,9 @@ INSERT INTO subscription_plans (name, slug, price_monthly, features) VALUES
   ('Pro',     'pro',     79900,  '{"max_active_tournaments": null, "can_use_world_cup_format": true, "can_accept_online_payments": true}'),
   ('Elite',   'elite',   149900, '{"max_active_tournaments": null, "can_use_world_cup_format": true, "can_accept_online_payments": true, "can_use_sub_admins": true}');
 ```
-
 *(Precios en centavos MXN — definir precios reales antes del Hito 5)*
 
 **`notification_types`** — al menos estos para el Hito 1:
-
 ```
 match_rescheduled       is_mutable: false
 match_result            is_mutable: true
