@@ -9,6 +9,7 @@ export interface TournamentFormatRef {
   id: string
   name: string
   slug: string
+  plan_required: string
 }
 
 export interface Tournament {

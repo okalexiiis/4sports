@@ -18,5 +18,6 @@ export interface ITournamentRepository {
   listPublic(filters: PublicTournamentFilters): Promise<PaginatedTournaments>
   isSlugTaken(slug: string, orgId: string, excludeId?: string): Promise<boolean>
   findOrgContext(tournamentId: string): Promise<OrgContext | null>
+  findOrgPlanContext(orgId: string): Promise<OrgContext | null>
   countActiveByOrg(orgId: string): Promise<number>
 }
