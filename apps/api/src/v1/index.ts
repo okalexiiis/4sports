@@ -2,6 +2,7 @@ import { authV1Routes } from '@/modules/auth/http/v1/routes'
 import { onboardingV1Routes } from '@/modules/onboarding/http/v1/routes'
 import { invitationsV1Routes } from '@/modules/organizations/http/v1/invitation-routes'
 import { organizationsV1Routes } from '@/modules/organizations/http/v1/routes'
+import { registrationsV1Routes } from '@/modules/registrations/http/v1/routes'
 import { sportsV1Routes } from '@/modules/sports/http/v1/routes'
 import { teamsV1Routes } from '@/modules/teams/http/v1/routes'
 import { tournamentFormatsV1Routes } from '@/modules/tournament-formats/http/v1/routes'
@@ -18,4 +19,5 @@ export const v1 = createVersion(1)
   .use(tournamentFormatsV1Routes)
   .use(tournamentsV1Routes)
   .use(teamsV1Routes)
+  .use(registrationsV1Routes)
   .use(uploadV1Routes)
