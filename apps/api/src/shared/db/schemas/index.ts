@@ -1,4 +1,5 @@
 export * from './audit-logs'
+export * from './auth.schema'
 export * from './enums'
 export * from './fcm-tokens'
 export * from './notification-preferences'
