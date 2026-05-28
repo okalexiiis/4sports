@@ -1,3 +1,4 @@
+import { seedHito3NotificationTypes } from './hito3'
 import { seedNotificationTypes } from './notification-types'
 import { seedPermissions } from './permissions'
 import { seedRolePermissions } from './role-permissions'
@@ -18,6 +19,9 @@ async function seed() {
 
   console.log('seeding notification types...')
   await seedNotificationTypes()
+
+  console.log('seeding hito3 notification types...')
+  await seedHito3NotificationTypes()
 
   console.log('seeding sports...')
   await seedSports()
