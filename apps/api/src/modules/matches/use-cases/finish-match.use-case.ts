@@ -3,6 +3,7 @@ import { err, ok } from '@4sports/utils/result'
 import { and, eq } from 'drizzle-orm'
 import { db } from '@/shared/db/client'
 import { matches, playerStatValues, playerSuspensions, sportEventTypes } from '@/shared/db/schemas'
+import { recalculateStandings } from '../../standings/use-cases/recalculate-standings.use-case'
 import { MatchErrors } from '../errors'
 import type { Match } from '../match.entity'
 import type { IMatchRepository } from '../match.repository'
@@ -14,7 +15,6 @@ export interface FinishMatchInput {
 
 export interface FinishMatchResult {
   match: Match
-  // false until D2 implements the full standings rebuild inside the transaction
   standingsUpdated: boolean
 }
 
@@ -88,8 +88,8 @@ export async function finishMatch(
       .where(eq(matches.id, input.matchId))
       .returning()
 
-    // Step 4 — Standings recalculation delegated to D2.
-    // TODO(D2): await recalculateStandings(tx, match.tournament_id)
+    // Step 4 — Full standings rebuild from all completed matches in the tournament.
+    await recalculateStandings({ tournamentId: match.tournament_id }, tx)
 
     // Step 5 — Confirm draft suspensions created during the live match.
     await tx
@@ -131,5 +131,5 @@ export async function finishMatch(
   // Step 6 — Enqueue BullMQ job outside the transaction so it only fires after commit.
   // TODO(H1): await matchFinishedQueue.add('match.finished', { matchId: input.matchId })
 
-  return ok({ match: rowToMatch(updatedRow), standingsUpdated: false })
+  return ok({ match: rowToMatch(updatedRow), standingsUpdated: true })
 }
