@@ -8,7 +8,7 @@ import type { IMatchRepository } from '../match.repository'
 // Unlisted statuses (walkover, cancelled) are terminal — no outgoing transitions.
 const VALID_TRANSITIONS: Partial<Record<MatchStatus, MatchStatus[]>> = {
   scheduled: ['live', 'postponed', 'walkover', 'cancelled'],
-  postponed: ['scheduled'],
+  postponed: ['scheduled', 'cancelled'],
   live: ['finished', 'suspended'],
   suspended: ['live', 'walkover'],
   finished: ['disputed'],
