@@ -10,20 +10,25 @@ import { MatchErrors } from '../../errors'
 import { createMatch } from '../../use-cases/create-match.use-case'
 import { finishMatch } from '../../use-cases/finish-match.use-case'
 import { getMatch } from '../../use-cases/get-match.use-case'
+import { getMatchResults } from '../../use-cases/get-match-results.use-case'
 import { listMatches } from '../../use-cases/list-matches.use-case'
+import { registerPeriodResults } from '../../use-cases/register-period-results.use-case'
 import { transitionMatchStatus } from '../../use-cases/transition-match-status.use-case'
 import {
   createMatchDetail,
   deleteMatchDetail,
   finishMatchDetail,
   getMatchDetail,
+  getMatchResultsDetail,
   listMatchesDetail,
+  registerPeriodResultsDetail,
   transitionStatusDetail,
   updateMatchDetail,
 } from './docs'
 import {
   CreateMatchBodySchema,
   ListMatchesQuerySchema,
+  RegisterPeriodResultsBodySchema,
   TransitionStatusBodySchema,
   UpdateMatchBodySchema,
 } from './schemas'
@@ -142,6 +147,29 @@ export const matchesV1Routes = new Elysia({ tags: ['Matches'] })
       beforeHandle: [authGuard, activeOrgGuard('organizer')],
       detail: finishMatchDetail,
     },
+  )
+  .post(
+    '/matches/:matchId/results/periods',
+    async (ctx) => {
+      const result = await registerPeriodResults(repo, {
+        matchId: ctx.params.matchId,
+        periods: ctx.body.periods,
+      })
+      return toApiResponse(ctx, result)
+    },
+    {
+      beforeHandle: [authGuard, activeOrgGuard('organizer')],
+      body: RegisterPeriodResultsBodySchema,
+      detail: registerPeriodResultsDetail,
+    },
+  )
+  .get(
+    '/matches/:matchId/results',
+    async (ctx) => {
+      const result = await getMatchResults(repo, ctx.params.matchId)
+      return toApiResponse(ctx, result)
+    },
+    { detail: getMatchResultsDetail },
   )
   .patch(
     '/matches/:matchId/status',

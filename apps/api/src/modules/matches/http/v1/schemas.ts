@@ -57,3 +57,32 @@ export const ListMatchesQuerySchema = Type.Object({
   round_id: Type.Optional(Type.String({ format: 'uuid' })),
   team_id: Type.Optional(Type.String({ format: 'uuid' })),
 })
+
+export const MatchResultSchema = Type.Object({
+  id: Type.String({ format: 'uuid' }),
+  match_id: Type.String({ format: 'uuid' }),
+  period_label: Type.String(),
+  period_index: Type.Number(),
+  home_score: Type.Number(),
+  away_score: Type.Number(),
+  created_at: Type.String({ format: 'date-time' }),
+})
+
+export const PeriodInputSchema = Type.Object({
+  period_label: Type.String({ minLength: 1, maxLength: 50 }),
+  period_index: Type.Integer({ minimum: 0 }),
+  home_score: Type.Integer({ minimum: 0 }),
+  away_score: Type.Integer({ minimum: 0 }),
+})
+
+export const RegisterPeriodResultsBodySchema = Type.Object({
+  periods: Type.Array(PeriodInputSchema, { minItems: 1 }),
+})
+
+export const MatchResultsOutputSchema = Type.Object({
+  final: Type.Object({
+    home: Type.Union([Type.Number(), Type.Null()]),
+    away: Type.Union([Type.Number(), Type.Null()]),
+  }),
+  periods: Type.Array(MatchResultSchema),
+})
