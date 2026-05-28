@@ -1,5 +1,11 @@
+import { Type } from '@sinclair/typebox'
 import { ApiResponses } from '@/shared/openapi/responses'
 import { MatchSchema } from './schemas'
+
+const FinishMatchResultSchema = Type.Object({
+  match: MatchSchema,
+  standingsUpdated: Type.Boolean(),
+})
 
 const security = [{ cookieAuth: [] }]
 
@@ -50,6 +56,18 @@ export const deleteMatchDetail = {
   responses: {
     204: { description: 'Match cancelled' },
     400: ApiResponses.error('Match cannot be cancelled in its current status'),
+    404: ApiResponses.notFound('Match not found'),
+  },
+}
+
+export const finishMatchDetail = {
+  summary: 'Finish match',
+  description:
+    'Closes a live match in a single transaction: calculates score from goal events, determines winner, updates standings, confirms draft suspensions, and advances bracket. Requires organizer role.',
+  security,
+  responses: {
+    200: ApiResponses.success(FinishMatchResultSchema, 'Match closed'),
+    400: ApiResponses.error('Match is not live'),
     404: ApiResponses.notFound('Match not found'),
   },
 }
