@@ -8,12 +8,14 @@ import { authGuard } from '@/shared/middleware/auth.guard'
 import { DrizzleMatchRepository } from '../../drizzle-match.repository'
 import { MatchErrors } from '../../errors'
 import { createMatch } from '../../use-cases/create-match.use-case'
+import { finishMatch } from '../../use-cases/finish-match.use-case'
 import { getMatch } from '../../use-cases/get-match.use-case'
 import { listMatches } from '../../use-cases/list-matches.use-case'
 import { transitionMatchStatus } from '../../use-cases/transition-match-status.use-case'
 import {
   createMatchDetail,
   deleteMatchDetail,
+  finishMatchDetail,
   getMatchDetail,
   listMatchesDetail,
   transitionStatusDetail,
@@ -124,6 +126,21 @@ export const matchesV1Routes = new Elysia({ tags: ['Matches'] })
     {
       beforeHandle: [authGuard, activeOrgGuard('admin')],
       detail: deleteMatchDetail,
+    },
+  )
+  .post(
+    '/matches/:matchId/finish',
+    async (ctx) => {
+      const { user } = ctx.store as AuthStore
+      const result = await finishMatch(repo, {
+        matchId: ctx.params.matchId,
+        actorId: user.id,
+      })
+      return toApiResponse(ctx, result)
+    },
+    {
+      beforeHandle: [authGuard, activeOrgGuard('organizer')],
+      detail: finishMatchDetail,
     },
   )
   .patch(
