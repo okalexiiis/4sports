@@ -1,6 +1,6 @@
 import { Type } from '@sinclair/typebox'
 import { ApiResponses } from '@/shared/openapi/responses'
-import { MatchSchema } from './schemas'
+import { MatchResultSchema, MatchSchema } from './schemas'
 
 const FinishMatchResultSchema = Type.Object({
   match: MatchSchema,
@@ -56,6 +56,35 @@ export const deleteMatchDetail = {
   responses: {
     204: { description: 'Match cancelled' },
     400: ApiResponses.error('Match cannot be cancelled in its current status'),
+    404: ApiResponses.notFound('Match not found'),
+  },
+}
+
+export const registerPeriodResultsDetail = {
+  summary: 'Register period results',
+  description:
+    'Upserts scoring data per period (1st Half, 2nd Half, Penalties, Set 1, OT, etc.). Accepts an array; existing rows for the given period indexes are replaced.',
+  security,
+  responses: {
+    200: ApiResponses.list(MatchResultSchema, 'Period results saved'),
+    404: ApiResponses.notFound('Match not found'),
+  },
+}
+
+export const getMatchResultsDetail = {
+  summary: 'Get match results',
+  description: 'Returns the final score and per-period breakdown. Publicly accessible.',
+  responses: {
+    200: ApiResponses.success(
+      Type.Object({
+        final: Type.Object({
+          home: Type.Union([Type.Number(), Type.Null()]),
+          away: Type.Union([Type.Number(), Type.Null()]),
+        }),
+        periods: Type.Array(MatchResultSchema),
+      }),
+      'Match results',
+    ),
     404: ApiResponses.notFound('Match not found'),
   },
 }
