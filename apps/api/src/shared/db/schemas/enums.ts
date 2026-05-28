@@ -96,4 +96,15 @@ export const assignmentRoleEnum = pgEnum('assignment_role', [
   'scorekeeper',
 ])
 
+export const convocatoriaResponseEnum = pgEnum('convocatoria_response', [
+  'pending',
+  'va',
+  'no_va',
+  'duda',
+])
+
+export const lineupRoleEnum = pgEnum('lineup_role', ['starter', 'substitute', 'did_not_play'])
+
+export const disputeStatusEnum = pgEnum('dispute_status', ['open', 'resolved'])
+
 export const bracketTypeEnum = pgEnum('bracket_type', ['winners', 'losers', 'grand_final'])
