@@ -1,4 +1,5 @@
 import { authV1Routes } from '@/modules/auth/http/v1/routes'
+import { matchEventsV1Routes } from '@/modules/match-events/http/v1/routes'
 import { matchesV1Routes } from '@/modules/matches/http/v1/routes'
 import { onboardingV1Routes } from '@/modules/onboarding/http/v1/routes'
 import { invitationsV1Routes } from '@/modules/organizations/http/v1/invitation-routes'
@@ -26,4 +27,5 @@ export const v1 = createVersion(1)
   .use(playersV1Routes)
   .use(uploadV1Routes)
   .use(matchesV1Routes)
+  .use(matchEventsV1Routes)
   .use(sportEventTypesV1Routes)
