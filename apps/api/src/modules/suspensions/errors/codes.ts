@@ -1,0 +1,4 @@
+export const SuspensionErrorCodes = {
+  NOT_FOUND: 'SUSPENSION_NOT_FOUND',
+  ALREADY_CONFIRMED: 'SUSPENSION_ALREADY_CONFIRMED',
+} as const
