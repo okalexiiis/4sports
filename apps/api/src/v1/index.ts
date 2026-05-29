@@ -12,6 +12,7 @@ import { registrationsV1Routes } from '@/modules/registrations/http/v1/routes'
 import { sportEventTypesV1Routes } from '@/modules/sport-event-types/http/v1/routes'
 import { sportsV1Routes } from '@/modules/sports/http/v1/routes'
 import { standingsV1Routes } from '@/modules/standings/http/v1/routes'
+import { suspensionsV1Routes } from '@/modules/suspensions/http/v1/routes'
 import { teamsV1Routes } from '@/modules/teams/http/v1/routes'
 import { tournamentFormatsV1Routes } from '@/modules/tournament-formats/http/v1/routes'
 import { tournamentsV1Routes } from '@/modules/tournaments/http/v1/routes'
@@ -35,5 +36,6 @@ export const v1 = createVersion(1)
   .use(convocatoriasV1Routes)
   .use(lineupsV1Routes)
   .use(disputesV1Routes)
+  .use(suspensionsV1Routes)
   .use(sportEventTypesV1Routes)
   .use(standingsV1Routes)
