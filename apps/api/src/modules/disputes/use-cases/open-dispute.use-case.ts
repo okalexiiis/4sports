@@ -3,6 +3,7 @@ import { err, ok } from '@4sports/utils/result'
 import { eq } from 'drizzle-orm'
 import { db } from '@/shared/db/client'
 import { matches, tournaments } from '@/shared/db/schemas'
+import { notificationsQueue } from '@/shared/lib/bullmq'
 import type { Dispute } from '../dispute.entity'
 import type { IDisputeRepository } from '../dispute.repository'
 import { DisputeErrors } from '../errors'
@@ -56,6 +57,11 @@ export async function openDispute(
     reason: input.reason,
     description: input.description,
     evidence_urls: input.evidenceUrls,
+  })
+
+  await notificationsQueue.add('dispute.opened', {
+    type: 'dispute.opened',
+    payload: { disputeId: dispute.id, matchId: input.matchId, openedBy: input.userId },
   })
 
   return ok(dispute)
