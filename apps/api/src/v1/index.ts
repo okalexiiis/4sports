@@ -1,5 +1,6 @@
 import { authV1Routes } from '@/modules/auth/http/v1/routes'
 import { convocatoriasV1Routes } from '@/modules/convocatorias/http/v1/routes'
+import { disputesV1Routes } from '@/modules/disputes/http/v1/routes'
 import { lineupsV1Routes } from '@/modules/lineups/http/v1/routes'
 import { matchEventsV1Routes } from '@/modules/match-events/http/v1/routes'
 import { matchesV1Routes } from '@/modules/matches/http/v1/routes'
@@ -33,5 +34,6 @@ export const v1 = createVersion(1)
   .use(matchEventsV1Routes)
   .use(convocatoriasV1Routes)
   .use(lineupsV1Routes)
+  .use(disputesV1Routes)
   .use(sportEventTypesV1Routes)
   .use(standingsV1Routes)
