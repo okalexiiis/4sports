@@ -3,6 +3,7 @@ import { err, ok } from '@4sports/utils/result'
 import { and, eq } from 'drizzle-orm'
 import { db } from '@/shared/db/client'
 import { matches, playerStatValues, playerSuspensions, sportEventTypes } from '@/shared/db/schemas'
+import { notificationsQueue } from '@/shared/lib/bullmq'
 import { recalculateStandings } from '../../standings/use-cases/recalculate-standings.use-case'
 import { MatchErrors } from '../errors'
 import type { Match } from '../match.entity'
@@ -128,8 +129,11 @@ export async function finishMatch(
     return row!
   })
 
-  // Step 6 — Enqueue BullMQ job outside the transaction so it only fires after commit.
-  // TODO(H1): await matchFinishedQueue.add('match.finished', { matchId: input.matchId })
+  // Step 6 — Enqueue outside the transaction so it only fires after commit.
+  await notificationsQueue.add('match.finished', {
+    type: 'match.finished',
+    payload: { matchId: input.matchId },
+  })
 
   return ok({ match: rowToMatch(updatedRow), standingsUpdated: true })
 }
