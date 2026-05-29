@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm'
 import { recalculateStandings } from '@/modules/standings/use-cases/recalculate-standings.use-case'
 import { db } from '@/shared/db/client'
 import { matches } from '@/shared/db/schemas'
+import { notificationsQueue } from '@/shared/lib/bullmq'
 import type { Dispute } from '../dispute.entity'
 import type { IDisputeRepository } from '../dispute.repository'
 import { DisputeErrors } from '../errors'
@@ -49,6 +50,11 @@ export async function resolveDispute(
       await recalculateStandings({ tournamentId: match.tournament_id, groupId: null })
     }
   }
+
+  await notificationsQueue.add('dispute.resolved', {
+    type: 'dispute.resolved',
+    payload: { disputeId: input.disputeId, openedBy: dispute.opened_by },
+  })
 
   return ok(resolved)
 }

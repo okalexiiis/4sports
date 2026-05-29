@@ -1,5 +1,6 @@
 import type { Result } from '@4sports/utils/result'
 import { err, ok } from '@4sports/utils/result'
+import { notificationsQueue } from '@/shared/lib/bullmq'
 import { SuspensionErrors } from '../errors'
 import type { Suspension } from '../suspension.entity'
 import type { ISuspensionRepository } from '../suspension.repository'
@@ -24,6 +25,11 @@ export async function confirmSuspension(
     confirmed_at: new Date(),
     suspension_matches: input.suspensionMatches,
     justification: input.justification,
+  })
+
+  await notificationsQueue.add('suspension.confirmed', {
+    type: 'suspension.confirmed',
+    payload: { suspensionId: confirmed.id },
   })
 
   return ok(confirmed)

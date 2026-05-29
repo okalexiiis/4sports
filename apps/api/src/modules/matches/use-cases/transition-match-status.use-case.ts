@@ -1,5 +1,6 @@
 import type { Result } from '@4sports/utils/result'
 import { err, ok } from '@4sports/utils/result'
+import { notificationsQueue } from '@/shared/lib/bullmq'
 import { MatchErrors } from '../errors'
 import type { Match, MatchStatus } from '../match.entity'
 import type { IMatchRepository } from '../match.repository'
@@ -86,5 +87,13 @@ export async function transitionMatchStatus(
   }
 
   const updated = await repo.updateStatus(input.matchId, input.newStatus, extra)
+
+  if (input.newStatus === 'postponed') {
+    await notificationsQueue.add('match.rescheduled', {
+      type: 'match.rescheduled',
+      payload: { matchId: input.matchId },
+    })
+  }
+
   return ok(updated)
 }
