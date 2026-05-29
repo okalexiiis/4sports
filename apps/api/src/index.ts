@@ -5,6 +5,7 @@ import { noteV1Routes } from '@/_sandbox/note/http/v1/routes'
 import { matchWsRoutes } from '@/modules/matches/ws/match.ws'
 import { auth } from '@/shared/lib/auth'
 import { setBunServer } from '@/shared/lib/bun-server'
+import { startWorkers } from '@/shared/lib/workers'
 import { logger } from '@/shared/logger'
 import { requestLogger } from '@/shared/middleware/request-logger'
 import { v1 } from '@/v1/index'
@@ -98,6 +99,7 @@ const app = new Elysia()
   .listen(process.env.PORT ?? 4000)
 
 if (app.server) setBunServer(app.server)
+startWorkers()
 
 const port = Number(process.env.PORT ?? 4000)
 logger.info('server ready', { type: 'startup', port } satisfies StartupLogMeta)
