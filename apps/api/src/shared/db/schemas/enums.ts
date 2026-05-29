@@ -77,13 +77,34 @@ export const teamScopeEnum = pgEnum('team_scope', ['tournament_scoped', 'permane
 
 export const teamMemberRoleEnum = pgEnum('team_member_role', ['captain', 'coach', 'player'])
 
+// Hito 3 — Partidos y Resultados
+
 export const matchStatusEnum = pgEnum('match_status', [
   'scheduled',
-  'in_progress',
-  'completed',
-  'cancelled',
-  'forfeit',
+  'postponed',
+  'live',
+  'suspended',
+  'finished',
   'disputed',
+  'walkover',
+  'cancelled',
 ])
+
+export const assignmentRoleEnum = pgEnum('assignment_role', [
+  'referee',
+  'assistant_referee',
+  'scorekeeper',
+])
+
+export const convocatoriaResponseEnum = pgEnum('convocatoria_response', [
+  'pending',
+  'va',
+  'no_va',
+  'duda',
+])
+
+export const lineupRoleEnum = pgEnum('lineup_role', ['starter', 'substitute', 'did_not_play'])
+
+export const disputeStatusEnum = pgEnum('dispute_status', ['open', 'resolved'])
 
 export const bracketTypeEnum = pgEnum('bracket_type', ['winners', 'losers', 'grand_final'])
