@@ -14,12 +14,12 @@ type AuthStore = { user: { id: string } }
 
 export const suspensionsV1Routes = new Elysia({ tags: ['Suspensions'] })
   .get(
-    '/organizations/:organizationId/suspensions',
+    '/organizations/:orgId/suspensions',
     async (ctx) => {
       const isDraftRaw = ctx.query.is_draft
       const isDraft = isDraftRaw === 'true' ? true : isDraftRaw === 'false' ? false : undefined
       const result = await listSuspensions(repo, {
-        organizationId: ctx.params.organizationId,
+        organizationId: ctx.params.orgId,
         tournamentId: ctx.query.tournament_id,
         isDraft,
       })
@@ -32,7 +32,7 @@ export const suspensionsV1Routes = new Elysia({ tags: ['Suspensions'] })
     },
   )
   .patch(
-    '/organizations/:organizationId/suspensions/:suspensionId',
+    '/organizations/:orgId/suspensions/:suspensionId',
     async (ctx) => {
       const { user } = ctx.store as AuthStore
       const result = await confirmSuspension(repo, {
