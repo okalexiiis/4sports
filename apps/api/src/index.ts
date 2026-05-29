@@ -2,12 +2,15 @@ import type { ErrorLogMeta, StartupLogMeta } from '@4sports/logger'
 import { openapi } from '@elysia/openapi'
 import { Elysia } from 'elysia'
 import { noteV1Routes } from '@/_sandbox/note/http/v1/routes'
+import { matchWsRoutes } from '@/modules/matches/ws/match.ws'
 import { auth } from '@/shared/lib/auth'
+import { setBunServer } from '@/shared/lib/bun-server'
+import { startWorkers } from '@/shared/lib/workers'
 import { logger } from '@/shared/logger'
 import { requestLogger } from '@/shared/middleware/request-logger'
 import { v1 } from '@/v1/index'
 
-new Elysia()
+const app = new Elysia()
   .use(requestLogger)
   .onError({ as: 'global' }, (ctx) => {
     const { error, set, code } = ctx
@@ -91,8 +94,12 @@ new Elysia()
   )
   .use(v1)
   .use(noteV1Routes)
+  .use(matchWsRoutes)
   .all('/auth/*', async (ctx) => auth.handler(ctx.request))
   .listen(process.env.PORT ?? 4000)
+
+if (app.server) setBunServer(app.server)
+startWorkers()
 
 const port = Number(process.env.PORT ?? 4000)
 logger.info('server ready', { type: 'startup', port } satisfies StartupLogMeta)
