@@ -12,6 +12,14 @@ import { v1 } from '@/v1/index'
 
 const app = new Elysia()
   .use(requestLogger)
+  .get('/health', () => ({ status: 'ok' }))
+  .get('/', () => ({
+    message: 'Welcome to the 4sports API!',
+    contents: {
+      'Api documentation': '/openapi',
+      'BetterAuth documentation': '/auth/reference',
+    },
+  }))
   .onError({ as: 'global' }, (ctx) => {
     const { error, set, code } = ctx
     const requestId = (ctx as unknown as { requestId?: string }).requestId
