@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
         hostname: '*.r2.cloudflarestorage.com',
       },
     ],
-    qualities: [70],
+    qualities: [70, 75],
   },
 }
 
