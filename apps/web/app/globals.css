@@ -1,0 +1,389 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* MODO CLARO */
+:root {
+  /* TINTS DE MARCA */
+
+  --primary: #5a8a00; /* Acción primaria, primeros lugares, éxito deportivo */
+  --primary-hover: #78b409;
+  --primary-background: #eef7d0; /* Fondo de primary */
+  --primary-text: #ffffff; /* Texto sobre primary sólido */
+
+  --secondary: #c93a12; /* Urgencia, en vivo, alertas deportivas */
+  --secondary-hover: #e75026;
+  --secondary-background: #fdeee9; /* Fondo de secondary */
+  --secondary-text: #ffffff; /* Texto sobre secondary sólido */
+
+  --disabled: #e2e5df;
+  --disabled-text: #c5c8c0;
+  --disabled-border: #c5c8c0;
+
+  /* TOKENS DE SUPERFICIE */
+
+  --background: #f7f6f2; /* Fondo de página */
+  --surface: #f0efe9; /* Fondos de secciones, sidebars */
+  --surface-hover: #dddcd4;
+  --card: #ffffff; /* Tarjetas, modales, dropdowns */
+  --card-2: #f7f6f2; /* Fondos secundarios dentro de cards */
+
+  /* TOKENS DE TEXTO */
+
+  --ink: #141510; /* Títulos, marcadores, texto principal */
+  --body: #2e3128; /* Texto de cuerpo */
+  --muted: #6f706d; /* Texto secundario, labels */
+  --faint: #9da19a; /* Placeholders, timestamps, texto deshabilitado */
+  --lucide: #ccd0c8;
+
+  /* TOKENS DE BORDE */
+
+  --line: rgba(20, 21, 16, 0.09); /* Bordes de cards y separadores */
+  --line-2: rgba(20, 21, 16, 0.18); /* Bordes de inputs, énfasis */
+
+  /* COLORES SEMÁNTICOS */
+
+  /* Success — confirmación, completado, primero */
+
+  --success: #2e7d4f;
+  --success-hover: #419966;
+  --success-bg: #eaf5ef;
+  --success-border: rgba(46, 125, 79, 0.35);
+
+  /* Danger — error, pago vencido, eliminado */
+
+  --danger: #c93a12;
+  --danger-bg: #fdeee9;
+  --danger-border: rgba(201, 58, 18, 0.35);
+
+  /* Warning — cobro pendiente, conflicto de horario, advertencia */
+
+  --warn: #a0640a;
+  --warn-bg: #fdf3e3;
+  --warn-border: rgba(160, 100, 10, 0.35);
+
+  /* Info — notificaciones, solicitudes, neutral informativo */
+
+  --info: #1a5fa0;
+  --info-bg: #eaf2fb;
+  --info-border: rgba(26, 95, 160, 0.35);
+
+  /* SCROLL BAR */
+  --scroll-track: #cfd4cb;
+  --scroll-thumb: #9ba395;
+
+  --foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+/* MODO OSCURO */
+.dark {
+  /* TINTS DE MARCA */
+
+  --primary: #d4f233; /* Acción primaria, primeros lugares, éxito deportivo */
+  --primary-hover: #ecff7f;
+  --primary-background: #252a11; /* Fondo de primary */
+  --primary-text: #0d0f0c; /* Texto sobre primary sólido */
+
+  --secondary: #ff4b1f; /* Urgencia, en vivo, alertas deportivas */
+  --secondary-hover: #ff7856;
+  --secondary-background: rgba(255, 75, 31, 0.12); /* Fondo de secondary */
+  --secondary-text: #ffffff; /* Texto sobre secondary sólido */
+
+  --disabled: #222320;
+  --disabled-text: #3e3f3c;
+  --disabled-border: #3e3f3c;
+
+  /* TOKENS DE SUPERFICIE */
+
+  --background: #0d0f0c; /* Fondo de página */
+  --surface: #141610; /* Fondos de secciones, sidebars */
+  --surface-hover: #22251c;
+  --card: #1f2218; /* Tarjetas, modales, dropdowns */
+  --card-2: #2f3424; /* Fondos secundarios dentro de cards */
+
+  /* TOKENS DE TEXTO */
+
+  --ink: #f2f2ef; /* Títulos, marcadores, texto principal */
+  --body: #c8cbc4; /* Texto de cuerpo */
+  --muted: #858b85; /* Texto secundario, labels */
+  --faint: #555955; /* Placeholders, timestamps, texto deshabilitado */
+  --lucide: #3d3f3d;
+
+  /* TOKENS DE BORDE */
+
+  --line: rgba(242, 242, 239, 0.08); /* Bordes de cards y separadores */
+  --line-2: rgba(242, 242, 239, 0.14); /* Bordes de inputs, énfasis */
+
+  /* COLORES SEMÁNTICOS */
+
+  /* Success — confirmación, completado, primero */
+
+  --success: #4caf72;
+  --success-hover: #67c48a;
+  --success-bg: #142219;
+  --success-border: rgba(76, 175, 114, 0.35);
+
+  /* Danger — error, pago vencido, eliminado */
+
+  --danger: #ff4b1f;
+  --danger-bg: #2a160f;
+  --danger-border: rgba(255, 75, 31, 0.35);
+
+  /* Warning — cobro pendiente, conflicto de horario, advertencia */
+
+  --warn: #f5a623;
+  --warn-bg: #29210f;
+  --warn-border: rgba(245, 166, 35, 0.35);
+
+  /* Info — notificaciones, solicitudes, neutral informativo */
+
+  --info: #4a9ee8;
+  --info-bg: #142027;
+  --info-border: rgba(74, 158, 232, 0.35);
+
+  /* SCROLL BAR */
+  --scroll-track: #212420;
+  --scroll-thumb: #555955;
+  --foreground: oklch(0.985 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+/* Exponer variables a Tailwind */
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-background: var(--primary-background);
+  --color-primary-text: var(--primary-text);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-background: var(--secondary-background);
+  --color-secondary-text: var(--secondary-text);
+
+  --color-disabled: var(--disabled);
+  --color-disabled-text: var(--disabled-text);
+  --color-disabled-border: var(--disabled-border);
+
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-card: var(--card);
+  --color-card-2: var(--card-2);
+
+  --color-ink: var(--ink);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-lucide: var(--lucide);
+
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+
+  --color-success: var(--success);
+  --color-success-hover: var(--success-hover);
+  --color-success-bg: var(--success-bg);
+  --color-success-border: var(--success-border);
+
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-danger-border: var(--danger-border);
+
+  --color-warn: var(--warn);
+  --color-warn-bg: var(--warn-bg);
+  --color-warn-border: var(--warn-border);
+
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+  --color-info-border: var(--info-border);
+
+  --color-scroll-track: var(--scroll-track);
+  --color-scroll-thumb: var(--scroll-thumb);
+
+  --font-bebas: var(--font-bebas-neue);
+
+  --font-heading: var(--font-sans);
+
+  --font-sans: var(--font-sans);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-sidebar-border: var(--sidebar-border);
+
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+
+  --color-sidebar-accent: var(--sidebar-accent);
+
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+
+  --color-sidebar-primary: var(--sidebar-primary);
+
+  --color-sidebar-foreground: var(--sidebar-foreground);
+
+  --color-sidebar: var(--sidebar);
+
+  --color-chart-5: var(--chart-5);
+
+  --color-chart-4: var(--chart-4);
+
+  --color-chart-3: var(--chart-3);
+
+  --color-chart-2: var(--chart-2);
+
+  --color-chart-1: var(--chart-1);
+
+  --color-ring: var(--ink);
+
+  --color-input: var(--input);
+
+  --color-border: var(--border);
+
+  --color-destructive: var(--destructive);
+
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-accent: var(--accent);
+
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-popover: var(--popover);
+
+  --color-card-foreground: var(--card-foreground);
+
+  --color-foreground: var(--foreground);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+
+  --radius-md: calc(var(--radius) * 0.8);
+
+  --radius-lg: var(--radius);
+
+  --radius-xl: calc(var(--radius) * 1.4);
+
+  --radius-2xl: calc(var(--radius) * 1.8);
+
+  --radius-3xl: calc(var(--radius) * 2.2);
+
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--body);
+  font-family: var(--font-dm-sans);
+}
+
+::selection {
+  background-color: var(--primary);
+  color: var(--primary-text);
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-scroll-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-scroll-thumb);
+  border-radius: 10px;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.bg-animated-gradient {
+  background-size: 300% 300%;
+  animation: gradientMove 10s ease infinite;
+}
+
+@keyframes skeletonGradientMove {
+  0% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -150% 0;
+  }
+}
+
+.bg-skeleton-gradient {
+  background-size: 300% 100%;
+  animation: skeletonGradientMove 3s linear infinite;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+}
