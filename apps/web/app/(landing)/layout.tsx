@@ -1,5 +1,4 @@
 /* COMPONENTS */
-
 import { Footer } from '@/content/shared/ui/footer/Footer'
 import { Navbar } from '@/content/shared/ui/navbar/Navbar'
 import { ThemeToggle } from '@/content/shared/ui/themeToogle/ThemeToogle'
