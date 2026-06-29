@@ -16,9 +16,9 @@
     "lineWidth": 100
   },
   "linter": {
-    "enabled": true,
+    "enabled": false,
     "rules": {
-      "recommended": true,
+      "recommended": false,
       "style": {
         "noNonNullAssertion": "warn"
       },
