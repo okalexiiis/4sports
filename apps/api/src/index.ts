@@ -1,4 +1,5 @@
 import type { ErrorLogMeta, StartupLogMeta } from '@4sports/logger'
+import cors from '@elysia/cors'
 import { openapi } from '@elysia/openapi'
 import { Elysia } from 'elysia'
 import { noteV1Routes } from '@/_sandbox/note/http/v1/routes'
@@ -8,6 +9,7 @@ import { requestLogger } from '@/shared/middleware/request-logger'
 import { v1 } from '@/v1/index'
 
 new Elysia()
+  .use(cors())
   .use(requestLogger)
   .onError({ as: 'global' }, (ctx) => {
     const { error, set, code } = ctx
