@@ -1,64 +1,69 @@
-"use client";
+'use client'
 
 /* COMPONENTS */
-import Link from "next/link";
-import { DinamicInputText } from "@/content/shared/form/dinamicInputText/DinamicInputText";
-import { DinamicButton } from "@/content/shared/form/dinamicButton/DinamicButton";
+import Link from 'next/link'
+import { DinamicInputText } from '@/content/shared/form/dinamicInputText/DinamicInputText'
+import { DinamicButton } from '@/content/shared/form/dinamicButton/DinamicButton'
 
 /* ICONS */
-import { FourSportsIcon } from "@/content/shared/icons/fourSports/FourSportsIcon";
-import { GoogleIcon } from "@/content/shared/icons/google/GoogleIcon";
-import { FacebookIcon } from "@/content/shared/icons/facebook/FacebookIcon";
+import { FourSportsIcon } from '@/content/shared/icons/fourSports/FourSportsIcon'
+import { GoogleIcon } from '@/content/shared/icons/google/GoogleIcon'
+import { FacebookIcon } from '@/content/shared/icons/facebook/FacebookIcon'
 
 /* HOOKS */
-import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
 
 /* NAVIGATION */
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation'
 
 /* STORES */
-import { useAnnouncement } from "@/content/shared/ui/annoucement/stores/announcementStore";
+import { useAnnouncement } from '@/content/shared/ui/annoucement/stores/announcementStore'
 
 /* TYPES */
-import { LoginForm } from "@/content/auth/login/types/LoginForm";
+import { LoginForm } from '@/content/auth/login/types/LoginForm'
+import { PORT } from '@/content/shared/consts/PORT'
 
 export function LoginContent() {
-  const router = useRouter();
+  const router = useRouter()
 
-  const { setAnnouncement } = useAnnouncement();
-  const [saving, setSaving] = useState(false);
+  const { setAnnouncement } = useAnnouncement()
+  const [saving, setSaving] = useState(false)
 
   const methods = useForm<LoginForm>({
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
-  });
+  })
 
   const onSubmit = async (data: LoginForm) => {
     try {
-      setSaving(true);
+      setSaving(true)
 
-      setAnnouncement({
+      const request = await fetch(PORT + '/auth/sign-in/email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: data.email, password: data.password }),
+        credentials: 'include',
+      })
+
+      const response = await request.json()
+      console.log(response)
+
+      /* setAnnouncement({
         isActivated: true,
-        announceType: "ok",
-        message: "Sesión iniciada correctamente",
-      });
-      router.push("/organizer/home");
-      /* router.push("/player/home"); */
+        announceType: 'ok',
+        message: 'Sesión iniciada correctamente',
+      })
+      router.push('/organizer/home') */
 
-      setAnnouncement({
-        isActivated: true,
-        announceType: "ok",
-        message: "Sesión iniciada correctamente",
-      });
-
-      setSaving(false);
+      setSaving(false)
     } catch (error) {
-      console.log("Error", error);
+      console.log('Error', error)
+      setSaving(false)
     }
-  };
+  }
 
   return (
     <FormProvider {...methods}>
@@ -66,9 +71,7 @@ export function LoginContent() {
         <FourSportsIcon />
       </div>
 
-      <h1 className="font-medium text-lg mb-2 text-center">
-        Ingresa a tu cuenta
-      </h1>
+      <h1 className="mb-2 text-lg font-medium text-center">Ingresa a tu cuenta</h1>
 
       <DinamicInputText<LoginForm>
         name="email"
@@ -86,8 +89,8 @@ export function LoginContent() {
         rules={{}}
       />
 
-      <div className="w-full h-fit mb-4">
-        <Link href={"/login/#"} className="text-primary underline text-sm">
+      <div className="w-full mb-4 h-fit">
+        <Link href={'/login/#'} className="text-sm underline text-primary">
           Olvidé mi contraseña
         </Link>
       </div>
@@ -97,12 +100,12 @@ export function LoginContent() {
         twClassName="mb-4"
         disabled={saving}
         disabledSpinner={true}
-        type={saving ? "disabled" : "filled"}
+        type={saving ? 'disabled' : 'filled'}
         label="Ingresar"
         spinFromText
       />
 
-      <div className="w-full h-fit flex gap-2 mb-4 justify-center items-center">
+      <div className="flex items-center justify-center w-full gap-2 mb-4 h-fit">
         <div className="w-24 h-px rounded-full bg-line" />
         <p className="text-sm text-muted">O también</p>
         <div className="w-24 h-px rounded-full bg-line" />
@@ -112,7 +115,7 @@ export function LoginContent() {
         <DinamicButton
           action={methods.handleSubmit(onSubmit)}
           disabled={saving}
-          type={saving ? "disabled" : "unfilled"}
+          type={saving ? 'disabled' : 'unfilled'}
           label="Google"
           spinFromText
           icon={
@@ -125,7 +128,7 @@ export function LoginContent() {
         <DinamicButton
           action={methods.handleSubmit(onSubmit)}
           disabled={saving}
-          type={saving ? "disabled" : "unfilled"}
+          type={saving ? 'disabled' : 'unfilled'}
           label="Ingresar"
           spinFromText
           icon={
@@ -136,12 +139,12 @@ export function LoginContent() {
         />
       </div>
 
-      <div className="w-full h-fit mb-4 flex gap-2 justify-center">
+      <div className="flex justify-center w-full gap-2 mb-4 h-fit">
         <p>¿No tienes una cuenta?</p>
-        <Link href={"/register"} className="text-primary underline">
+        <Link href={'/register'} className="underline text-primary">
           Ir a Registrarse
         </Link>
       </div>
     </FormProvider>
-  );
+  )
 }
