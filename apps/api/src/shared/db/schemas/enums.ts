@@ -108,3 +108,22 @@ export const lineupRoleEnum = pgEnum('lineup_role', ['starter', 'substitute', 'd
 export const disputeStatusEnum = pgEnum('dispute_status', ['open', 'resolved'])
 
 export const bracketTypeEnum = pgEnum('bracket_type', ['winners', 'losers', 'grand_final'])
+
+// Hito 3 — Partidos y Resultados
+
+export const assignmentRoleEnum = pgEnum('assignment_role', [
+  'referee',
+  'assistant_referee',
+  'scorekeeper',
+])
+
+export const convocatoriaResponseEnum = pgEnum('convocatoria_response', [
+  'convocado',
+  'va',
+  'no_va',
+  'duda',
+])
+
+export const lineupRoleEnum = pgEnum('lineup_role', ['titular', 'suplente', 'no_jugo'])
+
+export const disputeStatusEnum = pgEnum('dispute_status', ['open', 'resolved'])
