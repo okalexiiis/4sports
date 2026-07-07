@@ -35,7 +35,7 @@ No test commands are configured yet.
 
 ```
 apps/api      → Bun + ElysiaJS — REST API and WebSockets
-apps/web      → Next.js 14 App Router — organizer dashboard (Turbopack dev)
+apps/web      → Next.js 16 App Router — organizer dashboard (Turbopack dev)
 apps/mobile   → Expo + React Native + NativeWind v4 + Tailwind v3 — iOS & Android
 packages/logger  → Pino-based logger; the canonical logger implementation for the monorepo
 packages/types   → Shared TypeScript types (never redefine in apps)
