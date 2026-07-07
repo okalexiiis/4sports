@@ -26,7 +26,12 @@ export class DrizzleConvocatoriaRepository implements IConvocatoriaRepository {
     const rows = await db
       .insert(matchConvocatorias)
       .values(
-        inputs.map((i) => ({ match_id: i.match_id, player_id: i.player_id, team_id: i.team_id })),
+        inputs.map((i) => ({
+          match_id: i.match_id,
+          player_id: i.player_id,
+          team_id: i.team_id,
+          sent_by: i.sent_by,
+        })),
       )
       .onConflictDoUpdate({
         target: [matchConvocatorias.match_id, matchConvocatorias.player_id],

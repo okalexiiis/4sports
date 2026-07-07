@@ -51,7 +51,7 @@ export async function registerMatchEvent(
     event_type_id: input.eventTypeId,
     minute: input.minute,
     period_index: input.periodIndex,
-    created_by: input.actorId,
+    registered_by: input.actorId,
   })
 
   // If the event causes ejection, create a draft suspension for the sanctions engine.
@@ -68,8 +68,7 @@ export async function registerMatchEvent(
     await db.insert(playerSuspensions).values({
       player_id: input.playerId,
       tournament_id: match.tournament_id,
-      match_id: input.matchId,
-      event_type_id: input.eventTypeId,
+      stat_value_id: event.id,
       suspension_matches: eventType.suspension_matches,
       is_draft: true,
     })

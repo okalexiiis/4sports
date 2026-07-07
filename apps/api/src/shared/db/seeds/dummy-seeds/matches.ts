@@ -74,6 +74,7 @@ export async function seedDummyMatches() {
       scheduled_at: new Date(kickoff),
       started_at: new Date(kickoff),
       ended_at: new Date(kickoff + 2 * 60 * 60 * 1000),
+      created_by: 'system',
     }
   })
 
@@ -85,6 +86,7 @@ export async function seedDummyMatches() {
     venue_id: VENUE_IDS.canchaSur,
     status: 'scheduled' as const,
     scheduled_at: new Date(now + m.inDays * DAY),
+    created_by: 'system',
   }))
 
   await db

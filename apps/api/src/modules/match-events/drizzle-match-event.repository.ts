@@ -16,7 +16,7 @@ export class DrizzleMatchEventRepository implements IMatchEventRepository {
         minute: input.minute ?? null,
         period_index: input.period_index,
         is_draft: true,
-        created_by: input.created_by,
+        registered_by: input.registered_by,
       })
       .returning()
 
@@ -81,7 +81,7 @@ export class DrizzleMatchEventRepository implements IMatchEventRepository {
       minute: row.minute,
       period_index: row.period_index,
       is_draft: row.is_draft,
-      created_by: row.created_by,
+      registered_by: row.registered_by,
       created_at: row.created_at,
     }
   }

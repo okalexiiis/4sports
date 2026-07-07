@@ -11,7 +11,7 @@ function rowToMatch(row: typeof matches.$inferSelect): Match {
     home_team_id: row.home_team_id,
     away_team_id: row.away_team_id,
     venue_id: row.venue_id,
-    round_id: row.round_id,
+    group_id: row.group_id,
     status: row.status,
     home_score: row.home_score,
     away_score: row.away_score,
@@ -36,8 +36,9 @@ export class DrizzleMatchRepository implements IMatchRepository {
         home_team_id: input.home_team_id,
         away_team_id: input.away_team_id,
         scheduled_at: input.scheduled_at,
+        created_by: input.created_by,
         venue_id: input.venue_id ?? null,
-        round_id: input.round_id ?? null,
+        group_id: input.group_id ?? null,
         notes: input.notes ?? null,
         status: 'scheduled',
         referee_session_token: crypto.randomUUID(),
@@ -69,8 +70,8 @@ export class DrizzleMatchRepository implements IMatchRepository {
       conditions.push(eq(matches.status, filters.status))
     }
 
-    if (filters?.round_id) {
-      conditions.push(eq(matches.round_id, filters.round_id))
+    if (filters?.group_id) {
+      conditions.push(eq(matches.group_id, filters.group_id))
     }
 
     if (filters?.team_id) {
@@ -118,8 +119,8 @@ export class DrizzleMatchRepository implements IMatchRepository {
       .update(matches)
       .set({
         status,
-        ...(extra?.home_score !== undefined && { home_score: extra.home_score }),
-        ...(extra?.away_score !== undefined && { away_score: extra.away_score }),
+        ...(extra?.home_score != null && { home_score: extra.home_score }),
+        ...(extra?.away_score != null && { away_score: extra.away_score }),
         ...(extra?.winner_team_id !== undefined && { winner_team_id: extra.winner_team_id }),
         ...(extra?.started_at !== undefined && { started_at: extra.started_at }),
         ...(extra?.ended_at !== undefined && { ended_at: extra.ended_at }),

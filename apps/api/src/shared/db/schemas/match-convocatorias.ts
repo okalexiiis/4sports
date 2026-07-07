@@ -17,7 +17,7 @@ export const matchConvocatorias = pgTable(
     team_id: uuid('team_id')
       .notNull()
       .references(() => teams.id, { onDelete: 'cascade' }),
-    response: convocatoriaResponseEnum('response').notNull().default('convocado'),
+    response: convocatoriaResponseEnum('response').notNull().default('pending'),
     sent_by: text('sent_by').notNull(),
     responded_at: timestamp('responded_at', { withTimezone: true }),
     created_at: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),

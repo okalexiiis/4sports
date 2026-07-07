@@ -4,7 +4,7 @@ export interface ConfirmSuspensionInput {
   confirmed_by: string
   confirmed_at: Date
   suspension_matches?: number
-  justification?: string
+  notes?: string
 }
 
 export interface ListSuspensionsFilter {

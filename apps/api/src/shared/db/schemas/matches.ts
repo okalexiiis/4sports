@@ -39,6 +39,7 @@ export const matches = pgTable(
     // Identificador de grupo para torneos en Modo Mundial (ej. "A", "B").
     group_id: text('group_id'),
     walkover_reason: text('walkover_reason'),
+    notes: text('notes'),
     created_by: text('created_by').notNull(),
     created_at: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updated_at: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),

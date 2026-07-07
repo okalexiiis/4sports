@@ -9,7 +9,7 @@ export const MatchEventSchema = Type.Object({
   minute: Type.Union([Type.Number(), Type.Null()]),
   period_index: Type.Number(),
   is_draft: Type.Boolean(),
-  created_by: Type.String(),
+  registered_by: Type.String(),
   created_at: Type.String({ format: 'date-time' }),
 })
 

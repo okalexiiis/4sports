@@ -14,12 +14,12 @@ export interface Match {
   home_team_id: string
   away_team_id: string
   venue_id: string | null
-  round_id: string | null
+  group_id: string | null
   status: MatchStatus
   home_score: number | null
   away_score: number | null
   winner_team_id: string | null
-  scheduled_at: Date
+  scheduled_at: Date | null
   started_at: Date | null
   ended_at: Date | null
   referee_session_token: string | null
@@ -52,8 +52,9 @@ export interface CreateMatchInput {
   home_team_id: string
   away_team_id: string
   scheduled_at: Date
+  created_by: string
   venue_id?: string | null
-  round_id?: string | null
+  group_id?: string | null
   notes?: string | null
 }
 
@@ -64,7 +65,7 @@ export interface UpdateMatchInput {
 }
 
 export interface ListMatchesFilters {
-  round_id?: string
+  group_id?: string
   status?: MatchStatus
   team_id?: string
 }

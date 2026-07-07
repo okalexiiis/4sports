@@ -17,7 +17,7 @@ export const matchLineups = pgTable(
     team_id: uuid('team_id')
       .notNull()
       .references(() => teams.id, { onDelete: 'cascade' }),
-    lineup_role: lineupRoleEnum('lineup_role').notNull().default('titular'),
+    lineup_role: lineupRoleEnum('lineup_role').notNull().default('starter'),
     field_position: text('field_position'),
     jersey_number: integer('jersey_number'),
     // Null hasta que el capitán/organizador publica la alineación oficialmente.

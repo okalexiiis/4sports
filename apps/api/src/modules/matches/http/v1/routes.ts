@@ -41,13 +41,15 @@ export const matchesV1Routes = new Elysia({ tags: ['Matches'] })
   .post(
     '/tournaments/:tournamentId/matches',
     async (ctx) => {
+      const { user } = ctx.store as AuthStore
       const result = await createMatch(repo, {
         tournament_id: ctx.params.tournamentId,
         home_team_id: ctx.body.home_team_id,
         away_team_id: ctx.body.away_team_id,
         scheduled_at: new Date(ctx.body.scheduled_at),
+        created_by: user.id,
         venue_id: ctx.body.venue_id ?? null,
-        round_id: ctx.body.round_id ?? null,
+        group_id: ctx.body.group_id ?? null,
         notes: ctx.body.notes ?? null,
       })
       if (result.ok) ctx.set.status = 201
@@ -66,7 +68,7 @@ export const matchesV1Routes = new Elysia({ tags: ['Matches'] })
         tournamentId: ctx.params.tournamentId,
         filters: {
           status: ctx.query.status as never,
-          round_id: ctx.query.round_id,
+          group_id: ctx.query.group_id,
           team_id: ctx.query.team_id,
         },
       })

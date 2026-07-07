@@ -13,13 +13,12 @@ function rowToSuspension(row: typeof playerSuspensions.$inferSelect): Suspension
     id: row.id,
     player_id: row.player_id,
     tournament_id: row.tournament_id,
-    match_id: row.match_id,
-    event_type_id: row.event_type_id,
+    stat_value_id: row.stat_value_id,
     suspension_matches: row.suspension_matches,
     is_draft: row.is_draft,
     confirmed_by: row.confirmed_by,
     confirmed_at: row.confirmed_at,
-    justification: row.justification,
+    notes: row.notes,
     created_at: row.created_at,
   }
 }
@@ -62,7 +61,7 @@ export class DrizzleSuspensionRepository implements ISuspensionRepository {
         ...(input.suspension_matches !== undefined && {
           suspension_matches: input.suspension_matches,
         }),
-        ...(input.justification !== undefined && { justification: input.justification }),
+        ...(input.notes !== undefined && { notes: input.notes }),
       })
       .where(eq(playerSuspensions.id, id))
       .returning()

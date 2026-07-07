@@ -6,7 +6,7 @@ export const MatchSchema = Type.Object({
   home_team_id: Type.String({ format: 'uuid' }),
   away_team_id: Type.String({ format: 'uuid' }),
   venue_id: Type.Union([Type.String({ format: 'uuid' }), Type.Null()]),
-  round_id: Type.Union([Type.String({ format: 'uuid' }), Type.Null()]),
+  group_id: Type.Union([Type.String(), Type.Null()]),
   status: Type.String(),
   home_score: Type.Union([Type.Number(), Type.Null()]),
   away_score: Type.Union([Type.Number(), Type.Null()]),
@@ -26,7 +26,7 @@ export const CreateMatchBodySchema = Type.Object({
   away_team_id: Type.String({ format: 'uuid' }),
   scheduled_at: Type.String({ format: 'date-time' }),
   venue_id: Type.Optional(Type.Union([Type.String({ format: 'uuid' }), Type.Null()])),
-  round_id: Type.Optional(Type.Union([Type.String({ format: 'uuid' }), Type.Null()])),
+  group_id: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   notes: Type.Optional(Type.Union([Type.String({ maxLength: 1000 }), Type.Null()])),
 })
 
@@ -54,7 +54,7 @@ export const TransitionStatusBodySchema = Type.Object({
 
 export const ListMatchesQuerySchema = Type.Object({
   status: Type.Optional(Type.String()),
-  round_id: Type.Optional(Type.String({ format: 'uuid' })),
+  group_id: Type.Optional(Type.String()),
   team_id: Type.Optional(Type.String({ format: 'uuid' })),
 })
 
