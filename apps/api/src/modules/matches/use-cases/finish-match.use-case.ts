@@ -1,6 +1,6 @@
 import type { Result } from '@4sports/utils/result'
 import { err, ok } from '@4sports/utils/result'
-import { and, eq } from 'drizzle-orm'
+import { and, eq, inArray } from 'drizzle-orm'
 import { db } from '@/shared/db/client'
 import { matches, playerStatValues, playerSuspensions, sportEventTypes } from '@/shared/db/schemas'
 import { notificationsQueue } from '@/shared/lib/bullmq'
@@ -26,7 +26,7 @@ function rowToMatch(row: typeof matches.$inferSelect): Match {
     home_team_id: row.home_team_id,
     away_team_id: row.away_team_id,
     venue_id: row.venue_id,
-    round_id: row.round_id,
+    group_id: row.group_id,
     status: row.status as Match['status'],
     home_score: row.home_score,
     away_score: row.away_score,
@@ -93,12 +93,25 @@ export async function finishMatch(
     await recalculateStandings({ tournamentId: match.tournament_id }, tx)
 
     // Step 5 — Confirm draft suspensions created during the live match.
-    await tx
-      .update(playerSuspensions)
-      .set({ is_draft: false, confirmed_by: input.actorId, confirmed_at: new Date() })
-      .where(
-        and(eq(playerSuspensions.match_id, input.matchId), eq(playerSuspensions.is_draft, true)),
-      )
+    const ejectedStatIds = await tx
+      .select({ id: playerStatValues.id })
+      .from(playerStatValues)
+      .where(eq(playerStatValues.match_id, input.matchId))
+
+    if (ejectedStatIds.length > 0) {
+      await tx
+        .update(playerSuspensions)
+        .set({ is_draft: false, confirmed_by: input.actorId, confirmed_at: new Date() })
+        .where(
+          and(
+            inArray(
+              playerSuspensions.stat_value_id,
+              ejectedStatIds.map((s) => s.id),
+            ),
+            eq(playerSuspensions.is_draft, true),
+          ),
+        )
+    }
 
     // Step 7 — Bracket advancement: assign winner to the reserved slot in the next match.
     if (match.next_match_id && winnerTeamId) {

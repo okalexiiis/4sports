@@ -14,4 +14,5 @@ export interface UpsertConvocatoriaInput {
   match_id: string
   player_id: string
   team_id: string
+  sent_by: string
 }

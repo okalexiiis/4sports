@@ -9,7 +9,7 @@ export interface ConfirmSuspensionInput {
   suspensionId: string
   confirmedBy: string
   suspensionMatches?: number
-  justification?: string
+  notes?: string
 }
 
 export async function confirmSuspension(
@@ -24,7 +24,7 @@ export async function confirmSuspension(
     confirmed_by: input.confirmedBy,
     confirmed_at: new Date(),
     suspension_matches: input.suspensionMatches,
-    justification: input.justification,
+    notes: input.notes,
   })
 
   await notificationsQueue.add('suspension.confirmed', {

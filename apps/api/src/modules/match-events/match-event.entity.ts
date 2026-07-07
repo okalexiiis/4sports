@@ -7,7 +7,7 @@ export interface MatchEvent {
   minute: number | null
   period_index: number
   is_draft: boolean
-  created_by: string
+  registered_by: string
   created_at: Date
 }
 
@@ -18,5 +18,5 @@ export interface CreateMatchEventInput {
   event_type_id: string
   minute?: number
   period_index: number
-  created_by: string
+  registered_by: string
 }

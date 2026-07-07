@@ -97,7 +97,7 @@ export async function seedDummyStats(userIds: UserIds) {
     minute: e.minute,
     period_index: e.period,
     is_draft: false,
-    created_by: createdBy,
+    registered_by: createdBy,
   }))
 
   await db.insert(playerStatValues).values(rows).onConflictDoNothing()

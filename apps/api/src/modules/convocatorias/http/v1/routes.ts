@@ -17,10 +17,12 @@ export const convocatoriasV1Routes = new Elysia({ tags: ['Convocatorias'] })
   .post(
     '/matches/:matchId/convocatorias',
     async (ctx) => {
+      const { user } = ctx.store as AuthStore
       const result = await sendConvocatoria(repo, {
         matchId: ctx.params.matchId,
         teamId: ctx.body.team_id,
         playerIds: ctx.body.player_ids,
+        actorId: user.id,
       })
       if (result.ok) ctx.set.status = 201
       return toApiResponse(ctx, result)

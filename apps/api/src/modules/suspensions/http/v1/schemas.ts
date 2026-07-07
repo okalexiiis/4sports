@@ -4,13 +4,12 @@ export const SuspensionSchema = Type.Object({
   id: Type.String({ format: 'uuid' }),
   player_id: Type.String({ format: 'uuid' }),
   tournament_id: Type.String({ format: 'uuid' }),
-  match_id: Type.String({ format: 'uuid' }),
-  event_type_id: Type.String({ format: 'uuid' }),
+  stat_value_id: Type.Union([Type.String({ format: 'uuid' }), Type.Null()]),
   suspension_matches: Type.Integer(),
   is_draft: Type.Boolean(),
   confirmed_by: Type.Union([Type.String(), Type.Null()]),
   confirmed_at: Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
-  justification: Type.Union([Type.String(), Type.Null()]),
+  notes: Type.Union([Type.String(), Type.Null()]),
   created_at: Type.String({ format: 'date-time' }),
 })
 
@@ -22,5 +21,5 @@ export const ListSuspensionsQuerySchema = Type.Object({
 
 export const ConfirmSuspensionBodySchema = Type.Object({
   suspension_matches: Type.Optional(Type.Integer({ minimum: 1 })),
-  justification: Type.Optional(Type.String({ minLength: 1 })),
+  notes: Type.Optional(Type.String({ minLength: 1 })),
 })

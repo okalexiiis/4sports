@@ -13,6 +13,7 @@ export interface SendConvocatoriaInput {
   matchId: string
   teamId: string
   playerIds: string[]
+  actorId: string
 }
 
 export async function sendConvocatoria(
@@ -33,6 +34,7 @@ export async function sendConvocatoria(
       match_id: input.matchId,
       player_id: playerId,
       team_id: input.teamId,
+      sent_by: input.actorId,
     })),
   )
 

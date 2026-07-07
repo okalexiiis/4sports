@@ -39,7 +39,7 @@ export const suspensionsV1Routes = new Elysia({ tags: ['Suspensions'] })
         suspensionId: ctx.params.suspensionId,
         confirmedBy: user.id,
         suspensionMatches: ctx.body.suspension_matches,
-        justification: ctx.body.justification,
+        notes: ctx.body.notes,
       })
       return toApiResponse(ctx, result)
     },

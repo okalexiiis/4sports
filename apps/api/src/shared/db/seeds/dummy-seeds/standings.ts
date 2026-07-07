@@ -69,7 +69,7 @@ export async function seedDummyStandings() {
     .values({
       id: STANDING_IDS.ligaApertura,
       tournament_id: TOURNAMENT_IDS.ligaApertura,
-      calculated_at: new Date(),
+      last_calculated_at: new Date(),
     })
     .onConflictDoNothing()
 
@@ -80,14 +80,14 @@ export async function seedDummyStandings() {
         standing_id: STANDING_IDS.ligaApertura,
         team_id: r.team_id,
         position: i + 1,
-        played: r.played,
-        won: r.won,
-        drawn: r.drawn,
-        lost: r.lost,
-        goals_for: r.goals_for,
-        goals_against: r.goals_against,
-        goal_difference: r.goal_difference,
-        points: r.points,
+        pj: r.played,
+        pg: r.won,
+        pe: r.drawn,
+        pp: r.lost,
+        gf: r.goals_for,
+        gc: r.goals_against,
+        dg: r.goal_difference,
+        pts: r.points,
       })),
     )
     .onConflictDoNothing()

@@ -47,7 +47,7 @@ export async function deleteMatchEvent(
       .delete(playerSuspensions)
       .where(
         and(
-          eq(playerSuspensions.match_id, input.matchId),
+          eq(playerSuspensions.stat_value_id, input.eventId),
           eq(playerSuspensions.player_id, event.player_id),
           eq(playerSuspensions.is_draft, true),
         ),

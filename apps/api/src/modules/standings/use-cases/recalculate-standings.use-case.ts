@@ -159,13 +159,13 @@ export async function recalculateStandings(
   // Step 1 — Load all finished/walkover matches for this tournament/group
   const completedStatuses = ['finished', 'walkover'] as const
 
-  // For group-mode tournaments, round_id acts as a group identifier
+  // For group-mode tournaments, group_id acts as a group identifier
   const matchConditions = [
     eq(matches.tournament_id, input.tournamentId),
     inArray(matches.status, completedStatuses),
   ]
   if (input.groupId) {
-    matchConditions.push(eq(matches.round_id, input.groupId))
+    matchConditions.push(eq(matches.group_id, input.groupId))
   }
 
   const completedMatches = await client
@@ -199,11 +199,11 @@ export async function recalculateStandings(
     .values({
       tournament_id: input.tournamentId,
       group_id: groupId,
-      calculated_at: new Date(),
+      last_calculated_at: new Date(),
     })
     .onConflictDoUpdate({
       target: [standings.tournament_id, standings.group_id],
-      set: { calculated_at: new Date() },
+      set: { last_calculated_at: new Date() },
     })
     .returning()
 
@@ -214,14 +214,14 @@ export async function recalculateStandings(
     standing_id: standingRow.id,
     team_id: stats.teamId,
     position: idx + 1,
-    played: stats.played,
-    won: stats.won,
-    drawn: stats.drawn,
-    lost: stats.lost,
-    goals_for: stats.goalsFor,
-    goals_against: stats.goalsAgainst,
-    goal_difference: stats.goalDifference,
-    points: stats.points,
+    pj: stats.played,
+    pg: stats.won,
+    pe: stats.drawn,
+    pp: stats.lost,
+    gf: stats.goalsFor,
+    gc: stats.goalsAgainst,
+    dg: stats.goalDifference,
+    pts: stats.points,
   }))
 
   const insertedEntries = await client.insert(standingEntries).values(entriesToInsert).returning()
@@ -232,14 +232,14 @@ export async function recalculateStandings(
       standing_id: row.standing_id,
       team_id: row.team_id,
       position: row.position,
-      played: row.played,
-      won: row.won,
-      drawn: row.drawn,
-      lost: row.lost,
-      goals_for: row.goals_for,
-      goals_against: row.goals_against,
-      goal_difference: row.goal_difference,
-      points: row.points,
+      played: row.pj,
+      won: row.pg,
+      drawn: row.pe,
+      lost: row.pp,
+      goals_for: row.gf,
+      goals_against: row.gc,
+      goal_difference: row.dg,
+      points: row.pts,
     })),
   )
 }

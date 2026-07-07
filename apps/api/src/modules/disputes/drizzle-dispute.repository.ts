@@ -35,7 +35,7 @@ export class DrizzleDisputeRepository implements IDisputeRepository {
         opened_by: input.opened_by,
         reason: input.reason,
         description: input.description,
-        evidence_urls: input.evidence_urls ?? null,
+        evidence_urls: input.evidence_urls ?? [],
       })
       .returning()
     // biome-ignore lint/style/noNonNullAssertion: insert + returning always yields one row

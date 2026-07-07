@@ -22,14 +22,14 @@ function enrichEntries(entries: RawEntry[], teamMap: Map<string, RawTeam>) {
       team_name: team?.name ?? '',
       team_logo_url: team?.logo_url ?? null,
       position: e.position,
-      played: e.played,
-      won: e.won,
-      drawn: e.drawn,
-      lost: e.lost,
-      goals_for: e.goals_for,
-      goals_against: e.goals_against,
-      goal_difference: e.goal_difference,
-      points: e.points,
+      played: e.pj,
+      won: e.pg,
+      drawn: e.pe,
+      lost: e.pp,
+      goals_for: e.gf,
+      goals_against: e.gc,
+      goal_difference: e.dg,
+      points: e.pts,
     }
   })
 }
