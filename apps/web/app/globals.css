@@ -142,7 +142,7 @@
   /* TOKENS DE BORDE */
 
   --line: rgba(242, 242, 239, 0.08); /* Bordes de cards y separadores */
-  --line-2: rgba(242, 242, 239, 0.14); /* Bordes de inputs, énfasis */
+  --line-2: #2d2f2c; /* Bordes de inputs, énfasis */
 
   /* COLORES SEMÁNTICOS */
 
@@ -349,6 +349,10 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--color-scroll-thumb);
   border-radius: 10px;
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--color-scroll-track);
 }
 
 @keyframes gradientMove {

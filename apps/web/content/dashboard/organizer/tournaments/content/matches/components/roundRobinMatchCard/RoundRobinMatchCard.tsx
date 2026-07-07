@@ -1,7 +1,6 @@
 'use client'
 
 import Image from 'next/image'
-import { forwardRef } from 'react'
 import { useFormContext } from 'react-hook-form'
 import type { Match, BracketMode, SetupFormValues } from '../../types/types'
 import { UsersRound } from 'lucide-react'
@@ -14,15 +13,18 @@ interface MatchCardProps {
   mode: BracketMode
   onOpenResultModal?: (match: Match) => void
   isEmpty?: boolean
-  isLastRound: boolean
+  canHaveTopBorder: boolean
+  canHaveLeftBorder: boolean
 }
 
-// ─── MatchCard (con forwardRef para que el padre mida la altura real) ─────────
-
-const MatchCard = forwardRef<HTMLDivElement, MatchCardProps>(function MatchCard(
-  { match, mode, onOpenResultModal, isEmpty = false, isLastRound },
-  ref,
-) {
+export function RoundRobinMatchCard({
+  match,
+  mode,
+  onOpenResultModal,
+  isEmpty = false,
+  canHaveLeftBorder,
+  canHaveTopBorder,
+}: MatchCardProps) {
   // useFormContext solo disponible en modo setup (padre envuelve con FormProvider)
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const formMethods = mode === 'setup' ? useFormContext<SetupFormValues>() : null
@@ -34,21 +36,16 @@ const MatchCard = forwardRef<HTMLDivElement, MatchCardProps>(function MatchCard(
 
   if (isEmpty) {
     return (
-      // Las tarjetas vacías también reciben ref para que el ResizeObserver
-      // pueda medir su altura si fuera necesario (normalmente no se usa).
-      <div
-        ref={ref}
-        className={`p-6 border select-none rounded-2xl border-line ${isLastRound && "mr-6"}`}
-      >
-        <div className="flex items-center justify-center h-18">
-          <span className="text-faint">Disponible</span>
-        </div>
-      </div>
+      <td
+        className={`border border-r-line border-b-line bg-surface ${canHaveTopBorder ? 'border-t-line' : 'border-t-transparent'} ${canHaveLeftBorder ? 'border-l-line' : 'border-l-transparent'}`}
+      ></td>
     )
   }
 
   return (
-    <div ref={ref} className="border rounded-2xl border-line">
+    <td
+      className={`border border-r-line border-b-line ${canHaveTopBorder ? 'border-t-line' : 'border-t-transparent'} ${canHaveLeftBorder ? 'border-l-line' : 'border-l-transparent'}`}
+    >
       {/* Equipos */}
       <div className="flex items-center w-full gap-4 p-6">
         <div className="flex flex-col items-center w-full min-w-0 gap-4">
@@ -115,7 +112,7 @@ const MatchCard = forwardRef<HTMLDivElement, MatchCardProps>(function MatchCard(
               showTime
               placeholder="Seleccione una fecha"
               rules={{}}
-              label='Seleccione fecha y hora'
+              label="Seleccione fecha y hora"
             />
           </div>
         ) : isRegistration ? (
@@ -147,8 +144,6 @@ const MatchCard = forwardRef<HTMLDivElement, MatchCardProps>(function MatchCard(
           </button>
         )}
       </div>
-    </div>
+    </td>
   )
-})
-
-export default MatchCard
+}

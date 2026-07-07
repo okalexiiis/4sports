@@ -25,7 +25,7 @@ export interface Match {
 }
 
 export interface Round {
-  id: string;
+  id?: string;
   label: string; // ej. "Cuartos de final", "Semifinal", "Final"
   matches: Match[];
 }
@@ -34,13 +34,13 @@ export interface Round {
 
 export type BracketMode = "setup" | "registration";
 
-export interface EliminationBracketProps {
+export interface BracketProps {
   teams: Team[];
   mode: BracketMode;
   /** Callback al presionar "Registrar partidos" (modo setup) */
   onRegister?: (rounds: Round[]) => void;
   /** Callback al presionar "Terminar torneo" (modo registration) */
-  onFinish?: () => void;
+  onFinish: () => void;
   /** Callback al presionar "Ingresar resultado" en una tarjeta (modo registration) */
   onOpenResultModal?: (match: Match, roundId: string) => void;
 }

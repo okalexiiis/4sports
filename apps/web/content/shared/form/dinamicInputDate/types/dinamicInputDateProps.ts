@@ -7,4 +7,5 @@ export type DinamicInputDateProps<T extends FieldValues> = {
   placeholder?: string
   rules?: RegisterOptions<T, Path<T>>
   mode?: 'single' | 'range'
+  showTime?: boolean
 }
