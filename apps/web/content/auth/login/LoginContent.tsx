@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation'
 
 /* STORES */
 import { useAnnouncement } from '@/content/shared/ui/annoucement/stores/announcementStore'
+import { useAuthStore } from '@/content/shared/stores/autenticationStore/autenticationStore'
 
 /* TYPES */
 import { LoginForm } from '@/content/auth/login/types/LoginForm'
@@ -28,6 +29,8 @@ export function LoginContent() {
   const router = useRouter()
 
   const { setAnnouncement } = useAnnouncement()
+  const { setUser } = useAuthStore()
+
   const [saving, setSaving] = useState(false)
 
   const methods = useForm<LoginForm>({
@@ -44,23 +47,40 @@ export function LoginContent() {
       const request = await fetch(PORT + '/auth/sign-in/email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: data.email, password: data.password }),
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+          callbackURL: '',
+          rememberMe: false,
+        }),
         credentials: 'include',
       })
 
-      const response = await request.json()
-      console.log(response)
-
-      /* setAnnouncement({
-        isActivated: true,
-        announceType: 'ok',
-        message: 'Sesión iniciada correctamente',
-      })
-      router.push('/organizer/home') */
+      if (request.status === 200) {
+        setUser(null, 'idle')
+        router.push('/organizer/home')
+      } else if (request.status === 401) {
+        setAnnouncement({
+          isActivated: true,
+          announceType: 'error',
+          message: 'Información inválida, intente nuevamente con otros datos',
+        })
+      } else {
+        setAnnouncement({
+          isActivated: true,
+          announceType: 'error',
+          message: 'A ocurrido un error interno, intente nuevamente más tarde',
+        })
+      }
 
       setSaving(false)
-    } catch (error) {
-      console.log('Error', error)
+    } catch {
+      setAnnouncement({
+        isActivated: true,
+        announceType: 'error',
+        message: 'A ocurrido un error interno, intente nuevamente más tarde',
+      })
+
       setSaving(false)
     }
   }

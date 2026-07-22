@@ -1,45 +1,100 @@
-"use client";
+'use client'
 
 /* COMPONENTS */
-import { Sidebar } from "@/content/shared/ui/sidebar/Sidebar";
-import { NotificationsSidebar } from "@/content/shared/ui/notificationsSidebar/NotificationsSidebar";
+import { Sidebar } from '@/content/shared/ui/sidebar/Sidebar'
+import { NotificationsSidebar } from '@/content/shared/ui/notificationsSidebar/NotificationsSidebar'
 import { Modal } from '@/content/shared/ui/modal/Modal'
+import { DinamicButton } from '@/content/shared/form/dinamicButton/DinamicButton'
 
 /* DATA */
-import { organizerSidebarLinks } from "@/content/shared/ui/sidebar/data/organizerSidebarLinks";
+import { organizerSidebarLinks } from '@/content/shared/ui/sidebar/data/organizerSidebarLinks'
+
+/* HOOKS */
+import { useEffect } from 'react'
+
+/* ICONS */
+import { Loader } from 'lucide-react'
+
+/* NAVIGATION */
+import { useRouter } from 'next/navigation'
 
 /* LIBS */
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion'
 
 /* STORES */
-import { useSidebarStore } from "@/content/shared/ui/sidebar/stores/SidebarStore";
+import { useSidebarStore } from '@/content/shared/ui/sidebar/stores/SidebarStore'
+import { useAuthStore } from '@/content/shared/stores/autenticationStore/autenticationStore'
 
-export default function OrganizerLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const { expanded } = useSidebarStore();
+export default function OrganizerLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
 
-  return (
-    <motion.main
-      className="flex min-h-dvh overflow-y-hidden overflow-x-hidden relative"
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeInOut" }}
-    >
-      <Sidebar links={organizerSidebarLinks} />
-      <Modal />
-      <div
-        className={`flex flex-col h-dvh w-full transition-all duration-300 ${
-          expanded
-            ? "lg:left-64 lg:w-[calc(100%-16rem)]"
-            : "lg:left-16 lg:w-[calc(100%-4rem)] z-40"
-        }`}
+  const { expanded } = useSidebarStore()
+  const initialize = useAuthStore((s) => s.initialize)
+  const status = useAuthStore((s) => s.status)
+  const user = useAuthStore((s) => s.data)
+
+  useEffect(() => {
+    initialize()
+  }, [initialize])
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/login')
+    }
+  }, [status, router])
+
+  if (status === 'idle' || status === 'loading' || status === 'unauthenticated') {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: 'easeInOut' }}
+        exit={{ opacity: 0 }}
+        className="flex items-center justify-center w-full min-h-dvh"
       >
-        {children}
-      </div>
-      <NotificationsSidebar />
-    </motion.main>
-  );
+        <Loader className="size-12 animate-spin text-primary" />
+      </motion.div>
+    )
+  } else if (status === 'authenticated') {
+    return (
+      <motion.div
+        className="relative flex overflow-x-hidden overflow-y-hidden min-h-dvh"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: 'easeInOut' }}
+      >
+        <Sidebar links={organizerSidebarLinks} />
+        <Modal />
+        <div
+          className={`flex flex-col h-dvh w-full transition-all duration-300 ${
+            expanded
+              ? 'lg:left-64 lg:w-[calc(100%-16rem)]'
+              : 'lg:left-16 lg:w-[calc(100%-4rem)] z-40'
+          }`}
+        >
+          {children}
+        </div>
+        <NotificationsSidebar />
+      </motion.div>
+    )
+  } else {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: 'easeInOut' }}
+        exit={{ opacity: 0 }}
+        className="flex flex-col items-center justify-center w-full gap-4 min-h-dvh"
+      >
+        <p>A ocurrido un error al ingresar, porfavor intenta nuevamente más tarde</p>
+
+        <DinamicButton
+          action={() => router.replace('/login')}
+          twClassName="w-fit"
+          type="filled"
+          label="Regresar a Iniciar sesión"
+        />
+      </motion.div>
+    )
+  }
 }

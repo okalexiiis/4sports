@@ -1,11 +1,12 @@
 /* COMPONENTS */
+import { Announcement } from '@/content/shared/ui/annoucement/Announcement'
+import { Providers } from './providers'
 
 /* METADATA */
 import type { Metadata } from 'next'
+
 /* FONTS */
 import { Bebas_Neue, DM_Sans, Inter } from 'next/font/google'
-import { Announcement } from '@/content/shared/ui/annoucement/Announcement'
-import { Providers } from './providers'
 
 /* STYLES */
 import './globals.css'
