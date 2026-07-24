@@ -171,6 +171,7 @@ export class DrizzleTournamentRepository implements ITournamentRepository {
         name: data.name,
         slug: data.slug,
         description: data.description ?? null,
+        banner_url: data.banner_url ?? null,
         sport_id: data.sport_id ?? null,
         format_id: data.format_id ?? null,
         tags: data.tags ?? [],

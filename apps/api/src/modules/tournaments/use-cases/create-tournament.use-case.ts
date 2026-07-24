@@ -43,6 +43,7 @@ export async function createTournament(
     name: string
     slug?: string
     description?: string | null
+    banner_url?: string | null
     sport_id?: string | null
     format_id?: string | null
     tags?: string[]
@@ -94,6 +95,7 @@ export async function createTournament(
     name: input.name,
     slug,
     description: input.description,
+    banner_url: input.banner_url,
     sport_id: input.sport_id,
     format_id: input.format_id,
     tags: input.tags,
