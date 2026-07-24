@@ -43,7 +43,7 @@ export default function OrganizerLayout({ children }: { children: React.ReactNod
     }
   }, [status, router])
 
-  if (status === 'idle' || status === 'loading' || status === 'unauthenticated') {
+  if (status === 'empty' || status === 'unauthenticated') {
     return (
       <motion.div
         initial={{ opacity: 0 }}

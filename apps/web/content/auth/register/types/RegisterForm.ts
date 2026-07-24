@@ -1,5 +1,6 @@
 export type RegisterForm = {
-  email: string;
-  password: string;
-  password_confirm: string;
-};
+  email: string
+  name: string
+  password: string
+  password_confirm: string
+}

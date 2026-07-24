@@ -5,10 +5,13 @@ import Link from 'next/link'
 import { DinamicInputText } from '@/content/shared/form/dinamicInputText/DinamicInputText'
 import { DinamicButton } from '@/content/shared/form/dinamicButton/DinamicButton'
 
+/* CONSTS */
+import { PORT } from '@/content/shared/consts/PORT'
+
 /* ICONS */
 import { FourSportsIcon } from '@/content/shared/icons/fourSports/FourSportsIcon'
-import { GoogleIcon } from '@/content/shared/icons/google/GoogleIcon'
-import { FacebookIcon } from '@/content/shared/icons/facebook/FacebookIcon'
+/* import { GoogleIcon } from '@/content/shared/icons/google/GoogleIcon'
+import { FacebookIcon } from '@/content/shared/icons/facebook/FacebookIcon' */
 
 /* HOOKS */
 import { useState } from 'react'
@@ -23,7 +26,6 @@ import { useAuthStore } from '@/content/shared/stores/autenticationStore/autenti
 
 /* TYPES */
 import { LoginForm } from '@/content/auth/login/types/LoginForm'
-import { PORT } from '@/content/shared/consts/PORT'
 
 export function LoginContent() {
   const router = useRouter()
@@ -57,7 +59,7 @@ export function LoginContent() {
       })
 
       if (request.status === 200) {
-        setUser(null, 'idle')
+        setUser(null, 'empty')
         router.push('/organizer/home')
       } else if (request.status === 401) {
         setAnnouncement({
@@ -98,7 +100,7 @@ export function LoginContent() {
         label="Correo"
         type="text"
         placeholder="tucorreo@email.com"
-        rules={{}}
+        rules={{ required: { message: 'El correo es necesario', value: true } }}
       />
 
       <DinamicInputText<LoginForm>
@@ -106,14 +108,14 @@ export function LoginContent() {
         label="Contraseña"
         type="password"
         placeholder="********"
-        rules={{}}
+        rules={{ required: { message: 'La contraseña es necesaria', value: true } }}
       />
 
-      <div className="w-full mb-4 h-fit">
+      {/* <div className="w-full mb-4 h-fit">
         <Link href={'/login/#'} className="text-sm underline text-primary">
           Olvidé mi contraseña
         </Link>
-      </div>
+      </div> */}
 
       <DinamicButton
         action={methods.handleSubmit(onSubmit)}
@@ -125,13 +127,13 @@ export function LoginContent() {
         spinFromText
       />
 
-      <div className="flex items-center justify-center w-full gap-2 mb-4 h-fit">
+      {/* <div className="flex items-center justify-center w-full gap-2 mb-4 h-fit">
         <div className="w-24 h-px rounded-full bg-line" />
         <p className="text-sm text-muted">O también</p>
         <div className="w-24 h-px rounded-full bg-line" />
-      </div>
+      </div> */}
 
-      <div className="flex gap-4 mb-6">
+      {/* <div className="flex gap-4 mb-6">
         <DinamicButton
           action={methods.handleSubmit(onSubmit)}
           disabled={saving}
@@ -157,7 +159,7 @@ export function LoginContent() {
             </div>
           }
         />
-      </div>
+      </div> */}
 
       <div className="flex justify-center w-full gap-2 mb-4 h-fit">
         <p>¿No tienes una cuenta?</p>

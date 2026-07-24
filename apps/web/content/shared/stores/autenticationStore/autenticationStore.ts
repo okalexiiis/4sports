@@ -4,11 +4,11 @@ import { MeData } from '../../../../../api/src/modules/auth/auth.entity'
 
 interface AuthState {
   data: MeData | null
-  status: 'idle' | 'loading' | 'authenticated' | 'unauthenticated' | 'error'
+  status: 'empty' | 'authenticated' | 'unauthenticated' | 'error'
 
   setUser: (
     user: MeData | null,
-    status: 'idle' | 'loading' | 'authenticated' | 'unauthenticated' | 'error',
+    status: 'empty' | 'authenticated' | 'unauthenticated' | 'error',
   ) => void
   initialize: () => Promise<void>
   logout: () => Promise<void>
@@ -16,13 +16,13 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   data: null,
-  status: 'idle',
+  status: 'empty',
 
   setUser: (data, status) => set({ data, status }),
 
   initialize: async () => {
     // Evitar volver a pedir /me
-    if (get().status !== 'idle') return
+    if (get().status !== 'empty') return
 
     try {
       const res = await fetch(`${PORT}/v1/me`, {
