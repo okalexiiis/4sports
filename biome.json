@@ -7,7 +7,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**"]
+    "includes": ["**", "./!graphify-out/**"]
   },
   "formatter": {
     "enabled": true,
