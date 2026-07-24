@@ -4,7 +4,7 @@ export interface PresignedUrlResult {
   expires_in: number
 }
 
-export type UploadContext = 'avatar' | 'org-logo' | 'banner'
+export type UploadContext = 'avatar' | 'org-logo' | 'team-logo' | 'banner'
 
 export const ALLOWED_CONTENT_TYPES = [
   'image/jpeg',

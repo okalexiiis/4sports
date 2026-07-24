@@ -1,0 +1,134 @@
+{
+  "nodes": [
+    {
+      "id": "hitos_hitos_1_y_2_techdoc",
+      "label": "Hitos 1-2 TechDoc (Auth, Tournaments, Teams)",
+      "file_type": "document",
+      "source_file": "agent_docs/hitos/hitos-1-y-2.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hitos_hitos_1_y_2_layered_architecture",
+      "label": "Layered API Architecture (routes -> use-case -> repository)",
+      "file_type": "rationale",
+      "source_file": "agent_docs/hitos/hitos-1-y-2.md",
+      "source_location": "Arquitectura de la API",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Layers never mix: routes only call use cases, use cases only call repositories, repositories only run Drizzle queries; Redis is handled by the use case, never routes or repositories."
+    },
+    {
+      "id": "hitos_hitos_1_y_2_module_structure",
+      "label": "Domain Module Folder Structure",
+      "file_type": "concept",
+      "source_file": "agent_docs/hitos/hitos-1-y-2.md",
+      "source_location": "Estructura de modulos",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hitos_hitos_1_y_2_r2_presigned_upload",
+      "label": "R2 Presigned Upload Flow (POST /v1/upload/presigned)",
+      "file_type": "concept",
+      "source_file": "agent_docs/hitos/hitos-1-y-2.md",
+      "source_location": "Manejo de archivos",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Clients never upload files through the API; the API only issues a 5-minute presigned PUT URL and later stores the public URL \u2014 keeps upload bandwidth off the API."
+    },
+    {
+      "id": "hitos_hitos_1_y_2_pagination_standard",
+      "label": "Standard Pagination Format (page/limit + meta)",
+      "file_type": "concept",
+      "source_file": "agent_docs/hitos/hitos-1-y-2.md",
+      "source_location": "Paginacion estandar",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "hitos_hitos_1_y_2_techdoc",
+      "target": "use_cases_4sports_uc_bloque1_identidad_uc_bloque1",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/hitos/hitos-1-y-2.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hitos_1_y_2_techdoc",
+      "target": "use_cases_4sports_uc_bloque2_torneos_uc_bloque2",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/hitos/hitos-1-y-2.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hitos_1_y_2_techdoc",
+      "target": "hitos_hitos_1_y_2_layered_architecture",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/hitos/hitos-1-y-2.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hitos_1_y_2_module_structure",
+      "target": "hitos_hitos_1_y_2_layered_architecture",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/hitos/hitos-1-y-2.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hitos_1_y_2_techdoc",
+      "target": "hitos_hitos_1_y_2_r2_presigned_upload",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/hitos/hitos-1-y-2.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hitos_1_y_2_pagination_standard",
+      "target": "agent_docs_api_routes_reference_response_format",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agent_docs/hitos/hitos-1-y-2.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hitos_1_y_2_techdoc",
+      "target": "db_4sports_schema_v4_diagramas_schema_v4",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agent_docs/hitos/hitos-1-y-2.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": []
+}

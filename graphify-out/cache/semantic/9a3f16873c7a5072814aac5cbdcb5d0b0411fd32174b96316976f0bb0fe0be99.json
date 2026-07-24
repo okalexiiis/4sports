@@ -1,0 +1,51 @@
+{
+  "nodes": [
+    {
+      "id": "observability_promtail_config_api_logs_scrape",
+      "label": "Promtail api_logs Scrape Config",
+      "file_type": "code",
+      "source_file": "docker/observability/promtail-config.yaml",
+      "source_location": "scrape_configs.api_logs",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Tails /logs/api/*.log with static label service=api and promotes JSON fields level and type to Loki labels so LogQL can filter on them."
+    },
+    {
+      "id": "observability_promtail_config_pino_level_mapping",
+      "label": "Pino Numeric Level to String Mapping",
+      "file_type": "rationale",
+      "source_file": "docker/observability/promtail-config.yaml",
+      "source_location": "pipeline_stages.template",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Pino serializes log levels as numbers (10..60) when transport.targets is used (a Pino limitation), so a Promtail template stage maps 10->trace .. 60->fatal to keep the Loki level label human-queryable ({level=\"error\"})."
+    }
+  ],
+  "edges": [
+    {
+      "source": "observability_promtail_config_api_logs_scrape",
+      "target": "observability_docker_compose_loki_service",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/observability/promtail-config.yaml",
+      "source_location": "clients.url: http://loki:3100/loki/api/v1/push",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_promtail_config_pino_level_mapping",
+      "target": "observability_promtail_config_api_logs_scrape",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/observability/promtail-config.yaml",
+      "source_location": "scrape_configs.api_logs.pipeline_stages",
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": []
+}

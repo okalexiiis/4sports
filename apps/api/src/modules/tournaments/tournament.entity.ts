@@ -51,6 +51,7 @@ export interface CreateTournamentInput {
   name: string
   slug: string
   description?: string | null
+  banner_url?: string | null
   sport_id?: string | null
   format_id?: string | null
   tags?: string[]
@@ -74,6 +75,7 @@ export interface CreateTournamentInput {
 export interface UpdateTournamentInput {
   name?: string
   description?: string | null
+  banner_url?: string | null
   sport_id?: string | null
   format_id?: string | null
   tags?: string[]

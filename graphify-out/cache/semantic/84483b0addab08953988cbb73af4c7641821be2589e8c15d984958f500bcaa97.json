@@ -1,0 +1,158 @@
+{
+  "nodes": [
+    {
+      "id": "observability_readme_observability_stack",
+      "label": "Local Observability Stack Guide",
+      "file_type": "document",
+      "source_file": "docker/observability/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "observability_readme_log_pipeline",
+      "label": "Log Pipeline (API file -> Promtail -> Loki -> Grafana)",
+      "file_type": "rationale",
+      "source_file": "docker/observability/README.md",
+      "source_location": "How it works",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "The API is fully decoupled from observability: it only writes JSON log lines to a file, and Promtail/Loki/Grafana are optional Docker containers layered on top, so the app has zero runtime dependency on the log stack."
+    },
+    {
+      "id": "observability_readme_log_file_env",
+      "label": "LOG_FILE Environment Variable",
+      "file_type": "concept",
+      "source_file": "docker/observability/README.md",
+      "source_location": "Setup step 1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "LOG_FILE=logs/api.log makes Pino tee JSON logs to a file (relative to apps/api/) in addition to pretty terminal output, for Promtail to scrape. It must NOT be set in production, where writing JSON to stdout only is the correct behaviour for hosted environments."
+    },
+    {
+      "id": "observability_readme_logql_queries",
+      "label": "LogQL Query Recipes ({service=\"api\"})",
+      "file_type": "concept",
+      "source_file": "docker/observability/README.md",
+      "source_location": "Querying logs in Grafana",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "observability_readme_observability_stack",
+      "target": "observability_readme_log_pipeline",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/observability/README.md",
+      "source_location": "How it works",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_log_pipeline",
+      "target": "observability_docker_compose_loki_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/observability/README.md",
+      "source_location": "container table (4sports-loki)",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_log_pipeline",
+      "target": "observability_docker_compose_promtail_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/observability/README.md",
+      "source_location": "container table (4sports-promtail)",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_log_pipeline",
+      "target": "observability_docker_compose_grafana_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/observability/README.md",
+      "source_location": "container table (4sports-grafana)",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_log_file_env",
+      "target": "observability_readme_log_pipeline",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/observability/README.md",
+      "source_location": "Setup step 1",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_log_pipeline",
+      "target": "observability_promtail_config_api_logs_scrape",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docker/observability/README.md",
+      "source_location": "Promtail reads apps/api/logs/*.log vs __path__ /logs/api/*.log",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_logql_queries",
+      "target": "observability_promtail_config_api_logs_scrape",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docker/observability/README.md",
+      "source_location": "queries filter on labels service/level set by the scrape pipeline",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_logql_queries",
+      "target": "observability_docker_compose_grafana_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/observability/README.md",
+      "source_location": "Querying logs in Grafana (http://localhost:3001)",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_log_file_env",
+      "target": "observability_promtail_config_pino_level_mapping",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docker/observability/README.md",
+      "source_location": "both exist because Pino file transport output (JSON, numeric levels) feeds the scrape pipeline",
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "api_log_flow",
+      "label": "API JSON Log Flow (LOG_FILE -> Promtail -> Loki -> Grafana)",
+      "nodes": [
+        "observability_readme_log_file_env",
+        "observability_promtail_config_api_logs_scrape",
+        "observability_docker_compose_loki_service",
+        "observability_readme_logql_queries"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/observability/README.md"
+    }
+  ]
+}

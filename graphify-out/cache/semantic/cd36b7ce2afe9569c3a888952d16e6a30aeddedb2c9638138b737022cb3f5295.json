@@ -1,0 +1,189 @@
+{
+  "nodes": [
+    {
+      "id": "dev_docs_frontend_dev_guide_frontend_dev_guide",
+      "label": "Frontend Dev Guide (Garib & Ivan)",
+      "file_type": "document",
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "dev_docs_frontend_dev_guide_betterauth_session_auth",
+      "label": "BetterAuth Session Cookie Authentication (Client Side)",
+      "file_type": "concept",
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": "section 2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Web relies on browser cookie handling via fetch credentials:'include'; mobile must persist and resend the better-auth.session_token cookie manually (expo-secure-store or BetterAuth RN client) because React Native has no cookie jar."
+    },
+    {
+      "id": "dev_docs_frontend_dev_guide_nativewind_tailwind_stack",
+      "label": "NativeWind v4 + Tailwind v3 Styling Stack",
+      "file_type": "rationale",
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": "section 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Mobile deliberately pins NativeWind v4 with Tailwind v3 because the NativeWind + Tailwind v4 combination is not yet stable for production."
+    },
+    {
+      "id": "dev_docs_frontend_dev_guide_primary_color_tokens",
+      "label": "Primary Color Tokens (tailwind.config.js)",
+      "file_type": "concept",
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": "section 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Design tokens (primary-50..primary-900, sky-blue scale) are centralized in apps/mobile/tailwind.config.js theme.extend so new colors are added in one place."
+    },
+    {
+      "id": "dev_docs_frontend_dev_guide_shared_ui_package",
+      "label": "@4sports/ui Shared Component Package",
+      "file_type": "concept",
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": "section 4",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Components in packages/ui affect web and mobile simultaneously, so the team rule is: check for an existing component before creating one, and coordinate (Ivan asks Garib) before adding new shared components."
+    },
+    {
+      "id": "dev_docs_frontend_dev_guide_expo_router_navigation",
+      "label": "Expo Router v4 File-Based Navigation",
+      "file_type": "concept",
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": "section 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Expo Router was chosen for its file-system routing that mirrors Next.js App Router, keeping the mental model identical across web and mobile: each .tsx under app/ is a route, (auth) groups omit URL segments, [id].tsx is a dynamic route."
+    },
+    {
+      "id": "dev_docs_frontend_dev_guide_openapi_docs",
+      "label": "Interactive API Documentation URLs",
+      "file_type": "concept",
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": "section 2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "dev_docs_frontend_dev_guide_frontend_dev_guide",
+      "target": "dev_docs_frontend_dev_guide_betterauth_session_auth",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": "section 2",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_frontend_dev_guide",
+      "target": "dev_docs_frontend_dev_guide_nativewind_tailwind_stack",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": "section 3",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_frontend_dev_guide",
+      "target": "dev_docs_frontend_dev_guide_shared_ui_package",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": "section 4",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_frontend_dev_guide",
+      "target": "dev_docs_frontend_dev_guide_expo_router_navigation",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": "section 5",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_nativewind_tailwind_stack",
+      "target": "dev_docs_frontend_dev_guide_primary_color_tokens",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": "section 3 (tokens defined in apps/mobile/tailwind.config.js)",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_frontend_dev_guide",
+      "target": "dev_docs_frontend_dev_guide_openapi_docs",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": "section 2 (documentaci\u00f3n interactiva)",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_betterauth_session_auth",
+      "target": "dev_docs_josue_dev_guide_authenticated_requests",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": "both describe the better-auth.session_token cookie flow, one for app clients and one for curl",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_openapi_docs",
+      "target": "dev_docs_josue_dev_guide_betterauth_openapi_reference",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": "both document the same /openapi and /auth/reference URLs for consumers vs implementers",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_expo_router_navigation",
+      "target": "_expo_readme_expo_folder",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.65,
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": "both concern the Expo toolchain of apps/mobile",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_frontend_dev_guide",
+      "target": "docker_readme_docker_services",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "dev_docs/frontend-dev-guide.md",
+      "source_location": "section 1: pnpm run docker:up starts the Postgres + Redis compose services",
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": []
+}

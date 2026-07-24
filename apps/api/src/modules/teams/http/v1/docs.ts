@@ -3,6 +3,19 @@ import { TeamMemberSchema, TeamSchema } from './schemas'
 
 const security = [{ cookieAuth: [] }]
 
+export const updateTeamDetail = {
+  summary: 'Update team',
+  description: 'Updates team fields. All fields are optional. Requires captain role.',
+  security,
+  responses: {
+    200: ApiResponses.success(TeamSchema, 'Team updated'),
+    401: ApiResponses.unauthorized('No active session'),
+    403: ApiResponses.forbidden('Actor is not the team captain'),
+    404: ApiResponses.notFound('Team not found'),
+    422: ApiResponses.validation('Validation error'),
+  },
+}
+
 export const createTeamDetail = {
   summary: 'Create team',
   description:

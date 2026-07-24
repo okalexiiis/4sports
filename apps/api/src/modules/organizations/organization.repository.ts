@@ -4,8 +4,10 @@ import type {
   InvitationRecord,
   InviteMemberInput,
   ListMembersResult,
+  Organization,
   OrgMember,
   OrgWithRole,
+  UpdateOrgInput,
   UpdateRoleInput,
 } from './organization.entity'
 
@@ -33,4 +35,5 @@ export interface IOrganizationRepository {
   findInvitationById(memberId: string): Promise<InvitationRecord | null>
   acceptInvitation(memberId: string, userId: string): Promise<OrgMember>
   rejectInvitation(memberId: string): Promise<void>
+  updateOrganization(orgId: string, data: UpdateOrgInput): Promise<Organization>
 }

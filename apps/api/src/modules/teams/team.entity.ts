@@ -68,6 +68,18 @@ export interface CreateTeamInput {
   organization_id?: string | null
 }
 
+export interface UpdateTeamInput {
+  name?: string
+  short_name?: string | null
+  logo_url?: string | null
+  primary_color?: string | null
+  secondary_color?: string | null
+  city?: string | null
+  country_code?: string | null
+  gender_type?: string
+  join_policy?: string
+}
+
 export interface AddGuestPlayerInput {
   display_name: string
   avatar_url?: string | null

@@ -1,0 +1,233 @@
+{
+  "nodes": [
+    {
+      "id": "hitos_hito_3_techdoc",
+      "label": "Hito 3 MVP TechDoc (Matches & Results)",
+      "file_type": "document",
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hitos_hito_3_match_state_machine",
+      "label": "Match Lifecycle State Machine",
+      "file_type": "concept",
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": "section 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Strict state machine on matches.status (scheduled/postponed/live/suspended/finished/disputed/walkover/cancelled) \u2014 states cannot be skipped, preserving competition integrity."
+    },
+    {
+      "id": "hitos_hito_3_finish_match_transaction",
+      "label": "Match Finish Atomic Transaction",
+      "file_type": "rationale",
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": "section 6.2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "POST /matches/:id/finish runs score calc, winner, standings recalc, suspension confirmation, BullMQ enqueue and bracket advance in ONE PostgreSQL transaction \u2014 full rollback on any failure so a match never ends inconsistent."
+    },
+    {
+      "id": "hitos_hito_3_standings_recalculation",
+      "label": "Full Standings Recalculation (no incremental deltas)",
+      "file_type": "rationale",
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": "section 6.3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Recalculation reads ALL finished matches and rebuilds the table from scratch instead of applying deltas, to avoid drift/inconsistencies after corrections and disputes."
+    },
+    {
+      "id": "hitos_hito_3_bullmq_queues",
+      "label": "BullMQ Notification & Audit Queues",
+      "file_type": "concept",
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": "section 8",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hitos_hito_3_live_websocket_protocol",
+      "label": "Live Match WebSocket Protocol (ws://api/ws/matches/:id)",
+      "file_type": "concept",
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": "section 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Sub-5-second score latency target; Redis caches active match state to shield PostgreSQL during simultaneous write peaks \u2014 DB stays the source of truth."
+    }
+  ],
+  "edges": [
+    {
+      "source": "hitos_hito_3_techdoc",
+      "target": "agent_docs_equipo_team_roles",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hito_3_techdoc",
+      "target": "agent_docs_prd_prd",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hito_3_techdoc",
+      "target": "hitos_hitos_1_y_2_techdoc",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hito_3_techdoc",
+      "target": "db_4sports_schema_v4_diagramas_schema_v4",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hito_3_techdoc",
+      "target": "agent_docs_prd_referee_session_token",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hito_3_match_state_machine",
+      "target": "db_4sports_schema_v4_diagramas_matches",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hito_3_finish_match_transaction",
+      "target": "hitos_hito_3_standings_recalculation",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hito_3_finish_match_transaction",
+      "target": "hitos_hito_3_bullmq_queues",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hito_3_finish_match_transaction",
+      "target": "hitos_hito_3_match_state_machine",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hito_3_standings_recalculation",
+      "target": "db_4sports_schema_v4_diagramas_standings",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hito_3_standings_recalculation",
+      "target": "use_cases_4sports_uc_bloque2_torneos_standings_calculation",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hitos_hito_3_live_websocket_protocol",
+      "target": "hitos_hito_3_match_state_machine",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_forces_game_ejection",
+      "target": "hitos_hito_3_finish_match_transaction",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_walkover",
+      "target": "hitos_hito_3_match_state_machine",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agent_docs/hitos/hito-3.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "sanctions_discipline_flow",
+      "label": "Sanctions & Discipline Flow (ejection to confirmed suspension)",
+      "nodes": [
+        "agent_docs_prd_forces_game_ejection",
+        "agent_docs_prd_discipline_panel",
+        "db_4sports_schema_v4_diagramas_player_suspensions",
+        "hitos_hito_3_finish_match_transaction",
+        "db_4sports_schema_v4_diagramas_audit_logs"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/hitos/hito-3.md"
+    }
+  ]
+}

@@ -1,0 +1,383 @@
+{
+  "nodes": [
+    {
+      "id": "agent_docs_prd_prd",
+      "label": "Product Requirements Document v1.0",
+      "file_type": "document",
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_docs_prd_guest_player_profile",
+      "label": "Perfil Puente (Guest Player)",
+      "file_type": "concept",
+      "source_file": "agent_docs/PRD.md",
+      "source_location": "section 5.1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Removes adoption barrier: captains register players by name only (is_guest = true) so leagues work before every player has an account."
+    },
+    {
+      "id": "agent_docs_prd_identity_linking",
+      "label": "Identity Linking Rule (never auto-merge)",
+      "file_type": "rationale",
+      "source_file": "agent_docs/PRD.md",
+      "source_location": "section 5.2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "The platform never infers or merges identities by name similarity \u2014 linking always requires two-step human confirmation to avoid corrupting player history."
+    },
+    {
+      "id": "agent_docs_prd_protected_lifecycle",
+      "label": "Protected Tournament Lifecycle (created_under_plan)",
+      "file_type": "rationale",
+      "source_file": "agent_docs/PRD.md",
+      "source_location": "section 10.2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "A tournament started under a paid plan never degrades when the subscription lapses: feature flags evaluate current plan OR created_under_plan, whichever is greater. Protects competition integrity and works as retention."
+    },
+    {
+      "id": "agent_docs_prd_liquidation_mode",
+      "label": "Modo Liquidaci\u00f3n (subscription expiry)",
+      "file_type": "concept",
+      "source_file": "agent_docs/PRD.md",
+      "source_location": "section 10.2-10.3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_docs_prd_forces_game_ejection",
+      "label": "forces_game_ejection Sanction Flag",
+      "file_type": "concept",
+      "source_file": "agent_docs/PRD.md",
+      "source_location": "section 7.4",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Abstracts multi-sport ejections (red card, 5 fouls, umpire ejection) under one technical flag so the sanctions engine is sport-agnostic."
+    },
+    {
+      "id": "agent_docs_prd_discipline_panel",
+      "label": "Panel de Disciplina",
+      "file_type": "concept",
+      "source_file": "agent_docs/PRD.md",
+      "source_location": "section 7.5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_docs_prd_eligibility_engine",
+      "label": "Motor de Elegibilidad",
+      "file_type": "concept",
+      "source_file": "agent_docs/PRD.md",
+      "source_location": "section 5.5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Eligibility is validated against the real account (user_id), never the guest profile; suspensions are scoped per tournament, never platform-global."
+    },
+    {
+      "id": "agent_docs_prd_walkover",
+      "label": "Walkover Resolution",
+      "file_type": "concept",
+      "source_file": "agent_docs/PRD.md",
+      "source_location": "section 4.7",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Walkover score always comes from tournaments.settings.walkover_score, never hardcoded, so each league keeps its own rulebook."
+    },
+    {
+      "id": "agent_docs_prd_referee_session_token",
+      "label": "referee_session_token Access",
+      "file_type": "concept",
+      "source_file": "agent_docs/PRD.md",
+      "source_location": "section 11.3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Referees record match events via a tokenized link without needing an account; access is strictly limited to the assigned match. Captains and coaches are explicitly excluded from event capture."
+    },
+    {
+      "id": "agent_docs_prd_roles_permissions_model",
+      "label": "Hybrid Roles & Permissions Model",
+      "file_type": "concept",
+      "source_file": "agent_docs/PRD.md",
+      "source_location": "section 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Preconfigured roles with DB-scoped limits; permissions are backend validations per resource, never just UI restrictions. Multitenant: one user, different roles per organization."
+    },
+    {
+      "id": "agent_docs_prd_subscription_plans",
+      "label": "Subscription Plans (Free/Starter/Pro/Elite)",
+      "file_type": "concept",
+      "source_file": "agent_docs/PRD.md",
+      "source_location": "section 10.1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Plans billed per organization, not per user, so organizers are not penalized for growing their community."
+    },
+    {
+      "id": "agent_docs_prd_payment_model",
+      "label": "No-Intermediary Payment Model",
+      "file_type": "rationale",
+      "source_file": "agent_docs/PRD.md",
+      "source_location": "section 8.3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "4Sports never holds tournament money: Captain -> Gateway -> Organizer, 0% commission. Revenue is SaaS subscription only, avoiding financial-intermediary legal exposure."
+    },
+    {
+      "id": "agent_docs_prd_tournament_lifecycle",
+      "label": "Tournament Lifecycle States",
+      "file_type": "concept",
+      "source_file": "agent_docs/PRD.md",
+      "source_location": "section 4.2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "draft -> private/open_registration -> active -> completed -> archived; structure freezes at publish, incidents remain editable with audit + public notification."
+    },
+    {
+      "id": "agent_docs_prd_roster_validation_modes",
+      "label": "Roster Validation Modes (strict/flexible/hybrid)",
+      "file_type": "concept",
+      "source_file": "agent_docs/PRD.md",
+      "source_location": "section 5.4",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "agent_docs_prd_prd",
+      "target": "agent_docs_prd_guest_player_profile",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_prd",
+      "target": "agent_docs_prd_protected_lifecycle",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_prd",
+      "target": "agent_docs_prd_forces_game_ejection",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_prd",
+      "target": "agent_docs_prd_eligibility_engine",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_prd",
+      "target": "agent_docs_prd_payment_model",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_prd",
+      "target": "agent_docs_prd_roles_permissions_model",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_guest_player_profile",
+      "target": "agent_docs_prd_identity_linking",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_forces_game_ejection",
+      "target": "agent_docs_prd_discipline_panel",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_protected_lifecycle",
+      "target": "agent_docs_prd_liquidation_mode",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_protected_lifecycle",
+      "target": "agent_docs_prd_subscription_plans",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_eligibility_engine",
+      "target": "agent_docs_prd_roster_validation_modes",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_walkover",
+      "target": "agent_docs_prd_tournament_lifecycle",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_guest_player_profile",
+      "target": "db_4sports_schema_v4_diagramas_players",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_referee_session_token",
+      "target": "db_4sports_schema_v4_diagramas_matches",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_subscription_plans",
+      "target": "db_4sports_schema_v4_diagramas_subscription_plans",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_discipline_panel",
+      "target": "db_4sports_schema_v4_diagramas_player_suspensions",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_payment_model",
+      "target": "db_4sports_schema_v4_diagramas_payment_webhooks",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_tournament_lifecycle",
+      "target": "db_4sports_schema_v4_diagramas_tournaments",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_roles_permissions_model",
+      "target": "db_4sports_schema_v4_diagramas_organization_members",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_prd_referee_session_token",
+      "target": "db_4sports_schema_v4_diagramas_captain_invite_tokens",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "agent_docs/PRD.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": []
+}

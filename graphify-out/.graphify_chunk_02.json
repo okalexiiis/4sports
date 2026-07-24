@@ -1,0 +1,849 @@
+{
+  "nodes": [
+    {
+      "id": "api_readme_elysia_bun_runtime",
+      "label": "Elysia with Bun Runtime Template",
+      "file_type": "document",
+      "source_file": "/home/okalexiiis/dev/4sports/apps/api/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "_expo_readme_expo_folder",
+      "label": ".expo Local Folder",
+      "file_type": "document",
+      "source_file": "/home/okalexiiis/dev/4sports/apps/mobile/.expo/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "The .expo folder is machine-specific (recent devices, dev server settings) and must not be committed; it is auto-added to .gitignore on project creation."
+    },
+    {
+      "id": "dev_docs_frontend_dev_guide_frontend_dev_guide",
+      "label": "Frontend Dev Guide (Garib & Ivan)",
+      "file_type": "document",
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "dev_docs_frontend_dev_guide_betterauth_session_auth",
+      "label": "BetterAuth Session Cookie Authentication (Client Side)",
+      "file_type": "concept",
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": "section 2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Web relies on browser cookie handling via fetch credentials:'include'; mobile must persist and resend the better-auth.session_token cookie manually (expo-secure-store or BetterAuth RN client) because React Native has no cookie jar."
+    },
+    {
+      "id": "dev_docs_frontend_dev_guide_nativewind_tailwind_stack",
+      "label": "NativeWind v4 + Tailwind v3 Styling Stack",
+      "file_type": "rationale",
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": "section 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Mobile deliberately pins NativeWind v4 with Tailwind v3 because the NativeWind + Tailwind v4 combination is not yet stable for production."
+    },
+    {
+      "id": "dev_docs_frontend_dev_guide_primary_color_tokens",
+      "label": "Primary Color Tokens (tailwind.config.js)",
+      "file_type": "concept",
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": "section 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Design tokens (primary-50..primary-900, sky-blue scale) are centralized in apps/mobile/tailwind.config.js theme.extend so new colors are added in one place."
+    },
+    {
+      "id": "dev_docs_frontend_dev_guide_shared_ui_package",
+      "label": "@4sports/ui Shared Component Package",
+      "file_type": "concept",
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": "section 4",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Components in packages/ui affect web and mobile simultaneously, so the team rule is: check for an existing component before creating one, and coordinate (Ivan asks Garib) before adding new shared components."
+    },
+    {
+      "id": "dev_docs_frontend_dev_guide_expo_router_navigation",
+      "label": "Expo Router v4 File-Based Navigation",
+      "file_type": "concept",
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": "section 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Expo Router was chosen for its file-system routing that mirrors Next.js App Router, keeping the mental model identical across web and mobile: each .tsx under app/ is a route, (auth) groups omit URL segments, [id].tsx is a dynamic route."
+    },
+    {
+      "id": "dev_docs_frontend_dev_guide_openapi_docs",
+      "label": "Interactive API Documentation URLs",
+      "file_type": "concept",
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": "section 2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "label": "Josue Dev Guide (API)",
+      "file_type": "document",
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_authguard",
+      "label": "authGuard Middleware",
+      "file_type": "concept",
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "sections 3, 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Every private route must apply authGuard as an Elysia plugin before the handler; it lives at src/shared/middleware/auth.guard.ts."
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_orgguard",
+      "label": "orgGuard(minRole) Middleware",
+      "file_type": "concept",
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "sections 3, 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Routes operating on an organization apply orgGuard with a minimum role (e.g. orgGuard('organizer')); lives at src/shared/middleware/org.guard.ts."
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_featureguard",
+      "label": "featureGuard(feature) Middleware",
+      "file_type": "concept",
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "sections 3, 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Routes gated behind a subscription plan apply featureGuard('feature_key'); lives at src/shared/middleware/feature.guard.ts."
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_thin_route_handler",
+      "label": "Thin Route Handler Rule",
+      "file_type": "rationale",
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "section 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Route handlers in routes.ts may only call a use case and pass the result to toApiResponse; business logic never lives in HTTP handlers so it stays testable and transport-agnostic."
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_use_case_result_pattern",
+      "label": "Use Case Result Pattern",
+      "file_type": "rationale",
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "section 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Business logic is a pure async function (repo, input) -> Promise<Result<T>> that never throws; it returns ok(data) or err(domainError) so error flow is explicit and type-checked under strict TypeScript (no any, no ! assertions)."
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_betterauth_openapi_reference",
+      "label": "BetterAuth OpenAPI Reference (/auth/reference)",
+      "file_type": "concept",
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "section 2.2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "BetterAuth self-generates OpenAPI docs for all /auth/* routes via the openAPI() plugin registered in src/shared/lib/auth.ts, so auth endpoints never need hand-written docs."
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_sandbox_note_template",
+      "label": "_sandbox/note Reference Module Template",
+      "file_type": "concept",
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "section 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "The _sandbox/note module is the complete reference implementation of the domain module layout (entity, repository, drizzle repository, errors, use-cases, http/v1) and is the mandated template for new modules."
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_authenticated_requests",
+      "label": "Authenticated Request Flow (curl + session cookie)",
+      "file_type": "concept",
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "section 4",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docker_readme_docker_services",
+      "label": "Docker Compose Dev Services Index",
+      "file_type": "document",
+      "source_file": "/home/okalexiiis/dev/4sports/docker/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Each dev service ships as a standalone compose file with a named volume for persistence, so services can be started and stopped independently."
+    },
+    {
+      "id": "postgres_docker_compose_postgres_service",
+      "label": "PostgreSQL 15 Service (4sports-postgres)",
+      "file_type": "code",
+      "source_file": "/home/okalexiiis/dev/4sports/docker/postgres/docker-compose.yml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "redis_docker_compose_redis_service",
+      "label": "Redis 7 Service (4sports-redis)",
+      "file_type": "code",
+      "source_file": "/home/okalexiiis/dev/4sports/docker/redis/docker-compose.yml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "observability_readme_observability_stack",
+      "label": "Local Observability Stack Guide",
+      "file_type": "document",
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "observability_readme_log_pipeline",
+      "label": "Log Pipeline (API file -> Promtail -> Loki -> Grafana)",
+      "file_type": "rationale",
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/README.md",
+      "source_location": "How it works",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "The API is fully decoupled from observability: it only writes JSON log lines to a file, and Promtail/Loki/Grafana are optional Docker containers layered on top, so the app has zero runtime dependency on the log stack."
+    },
+    {
+      "id": "observability_readme_log_file_env",
+      "label": "LOG_FILE Environment Variable",
+      "file_type": "concept",
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/README.md",
+      "source_location": "Setup step 1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "LOG_FILE=logs/api.log makes Pino tee JSON logs to a file (relative to apps/api/) in addition to pretty terminal output, for Promtail to scrape. It must NOT be set in production, where writing JSON to stdout only is the correct behaviour for hosted environments."
+    },
+    {
+      "id": "observability_readme_logql_queries",
+      "label": "LogQL Query Recipes ({service=\"api\"})",
+      "file_type": "concept",
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/README.md",
+      "source_location": "Querying logs in Grafana",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "observability_docker_compose_loki_service",
+      "label": "Loki Service (4sports-loki, port 3100)",
+      "file_type": "code",
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/docker-compose.yml",
+      "source_location": "services.loki",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "observability_docker_compose_promtail_service",
+      "label": "Promtail Service (4sports-promtail)",
+      "file_type": "code",
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/docker-compose.yml",
+      "source_location": "services.promtail",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Mounts ../../apps/api/logs read-only into /logs/api so log scraping needs no Docker socket and no agent inside the API process."
+    },
+    {
+      "id": "observability_docker_compose_grafana_service",
+      "label": "Grafana Service (4sports-grafana, host port 3001)",
+      "file_type": "code",
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/docker-compose.yml",
+      "source_location": "services.grafana",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Anonymous access is enabled with Admin org role (GF_AUTH_ANONYMOUS_*) so local developers query logs without login; host port 3001 avoids clashing with the web app on 3000."
+    },
+    {
+      "id": "datasources_loki_loki_datasource",
+      "label": "Grafana Loki Datasource Provisioning",
+      "file_type": "code",
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/grafana/provisioning/datasources/loki.yaml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Provisioned as the default datasource (isDefault: true) pointing at http://loki:3100 so Grafana is query-ready on first boot with no manual setup."
+    },
+    {
+      "id": "observability_loki_config_loki_config",
+      "label": "Loki Single-Node Config (tsdb + filesystem)",
+      "file_type": "code",
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/loki-config.yaml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Dev-only single-node setup: auth disabled, in-memory ring, replication_factor 1, tsdb schema v13 on local filesystem, samples older than 168h rejected, analytics reporting off."
+    },
+    {
+      "id": "observability_promtail_config_api_logs_scrape",
+      "label": "Promtail api_logs Scrape Config",
+      "file_type": "code",
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/promtail-config.yaml",
+      "source_location": "scrape_configs.api_logs",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Tails /logs/api/*.log with static label service=api and promotes JSON fields level and type to Loki labels so LogQL can filter on them."
+    },
+    {
+      "id": "observability_promtail_config_pino_level_mapping",
+      "label": "Pino Numeric Level to String Mapping",
+      "file_type": "rationale",
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/promtail-config.yaml",
+      "source_location": "pipeline_stages.template",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Pino serializes log levels as numbers (10..60) when transport.targets is used (a Pino limitation), so a Promtail template stage maps 10->trace .. 60->fatal to keep the Loki level label human-queryable ({level=\"error\"})."
+    },
+    {
+      "id": "pnpm_workspace_workspace_packages",
+      "label": "pnpm Workspace Definition (apps/*, packages/*)",
+      "file_type": "code",
+      "source_file": "/home/okalexiiis/dev/4sports/pnpm-workspace.yaml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Workspaces span apps/* and packages/*; build scripts are explicitly allowlisted (esbuild, msgpackr-extract, sharp) under allowBuilds instead of allowing arbitrary postinstall scripts."
+    }
+  ],
+  "edges": [
+    {
+      "source": "observability_docker_compose_promtail_service",
+      "target": "observability_docker_compose_loki_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/docker-compose.yml",
+      "source_location": "services.promtail.depends_on",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_docker_compose_grafana_service",
+      "target": "observability_docker_compose_loki_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/docker-compose.yml",
+      "source_location": "services.grafana.depends_on",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_docker_compose_loki_service",
+      "target": "observability_loki_config_loki_config",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/docker-compose.yml",
+      "source_location": "services.loki.volumes",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_docker_compose_promtail_service",
+      "target": "observability_promtail_config_api_logs_scrape",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/docker-compose.yml",
+      "source_location": "services.promtail.volumes",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_docker_compose_grafana_service",
+      "target": "datasources_loki_loki_datasource",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/docker-compose.yml",
+      "source_location": "services.grafana.volumes (./grafana/provisioning mount)",
+      "weight": 1.0
+    },
+    {
+      "source": "datasources_loki_loki_datasource",
+      "target": "observability_docker_compose_loki_service",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/grafana/provisioning/datasources/loki.yaml",
+      "source_location": "url: http://loki:3100",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_promtail_config_api_logs_scrape",
+      "target": "observability_docker_compose_loki_service",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/promtail-config.yaml",
+      "source_location": "clients.url: http://loki:3100/loki/api/v1/push",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_promtail_config_pino_level_mapping",
+      "target": "observability_promtail_config_api_logs_scrape",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/promtail-config.yaml",
+      "source_location": "scrape_configs.api_logs.pipeline_stages",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_observability_stack",
+      "target": "observability_readme_log_pipeline",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/README.md",
+      "source_location": "How it works",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_log_pipeline",
+      "target": "observability_docker_compose_loki_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/README.md",
+      "source_location": "container table (4sports-loki)",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_log_pipeline",
+      "target": "observability_docker_compose_promtail_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/README.md",
+      "source_location": "container table (4sports-promtail)",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_log_pipeline",
+      "target": "observability_docker_compose_grafana_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/README.md",
+      "source_location": "container table (4sports-grafana)",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_log_file_env",
+      "target": "observability_readme_log_pipeline",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/README.md",
+      "source_location": "Setup step 1",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_log_pipeline",
+      "target": "observability_promtail_config_api_logs_scrape",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/README.md",
+      "source_location": "Promtail reads apps/api/logs/*.log vs __path__ /logs/api/*.log",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_logql_queries",
+      "target": "observability_promtail_config_api_logs_scrape",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/README.md",
+      "source_location": "queries filter on labels service/level set by the scrape pipeline",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_logql_queries",
+      "target": "observability_docker_compose_grafana_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/README.md",
+      "source_location": "Querying logs in Grafana (http://localhost:3001)",
+      "weight": 1.0
+    },
+    {
+      "source": "docker_readme_docker_services",
+      "target": "postgres_docker_compose_postgres_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/README.md",
+      "source_location": "Available services",
+      "weight": 1.0
+    },
+    {
+      "source": "docker_readme_docker_services",
+      "target": "redis_docker_compose_redis_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/README.md",
+      "source_location": "Available services",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_frontend_dev_guide",
+      "target": "dev_docs_frontend_dev_guide_betterauth_session_auth",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": "section 2",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_frontend_dev_guide",
+      "target": "dev_docs_frontend_dev_guide_nativewind_tailwind_stack",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": "section 3",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_frontend_dev_guide",
+      "target": "dev_docs_frontend_dev_guide_shared_ui_package",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": "section 4",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_frontend_dev_guide",
+      "target": "dev_docs_frontend_dev_guide_expo_router_navigation",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": "section 5",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_nativewind_tailwind_stack",
+      "target": "dev_docs_frontend_dev_guide_primary_color_tokens",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": "section 3 (tokens defined in apps/mobile/tailwind.config.js)",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_frontend_dev_guide",
+      "target": "dev_docs_frontend_dev_guide_openapi_docs",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": "section 2 (documentación interactiva)",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "dev_docs_josue_dev_guide_authguard",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "sections 3, 5",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "dev_docs_josue_dev_guide_orgguard",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "sections 3, 5",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "dev_docs_josue_dev_guide_featureguard",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "sections 3, 5",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "dev_docs_josue_dev_guide_thin_route_handler",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "section 5, rule 1",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "dev_docs_josue_dev_guide_use_case_result_pattern",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "section 5, rule 2",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "dev_docs_josue_dev_guide_betterauth_openapi_reference",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "section 2.2",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "dev_docs_josue_dev_guide_sandbox_note_template",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "section 3",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "dev_docs_josue_dev_guide_authenticated_requests",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "section 4",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_sandbox_note_template",
+      "target": "dev_docs_josue_dev_guide_thin_route_handler",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "section 3 (module layout: routes.ts thin handlers)",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_sandbox_note_template",
+      "target": "dev_docs_josue_dev_guide_use_case_result_pattern",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "section 3 (module layout: use-cases/)",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_betterauth_session_auth",
+      "target": "dev_docs_josue_dev_guide_authenticated_requests",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": "both describe the better-auth.session_token cookie flow, one for app clients and one for curl",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_openapi_docs",
+      "target": "dev_docs_josue_dev_guide_betterauth_openapi_reference",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": "both document the same /openapi and /auth/reference URLs for consumers vs implementers",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_expo_router_navigation",
+      "target": "_expo_readme_expo_folder",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.65,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": "both concern the Expo toolchain of apps/mobile",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "api_readme_elysia_bun_runtime",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.65,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "both describe running the Elysia/Bun API in dev mode",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_readme_log_file_env",
+      "target": "observability_promtail_config_pino_level_mapping",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/README.md",
+      "source_location": "both exist because Pino file transport output (JSON, numeric levels) feeds the scrape pipeline",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_frontend_dev_guide_frontend_dev_guide",
+      "target": "docker_readme_docker_services",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md",
+      "source_location": "section 1: pnpm run docker:up starts the Postgres + Redis compose services",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "docker_readme_docker_services",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md",
+      "source_location": "section 1: pnpm run docker:up starts the Postgres + Redis compose services",
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "local_observability_stack",
+      "label": "Local Observability Stack (Loki + Promtail + Grafana)",
+      "nodes": [
+        "observability_docker_compose_loki_service",
+        "observability_docker_compose_promtail_service",
+        "observability_docker_compose_grafana_service",
+        "observability_loki_config_loki_config",
+        "observability_promtail_config_api_logs_scrape",
+        "datasources_loki_loki_datasource"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/docker-compose.yml"
+    },
+    {
+      "id": "api_route_guard_chain",
+      "label": "Elysia Route Guard Plugins",
+      "nodes": [
+        "dev_docs_josue_dev_guide_authguard",
+        "dev_docs_josue_dev_guide_orgguard",
+        "dev_docs_josue_dev_guide_featureguard"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md"
+    },
+    {
+      "id": "api_log_flow",
+      "label": "API JSON Log Flow (LOG_FILE -> Promtail -> Loki -> Grafana)",
+      "nodes": [
+        "observability_readme_log_file_env",
+        "observability_promtail_config_api_logs_scrape",
+        "observability_docker_compose_loki_service",
+        "observability_readme_logql_queries"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/okalexiiis/dev/4sports/docker/observability/README.md"
+    }
+  ],
+  "input_tokens": 52984,
+  "output_tokens": 0
+}

@@ -1,0 +1,212 @@
+{
+  "nodes": [
+    {
+      "id": "agent_docs_api_routes_reference_routes_reference",
+      "label": "API Routes & Use-Cases Reference",
+      "file_type": "document",
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_docs_api_routes_reference_auth_guard",
+      "label": "authGuard (BetterAuth session check)",
+      "file_type": "concept",
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": "Guards section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_docs_api_routes_reference_org_guard",
+      "label": "orgGuard(minRole)",
+      "file_type": "concept",
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": "Guards section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Role hierarchy viewer(0) < organizer(1) < admin(2) < owner(3); verifies active Redis context matches :orgId and membership is active."
+    },
+    {
+      "id": "agent_docs_api_routes_reference_feature_guard",
+      "label": "featureGuard(feature)",
+      "file_type": "concept",
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": "Guards section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_docs_api_routes_reference_request_logger",
+      "label": "requestLogger Global Plugin",
+      "file_type": "concept",
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": "Guards section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_docs_api_routes_reference_error_codes",
+      "label": "API Error Codes Catalog",
+      "file_type": "concept",
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": "Error Codes section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_docs_api_routes_reference_response_format",
+      "label": "Standard API Response Format ({data}/{error}/meta)",
+      "file_type": "concept",
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": "Response Format section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_docs_api_routes_reference_active_context",
+      "label": "Active Org Context in Redis (context:{userId})",
+      "file_type": "concept",
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "agent_docs_api_routes_reference_routes_reference",
+      "target": "agent_docs_api_routes_reference_auth_guard",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_api_routes_reference_routes_reference",
+      "target": "agent_docs_api_routes_reference_org_guard",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_api_routes_reference_routes_reference",
+      "target": "agent_docs_api_routes_reference_feature_guard",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_api_routes_reference_routes_reference",
+      "target": "agent_docs_api_routes_reference_request_logger",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_api_routes_reference_routes_reference",
+      "target": "agent_docs_api_routes_reference_error_codes",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_api_routes_reference_routes_reference",
+      "target": "agent_docs_api_routes_reference_response_format",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_api_routes_reference_org_guard",
+      "target": "agent_docs_api_routes_reference_active_context",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_api_routes_reference_org_guard",
+      "target": "db_4sports_schema_v4_diagramas_organization_members",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_api_routes_reference_feature_guard",
+      "target": "db_4sports_schema_v4_diagramas_subscription_plans",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_api_routes_reference_feature_guard",
+      "target": "agent_docs_prd_subscription_plans",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agent_docs/api-routes-reference.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "api_authorization_guard_chain",
+      "label": "API Authorization Guard Chain",
+      "nodes": [
+        "agent_docs_api_routes_reference_auth_guard",
+        "agent_docs_api_routes_reference_org_guard",
+        "agent_docs_api_routes_reference_feature_guard",
+        "agent_docs_api_routes_reference_active_context",
+        "db_4sports_schema_v4_diagramas_organization_members"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/api-routes-reference.md"
+    }
+  ]
+}

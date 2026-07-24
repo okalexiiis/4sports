@@ -3,6 +3,7 @@ import { db } from '@/shared/db/client'
 import { organizationMembers, organizations, profiles } from '@/shared/db/schemas'
 import type { OrgMembership, ProfileData } from './auth.entity'
 import type { IAuthRepository } from './auth.repository'
+import type { UpdateProfileData } from './use-cases/update-profile.use-case'
 
 export class DrizzleAuthRepository implements IAuthRepository {
   async findProfile(userId: string): Promise<ProfileData | null> {
@@ -40,6 +41,28 @@ export class DrizzleAuthRepository implements IAuthRepository {
       )
 
     return rows
+  }
+
+  async updateProfile(userId: string, data: UpdateProfileData): Promise<ProfileData | null> {
+    const updateValues: Record<string, unknown> = { updated_at: new Date() }
+    if (data.avatar_url !== undefined) updateValues.avatar_url = data.avatar_url
+    if (data.city !== undefined) updateValues.city = data.city
+    if (data.country_code !== undefined) updateValues.country_code = data.country_code
+    if (data.phone !== undefined) updateValues.phone = data.phone
+
+    const [row] = await db
+      .update(profiles)
+      .set(updateValues)
+      .where(eq(profiles.user_id, userId))
+      .returning({
+        username: profiles.username,
+        avatar_url: profiles.avatar_url,
+        city: profiles.city,
+        initial_intent: profiles.initial_intent,
+        onboarding_completed_at: profiles.onboarding_completed_at,
+      })
+
+    return row ?? null
   }
 
   async findMembership(userId: string, orgId: string): Promise<{ role: string } | null> {

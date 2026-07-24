@@ -2,6 +2,20 @@ import { Type } from '@sinclair/typebox'
 import { ApiResponses } from '@/shared/openapi/responses'
 import { OrgMemberSchema, OrgSchema } from './schemas'
 
+export const updateOrganizationDetail = {
+  summary: 'Update organization',
+  security: [{ cookieAuth: [] }],
+  description:
+    'Updates organization fields. All fields are optional — only provided fields are written. Requires admin or owner role.',
+  responses: {
+    200: ApiResponses.success(OrgSchema, 'Organization updated'),
+    401: ApiResponses.unauthorized('No active session'),
+    403: ApiResponses.forbidden('Insufficient role'),
+    404: ApiResponses.notFound('Organization not found'),
+    422: ApiResponses.validation('Validation error'),
+  },
+}
+
 export const createOrganizationDetail = {
   summary: 'Create organization',
   security: [{ cookieAuth: [] }],

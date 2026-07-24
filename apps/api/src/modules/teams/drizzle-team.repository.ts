@@ -8,6 +8,7 @@ import type {
   Team,
   TeamInvitation,
   TeamMember,
+  UpdateTeamInput,
 } from './team.entity'
 import type { ITeamRepository } from './team.repository'
 
@@ -119,6 +120,27 @@ export class DrizzleTeamRepository implements ITeamRepository {
 
       return team
     })
+  }
+
+  async update(teamId: string, data: UpdateTeamInput): Promise<Team> {
+    const updateValues: Partial<typeof teams.$inferInsert> = { updated_at: new Date() }
+    if (data.name !== undefined) updateValues.name = data.name
+    if (data.short_name !== undefined) updateValues.short_name = data.short_name
+    if (data.logo_url !== undefined) updateValues.logo_url = data.logo_url
+    if (data.primary_color !== undefined) updateValues.primary_color = data.primary_color
+    if (data.secondary_color !== undefined) updateValues.secondary_color = data.secondary_color
+    if (data.city !== undefined) updateValues.city = data.city
+    if (data.country_code !== undefined) updateValues.country_code = data.country_code
+    if (data.gender_type !== undefined)
+      updateValues.gender_type = data.gender_type as 'male' | 'female' | 'mixed'
+    if (data.join_policy !== undefined)
+      updateValues.join_policy = data.join_policy as 'open' | 'request' | 'invite_only'
+
+    await db.update(teams).set(updateValues).where(eq(teams.id, teamId))
+
+    const updated = await this.findById(teamId)
+    // biome-ignore lint/style/noNonNullAssertion: just updated
+    return updated!
   }
 
   async findById(id: string): Promise<Team | null> {

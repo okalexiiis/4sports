@@ -47,6 +47,17 @@ export const TransferOwnershipBodySchema = Type.Object({
   new_owner_member_id: Type.String({ format: 'uuid' }),
 })
 
+export const UpdateOrgBodySchema = Type.Object({
+  name: Type.Optional(Type.String({ minLength: 2, maxLength: 120 })),
+  description: Type.Optional(Type.Union([Type.String({ maxLength: 500 }), Type.Null()])),
+  logo_url: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  website_url: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  city: Type.Optional(Type.Union([Type.String({ maxLength: 80 }), Type.Null()])),
+  country_code: Type.Optional(
+    Type.Union([Type.String({ minLength: 2, maxLength: 2 }), Type.Null()]),
+  ),
+})
+
 export const CreateOrgBodySchema = Type.Object({
   name: Type.String({ minLength: 2, maxLength: 120 }),
   slug: Type.Optional(Type.String({ maxLength: 80 })),

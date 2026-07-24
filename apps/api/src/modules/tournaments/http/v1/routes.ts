@@ -51,6 +51,7 @@ export const tournamentsV1Routes = new Elysia({ tags: ['Tournaments'] })
         name: ctx.body.name,
         slug: ctx.body.slug,
         description: ctx.body.description,
+        banner_url: ctx.body.banner_url,
         sport_id: ctx.body.sport_id,
         format_id: ctx.body.format_id,
         tags: ctx.body.tags,
@@ -91,6 +92,7 @@ export const tournamentsV1Routes = new Elysia({ tags: ['Tournaments'] })
           data: {
             name: ctx.body.name,
             description: ctx.body.description,
+            banner_url: ctx.body.banner_url,
             sport_id: ctx.body.sport_id,
             format_id: ctx.body.format_id,
             tags: ctx.body.tags,

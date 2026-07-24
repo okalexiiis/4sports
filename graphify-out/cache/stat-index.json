@@ -1,0 +1,287 @@
+{
+  "/home/okalexiiis/dev/4sports/.husky/_/husky.sh": {
+    "size": 160,
+    "mtime_ns": 1783437426234481743,
+    "hash": "6db0aa99aece6ebd17bbc27c5e5287a462fb39cc4a2ca3a82a6277c166bdb3a0"
+  },
+  "/home/okalexiiis/dev/4sports/agent_docs/db/4Sports_schema_v4.sql": {
+    "size": 72871,
+    "mtime_ns": 1779823425055698151,
+    "hash": "36108bde44d7f8fb45f78d2c36b8b4f1154dffd0e51866815de8a2a0e21fc3a9"
+  },
+  "/home/okalexiiis/dev/4sports/apps/api/package.json": {
+    "size": 1331,
+    "mtime_ns": 1783437095817836767,
+    "hash": "b8868ed7deb2fb21c21cc44c3b5c003794e7696e89e75c901dda62fd62e99d7b"
+  },
+  "/home/okalexiiis/dev/4sports/apps/api/tsconfig.json": {
+    "size": 646,
+    "mtime_ns": 1779641810118562901,
+    "hash": "bd081723fb94283c6551e92769d1677acfaf3d1801a655adb33951cae5a7ac82"
+  },
+  "/home/okalexiiis/dev/4sports/apps/mobile/.expo/devices.json": {
+    "size": 20,
+    "mtime_ns": 1779641785893389582,
+    "hash": "b8f3ba0f5ba22e9f8f5074b03fbcf340da2c8f74d0f0687e08514453817f3e0d"
+  },
+  "/home/okalexiiis/dev/4sports/apps/mobile/app.json": {
+    "size": 579,
+    "mtime_ns": 1779641785893389582,
+    "hash": "14ef83d7eefe1a3c2b6da2342c1009ebe97367b1ddda94547c3d64d8a4ebafe2"
+  },
+  "/home/okalexiiis/dev/4sports/apps/mobile/package.json": {
+    "size": 1063,
+    "mtime_ns": 1779823425059344254,
+    "hash": "2d832aa3a335ef790a381fe234262cc7bcccc08e722c8156e49bd6f1363f3d6e"
+  },
+  "/home/okalexiiis/dev/4sports/apps/mobile/tsconfig.json": {
+    "size": 485,
+    "mtime_ns": 1779641785893867124,
+    "hash": "d6e912b0512934f8cc0d109f85cbf0f747861a7ce61ed6145b0abb2f0b0df39b"
+  },
+  "/home/okalexiiis/dev/4sports/apps/web/package.json": {
+    "size": 536,
+    "mtime_ns": 1783437095824247924,
+    "hash": "6d67d48dee6a25b8467a9152879421395fc8959138f6140725740328f2ba19cd"
+  },
+  "/home/okalexiiis/dev/4sports/apps/web/tsconfig.json": {
+    "size": 503,
+    "mtime_ns": 1779641785894325572,
+    "hash": "18276d663f37bca273d2af81b5cd6a9878fa7f46313baf8f980ad7e581b5fdb3"
+  },
+  "/home/okalexiiis/dev/4sports/biome.json": {
+    "size": 946,
+    "mtime_ns": 1779641810120171094,
+    "hash": "12da594408f7be9517b46896bf9d5155fa30e39013d6850a312418e120ca046f"
+  },
+  "/home/okalexiiis/dev/4sports/package.json": {
+    "size": 2189,
+    "mtime_ns": 1783437095825068973,
+    "hash": "8ff68a666ede85b43cb9e97cb594f260f7491d5fa29a67373eb24d147aad8a84"
+  },
+  "/home/okalexiiis/dev/4sports/packages/config/package.json": {
+    "size": 158,
+    "mtime_ns": 1779823425059344254,
+    "hash": "0764a883f3026ac15a5d1571fdb079a2ac145431f164c13cefcb5d1f919dbf5d"
+  },
+  "/home/okalexiiis/dev/4sports/packages/config/tsconfig.base.json": {
+    "size": 302,
+    "mtime_ns": 1779641785895170523,
+    "hash": "d4fc9cfa9dba58b9923a1a83c3a6c79c20cc0691b3ab6ff47e62d0cac14ed9fd"
+  },
+  "/home/okalexiiis/dev/4sports/packages/config/tsconfig.node.json": {
+    "size": 95,
+    "mtime_ns": 1779641785895170523,
+    "hash": "0e3ca619576e9e57a8183f333731ee5963e7177b50b6c6cb9b5b231ba445fa6a"
+  },
+  "/home/okalexiiis/dev/4sports/packages/config/tsconfig.react.json": {
+    "size": 121,
+    "mtime_ns": 1779641785895170523,
+    "hash": "29c64571eba5697311146f108a0785046e6b2521be537b29ed8ef3f49de6538f"
+  },
+  "/home/okalexiiis/dev/4sports/packages/logger/package.json": {
+    "size": 459,
+    "mtime_ns": 1779641810120863224,
+    "hash": "b8a4a2e59d54bd8ffb38ef713389da701b4c90eb5ab00b3623afa34ad53a4238"
+  },
+  "/home/okalexiiis/dev/4sports/packages/logger/tsconfig.json": {
+    "size": 250,
+    "mtime_ns": 1779641810122562973,
+    "hash": "0255170051c90fac763193c3cc97bef9806849d9f49dd309e091d328ee861fa5"
+  },
+  "/home/okalexiiis/dev/4sports/packages/types/package.json": {
+    "size": 254,
+    "mtime_ns": 1779823425059344254,
+    "hash": "202a3e92b18c6997dbc19bc6e7f7922f91356868a156b7791539f2d2e60a25c7"
+  },
+  "/home/okalexiiis/dev/4sports/packages/types/tsconfig.json": {
+    "size": 250,
+    "mtime_ns": 1779823425059344254,
+    "hash": "d3ce9f9278d4a031dc8b0576b3e91fb1eff12293df23e4eb2f3bee0e5d9c66e7"
+  },
+  "/home/okalexiiis/dev/4sports/packages/ui/package.json": {
+    "size": 251,
+    "mtime_ns": 1779823425059698203,
+    "hash": "95e034363c0b00713897aad3a14143d7c19be225f28c4d1765f21e8963aca725"
+  },
+  "/home/okalexiiis/dev/4sports/packages/ui/tsconfig.json": {
+    "size": 251,
+    "mtime_ns": 1779823425059698203,
+    "hash": "5fb90367bd775a812c5b2183a2c224f6c0e18e46391b2672994bf3c185ed0632"
+  },
+  "/home/okalexiiis/dev/4sports/packages/utils/package.json": {
+    "size": 464,
+    "mtime_ns": 1779641810122562973,
+    "hash": "3b85df2a00d5189c0922d98979a4a82f8a1b477f85ab7a2b22d37177ab5a2c99"
+  },
+  "/home/okalexiiis/dev/4sports/packages/utils/tsconfig.json": {
+    "size": 250,
+    "mtime_ns": 1779641810123562992,
+    "hash": "1e1b36328d7aa72d71416d7f69f0438d21b1c025b4794a57c9d2a7fb767a481c"
+  },
+  "/home/okalexiiis/dev/4sports/turbo.json": {
+    "size": 434,
+    "mtime_ns": 1779641810126563046,
+    "hash": "586f5f9c96dcd7654de30501067d73da0d21c7df9dc6a9d0ad1918f4c368a016"
+  },
+  "/home/okalexiiis/dev/4sports/.github/ISSUE_TEMPLATE/bug_report.md": {
+    "size": 834,
+    "mtime_ns": 1783437095816247817,
+    "hash": "bde8476297bd2d313ec2bdeccfb059c65c8cf32f52c99634d690bb2800e15d3b"
+  },
+  "/home/okalexiiis/dev/4sports/.github/workflows/ci.yml": {
+    "size": 2136,
+    "mtime_ns": 1779641785888374656,
+    "hash": "75b133a994c31964c2af6be69836ec0bc568001d98cf98a7c851cbb77046f325"
+  },
+  "/home/okalexiiis/dev/4sports/.github/workflows/commitlint.yml": {
+    "size": 1812,
+    "mtime_ns": 1779641785888461273,
+    "hash": "9b845e37dc85679e746c548d2e3b13df664669818bc31b8dea4cb1c4ec80c690"
+  },
+  "/home/okalexiiis/dev/4sports/AGENTS.md": {
+    "size": 2146,
+    "mtime_ns": 1779641810116562865,
+    "hash": "6527c626b65497cb79e631562c44db366a9d82335ca2efc9a3eb6da408c62ed8"
+  },
+  "/home/okalexiiis/dev/4sports/CLAUDE.md": {
+    "size": 9683,
+    "mtime_ns": 1783532320876579925,
+    "hash": "174cce49eb98352fa5fd0af271501c91a2b865e43125104e4bf12da7326ec124"
+  },
+  "/home/okalexiiis/dev/4sports/DESIGN.md": {
+    "size": 25805,
+    "mtime_ns": 1779641785888461273,
+    "hash": "e9dfb6762c1df27597eaa02e32467768e2bd13741a52aa13e399f0d76ca6b4e3"
+  },
+  "/home/okalexiiis/dev/4sports/README.md": {
+    "size": 2175,
+    "mtime_ns": 1783437095817538772,
+    "hash": "8118f37c48c9f937b8287ae23076f5894880498159840377aa35b62a28ad1175"
+  },
+  "/home/okalexiiis/dev/4sports/agent_docs/EQUIPO.md": {
+    "size": 1641,
+    "mtime_ns": 1783437095817538772,
+    "hash": "bf4dbc01490e4a2f4b03513299f399997e1d33cfbe071e63464c08ff0562b509"
+  },
+  "/home/okalexiiis/dev/4sports/agent_docs/PRD.md": {
+    "size": 32047,
+    "mtime_ns": 1779928933100184772,
+    "hash": "73776171b250cf98193f86995dbb88bc64cbeea22d5cd665013af6c7f1ae46f0"
+  },
+  "/home/okalexiiis/dev/4sports/agent_docs/api-routes-reference.md": {
+    "size": 9643,
+    "mtime_ns": 1779928933100184772,
+    "hash": "f6b768a88a19a44ddb32b97dd180d01d9635f8a40644a9ff7f655cfb9ae49872"
+  },
+  "/home/okalexiiis/dev/4sports/agent_docs/db/4Sports_Schema_v4_Diagramas.md": {
+    "size": 27363,
+    "mtime_ns": 1779641785889267164,
+    "hash": "e6aac01c0afdd4cfa8e143b35ce6ef875682c91b34a9ed4a3a16986386a46c9e"
+  },
+  "/home/okalexiiis/dev/4sports/agent_docs/gaps-vs-uc-identidad-hito1.md": {
+    "size": 9713,
+    "mtime_ns": 1779928933101184717,
+    "hash": "d5860cf0476395d3b01ef607846e1ae32108e29de15bf506b80dc14847f2800b"
+  },
+  "/home/okalexiiis/dev/4sports/agent_docs/git-workflow.md": {
+    "size": 1140,
+    "mtime_ns": 1779641810116562865,
+    "hash": "449ff67cbf9f7c4161c5e6fd824f611f43245ab4d3de9e06e62c46d8514a1ffd"
+  },
+  "/home/okalexiiis/dev/4sports/agent_docs/hitos/hito-3.md": {
+    "size": 19489,
+    "mtime_ns": 1783437397316723709,
+    "hash": "5c14ba60815a433f7b83b90e998b7909bfa82a43e8eadd6a422147a495525d8b"
+  },
+  "/home/okalexiiis/dev/4sports/agent_docs/hitos/hitos-1-y-2.md": {
+    "size": 32008,
+    "mtime_ns": 1779928933101184717,
+    "hash": "cb2b0e7b1880075a8ebe69dfd7a79638fefb14a87829c222a88a9eb37dcf6333"
+  },
+  "/home/okalexiiis/dev/4sports/agent_docs/project.md": {
+    "size": 1599,
+    "mtime_ns": 1779641785889474618,
+    "hash": "5aa46ac8c677f2f3f22c2f5cb7b9ad0856053f665103f43477074da38b87c811"
+  },
+  "/home/okalexiiis/dev/4sports/agent_docs/use_cases/4Sports_UC_Bloque1_Identidad.md": {
+    "size": 33055,
+    "mtime_ns": 1779641785889474618,
+    "hash": "66388017e925d058f72a68a2a9c46c17fcf3be1cf59ad322b6c6572354826920"
+  },
+  "/home/okalexiiis/dev/4sports/agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md": {
+    "size": 35135,
+    "mtime_ns": 1779641785890159197,
+    "hash": "f2d5891623671c74a558cc3b97a7abb17f5342c5470f11808eaf45e7d45e57d9"
+  },
+  "/home/okalexiiis/dev/4sports/agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md": {
+    "size": 28426,
+    "mtime_ns": 1779823425056698164,
+    "hash": "7357034e71c286a712d8a58498cffdb6c154f20b350d3b4e24e0e23de1f334c2"
+  },
+  "/home/okalexiiis/dev/4sports/apps/api/README.md": {
+    "size": 316,
+    "mtime_ns": 1779641785890446441,
+    "hash": "eee4a287b43b80035fc7842550678258328a1a5bc2a9ce8c79d123f3b32cdab0"
+  },
+  "/home/okalexiiis/dev/4sports/apps/mobile/.expo/README.md": {
+    "size": 751,
+    "mtime_ns": 1779641785893317989,
+    "hash": "84dfac3709948b1fb2d17e4fe2632a3d79205cd691ce994810be509fa4b45708"
+  },
+  "/home/okalexiiis/dev/4sports/dev_docs/frontend-dev-guide.md": {
+    "size": 4037,
+    "mtime_ns": 1783437095824247924,
+    "hash": "cd36b7ce2afe9569c3a888952d16e6a30aeddedb2c9638138b737022cb3f5295"
+  },
+  "/home/okalexiiis/dev/4sports/dev_docs/josue-dev-guide.md": {
+    "size": 4094,
+    "mtime_ns": 1783437095825068973,
+    "hash": "d937a5defa990b8797a40ba68edc4bf828c23fb4a8e397e42b833bf7f809a601"
+  },
+  "/home/okalexiiis/dev/4sports/docker/README.md": {
+    "size": 729,
+    "mtime_ns": 1779641785894325572,
+    "hash": "667cc2f5ce21d300be5c0743bd49ed98a95390f591fd9ed5e475e13cff9ff082"
+  },
+  "/home/okalexiiis/dev/4sports/docker/observability/README.md": {
+    "size": 2944,
+    "mtime_ns": 1779641810120171094,
+    "hash": "84483b0addab08953988cbb73af4c7641821be2589e8c15d984958f500bcaa97"
+  },
+  "/home/okalexiiis/dev/4sports/docker/observability/docker-compose.yml": {
+    "size": 1020,
+    "mtime_ns": 1779641810120562937,
+    "hash": "c451b96e3d52ab5095ac30c1344bb310932348feffb660443cf8fe94fdccef05"
+  },
+  "/home/okalexiiis/dev/4sports/docker/observability/grafana/provisioning/datasources/loki.yaml": {
+    "size": 157,
+    "mtime_ns": 1779641810120863224,
+    "hash": "5c51fb794c93e956e1ebaa0e56dd39ed18591e2928a67334f687b93f62516bd6"
+  },
+  "/home/okalexiiis/dev/4sports/docker/observability/loki-config.yaml": {
+    "size": 781,
+    "mtime_ns": 1779641810120863224,
+    "hash": "0e600f4a2764ced299ceb09fe442cb9ea70a8fb23f1103aed48052bb536a01d3"
+  },
+  "/home/okalexiiis/dev/4sports/docker/observability/promtail-config.yaml": {
+    "size": 1023,
+    "mtime_ns": 1779641810120863224,
+    "hash": "9a3f16873c7a5072814aac5cbdcb5d0b0411fd32174b96316976f0bb0fe0be99"
+  },
+  "/home/okalexiiis/dev/4sports/docker/postgres/docker-compose.yml": {
+    "size": 359,
+    "mtime_ns": 1779641785894943937,
+    "hash": "40156119f202ad249153b3cf734aa19af8592c45dffc3cc8cdbed69a8ba50548"
+  },
+  "/home/okalexiiis/dev/4sports/docker/redis/docker-compose.yml": {
+    "size": 216,
+    "mtime_ns": 1779641785894943937,
+    "hash": "4e8f095a52f60d449b47a397fc6b9891be98edd10fced3fd5c0ec381bdd33b17"
+  },
+  "/home/okalexiiis/dev/4sports/pnpm-workspace.yaml": {
+    "size": 108,
+    "mtime_ns": 1783437151116137655,
+    "hash": "451b700b6b5aeaccc7325a0cb0ee52d97ac11fc06b377e70a2d497309836a9c6"
+  }
+}

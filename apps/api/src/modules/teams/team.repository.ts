@@ -5,11 +5,13 @@ import type {
   Team,
   TeamInvitation,
   TeamMember,
+  UpdateTeamInput,
 } from './team.entity'
 
 export interface ITeamRepository {
   create(userId: string, captainDisplayName: string, data: CreateTeamInput): Promise<Team>
   findById(id: string): Promise<Team | null>
+  update(teamId: string, data: UpdateTeamInput): Promise<Team>
   listMembers(teamId: string): Promise<TeamMember[]>
   addGuestPlayer(teamId: string, data: AddGuestPlayerInput, createdBy: string): Promise<TeamMember>
   inviteUser(teamId: string, data: InviteUserInput, invitedBy: string): Promise<TeamInvitation>

@@ -14,8 +14,10 @@ import type {
   InvitationRecord,
   InviteMemberInput,
   ListMembersResult,
+  Organization,
   OrgMember,
   OrgWithRole,
+  UpdateOrgInput,
   UpdateRoleInput,
 } from './organization.entity'
 import type { IOrganizationRepository } from './organization.repository'
@@ -588,5 +590,35 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
       .update(organizationMembers)
       .set({ status: 'left', left_at: new Date(), updated_at: new Date() })
       .where(eq(organizationMembers.id, memberId))
+  }
+
+  async updateOrganization(orgId: string, data: UpdateOrgInput): Promise<Organization> {
+    const updateValues: Partial<typeof organizations.$inferInsert> = { updated_at: new Date() }
+    if (data.name !== undefined) updateValues.name = data.name
+    if (data.description !== undefined) updateValues.description = data.description
+    if (data.logo_url !== undefined) updateValues.logo_url = data.logo_url
+    if (data.website_url !== undefined) updateValues.website_url = data.website_url
+    if (data.city !== undefined) updateValues.city = data.city
+    if (data.country_code !== undefined) updateValues.country_code = data.country_code
+
+    const [updated] = await db
+      .update(organizations)
+      .set(updateValues)
+      .where(eq(organizations.id, orgId))
+      .returning({
+        id: organizations.id,
+        name: organizations.name,
+        slug: organizations.slug,
+        description: organizations.description,
+        logo_url: organizations.logo_url,
+        website_url: organizations.website_url,
+        country_code: organizations.country_code,
+        city: organizations.city,
+        is_verified: organizations.is_verified,
+        created_at: organizations.created_at,
+      })
+
+    // biome-ignore lint/style/noNonNullAssertion: update always returns a row
+    return updated!
   }
 }

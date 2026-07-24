@@ -1,0 +1,126 @@
+{
+  "nodes": [
+    {
+      "id": "design_design_system",
+      "label": "4Sports Design System (DESIGN.md)",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": "Garib",
+      "contributor": null
+    },
+    {
+      "id": "design_design_tokens",
+      "label": "CSS Design Tokens (dark/light)",
+      "file_type": "concept",
+      "source_file": "DESIGN.md",
+      "source_location": "section 12",
+      "source_url": null,
+      "captured_at": null,
+      "author": "Garib",
+      "contributor": null,
+      "rationale": "No hardcoded colors allowed outside the token file; every token has a value in both themes so the theme switch is lossless."
+    },
+    {
+      "id": "design_volt_ember_palette",
+      "label": "Volt & Ember Brand Palette",
+      "file_type": "rationale",
+      "source_file": "DESIGN.md",
+      "source_location": "section 3.1",
+      "source_url": null,
+      "captured_at": null,
+      "author": "Garib",
+      "contributor": null,
+      "rationale": "Only two accent colors by design to protect brand identity. Volt (#D4F233) is legible on black but disappears on white, so light mode swaps it to a sports green (#5A8A00) that keeps WCAG AA >= 4.5:1 contrast."
+    },
+    {
+      "id": "design_dark_first_theming",
+      "label": "Dark-First Dual Theme",
+      "file_type": "rationale",
+      "source_file": "DESIGN.md",
+      "source_location": "section 2",
+      "source_url": null,
+      "captured_at": null,
+      "author": "Garib",
+      "contributor": null,
+      "rationale": "Dark theme is the canonical design because the product is used outdoors on phones (referees, organizers); light is a faithful adaptation, not a degraded version."
+    },
+    {
+      "id": "design_typography_scale",
+      "label": "Bebas Neue / DM Sans Typography Scale",
+      "file_type": "concept",
+      "source_file": "DESIGN.md",
+      "source_location": "section 4",
+      "source_url": null,
+      "captured_at": null,
+      "author": "Garib",
+      "contributor": null,
+      "rationale": "Bebas Neue reserved for high-impact numbers (scores, stats); DM Sans in weights 300/400/500 only \u2014 600/700 read too heavy in this system."
+    }
+  ],
+  "edges": [
+    {
+      "source": "design_design_system",
+      "target": "design_design_tokens",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DESIGN.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "design_design_system",
+      "target": "design_volt_ember_palette",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DESIGN.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "design_design_system",
+      "target": "design_dark_first_theming",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DESIGN.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "design_design_system",
+      "target": "design_typography_scale",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DESIGN.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "design_volt_ember_palette",
+      "target": "design_design_tokens",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DESIGN.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "design_dark_first_theming",
+      "target": "design_design_tokens",
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "DESIGN.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": []
+}

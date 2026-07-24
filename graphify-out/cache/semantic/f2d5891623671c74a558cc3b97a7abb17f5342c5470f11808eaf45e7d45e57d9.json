@@ -1,0 +1,185 @@
+{
+  "nodes": [
+    {
+      "id": "use_cases_4sports_uc_bloque2_torneos_uc_bloque2",
+      "label": "UC Block 2: Tournaments",
+      "file_type": "document",
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "use_cases_4sports_uc_bloque2_torneos_tournament_wizard",
+      "label": "Tournament Creation Wizard (UC-101)",
+      "file_type": "concept",
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": "UC-101",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "use_cases_4sports_uc_bloque2_torneos_competition_formats",
+      "label": "Competition Formats Catalog (round_robin/single/double/world_cup)",
+      "file_type": "concept",
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": "Catalogo de formatos",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "use_cases_4sports_uc_bloque2_torneos_fixture_generation",
+      "label": "Fixture Generation (UC-105)",
+      "file_type": "concept",
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": "UC-105",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "use_cases_4sports_uc_bloque2_torneos_groups_to_playoffs",
+      "label": "Groups -> Playoffs Transition (UC-106)",
+      "file_type": "concept",
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": "UC-106",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Transition is always manually triggered by the organizer (with overrule drag-and-drop) \u2014 never automatic \u2014 so administrative decisions like disqualifications can be applied before the bracket freezes."
+    },
+    {
+      "id": "use_cases_4sports_uc_bloque2_torneos_standings_calculation",
+      "label": "On-the-fly Standings Calculation (UC-108)",
+      "file_type": "rationale",
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": "UC-108",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Rank is never stored fixed; every query recomputes from completed matches applying settings.tiebreaker[] hierarchically. Tiebreakers lock after the first completed match."
+    }
+  ],
+  "edges": [
+    {
+      "source": "use_cases_4sports_uc_bloque2_torneos_uc_bloque2",
+      "target": "use_cases_4sports_uc_bloque2_torneos_tournament_wizard",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque2_torneos_uc_bloque2",
+      "target": "use_cases_4sports_uc_bloque2_torneos_fixture_generation",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque2_torneos_uc_bloque2",
+      "target": "use_cases_4sports_uc_bloque2_torneos_groups_to_playoffs",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque2_torneos_uc_bloque2",
+      "target": "use_cases_4sports_uc_bloque2_torneos_standings_calculation",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque2_torneos_uc_bloque2",
+      "target": "use_cases_4sports_uc_bloque2_torneos_competition_formats",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque2_torneos_tournament_wizard",
+      "target": "db_4sports_schema_v4_diagramas_tournaments",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque2_torneos_fixture_generation",
+      "target": "db_4sports_schema_v4_diagramas_matches",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque2_torneos_groups_to_playoffs",
+      "target": "use_cases_4sports_uc_bloque2_torneos_competition_formats",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque2_torneos_standings_calculation",
+      "target": "db_4sports_schema_v4_diagramas_standings",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque2_torneos_tournament_wizard",
+      "target": "agent_docs_prd_tournament_lifecycle",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque2_torneos_competition_formats",
+      "target": "agent_docs_prd_subscription_plans",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque2_Torneos.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": []
+}

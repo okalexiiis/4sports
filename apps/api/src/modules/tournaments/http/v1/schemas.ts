@@ -53,6 +53,7 @@ export const CreateTournamentBodySchema = Type.Object({
   name: Type.String({ minLength: 2, maxLength: 120 }),
   slug: Type.Optional(Type.String({ maxLength: 80 })),
   description: Type.Optional(Type.Union([Type.String({ maxLength: 500 }), Type.Null()])),
+  banner_url: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   sport_id: Type.Optional(Type.Union([Type.String({ format: 'uuid' }), Type.Null()])),
   format_id: Type.Optional(Type.Union([Type.String({ format: 'uuid' }), Type.Null()])),
   tags: Type.Optional(Type.Array(Type.String())),

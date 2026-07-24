@@ -24,6 +24,15 @@ const ProfileSchema = Type.Object({
   onboarding_completed_at: Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
 })
 
+export const UpdateProfileBodySchema = Type.Object({
+  avatar_url: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  city: Type.Optional(Type.Union([Type.String({ maxLength: 80 }), Type.Null()])),
+  country_code: Type.Optional(
+    Type.Union([Type.String({ minLength: 2, maxLength: 2 }), Type.Null()]),
+  ),
+  phone: Type.Optional(Type.Union([Type.String({ maxLength: 20 }), Type.Null()])),
+})
+
 export const MeSchema = Type.Object({
   user: Type.Object({
     id: Type.String(),

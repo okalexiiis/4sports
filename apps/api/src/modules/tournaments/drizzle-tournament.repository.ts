@@ -221,6 +221,7 @@ export class DrizzleTournamentRepository implements ITournamentRepository {
 
     if (data.name !== undefined) updateValues.name = data.name
     if (data.description !== undefined) updateValues.description = data.description
+    if (data.banner_url !== undefined) updateValues.banner_url = data.banner_url
     if (data.sport_id !== undefined) updateValues.sport_id = data.sport_id
     if (data.format_id !== undefined) updateValues.format_id = data.format_id
     if (data.tags !== undefined) updateValues.tags = data.tags

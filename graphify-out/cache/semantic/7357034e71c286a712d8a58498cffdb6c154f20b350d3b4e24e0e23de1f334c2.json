@@ -1,0 +1,179 @@
+{
+  "nodes": [
+    {
+      "id": "use_cases_4sports_uc_bloque3_equiposjugadores_uc_bloque3",
+      "label": "UC Block 3: Teams & Players (v2)",
+      "file_type": "document",
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "use_cases_4sports_uc_bloque3_equiposjugadores_ownership_model",
+      "label": "Team Ownership Model (is_owner / is_player)",
+      "file_type": "rationale",
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md",
+      "source_location": "Modelo de roles",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Ownership and roster presence are dimensions independent of the visible role: is_owner (exactly 1 per team, enforced by partial unique index) grants exclusive privileges; is_player controls roster/convocatoria inclusion. Lets a coach own the team without appearing in lineups."
+    },
+    {
+      "id": "use_cases_4sports_uc_bloque3_equiposjugadores_guest_claim_flow",
+      "label": "Guest Profile Claim Flow (UC-205)",
+      "file_type": "concept",
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md",
+      "source_location": "UC-205",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "use_cases_4sports_uc_bloque3_equiposjugadores_transfer_flows",
+      "label": "Player Transfer Flows (UC-210 free / UC-211 three-signature)",
+      "file_type": "concept",
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md",
+      "source_location": "UC-210/UC-211",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Off-season transfers are free; in-tournament regulated transfers require three signatures (staff, player, organizer) inside a configurable window. Past stats stay frozen with the old team."
+    },
+    {
+      "id": "use_cases_4sports_uc_bloque3_equiposjugadores_convocatoria_lineup",
+      "label": "Convocatoria & Tactical Lineup (UC-208/UC-209)",
+      "file_type": "concept",
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md",
+      "source_location": "UC-208/UC-209",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "use_cases_4sports_uc_bloque3_equiposjugadores_uc_bloque3",
+      "target": "use_cases_4sports_uc_bloque3_equiposjugadores_ownership_model",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque3_equiposjugadores_uc_bloque3",
+      "target": "use_cases_4sports_uc_bloque3_equiposjugadores_guest_claim_flow",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque3_equiposjugadores_uc_bloque3",
+      "target": "use_cases_4sports_uc_bloque3_equiposjugadores_transfer_flows",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque3_equiposjugadores_uc_bloque3",
+      "target": "use_cases_4sports_uc_bloque3_equiposjugadores_convocatoria_lineup",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque3_equiposjugadores_uc_bloque3",
+      "target": "agent_docs_prd_eligibility_engine",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque3_equiposjugadores_ownership_model",
+      "target": "db_4sports_schema_v4_diagramas_team_members",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md",
+      "source_location": "Revision del schema \u2014 Cambios requeridos por v2",
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque3_equiposjugadores_guest_claim_flow",
+      "target": "agent_docs_prd_guest_player_profile",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque3_equiposjugadores_guest_claim_flow",
+      "target": "agent_docs_prd_identity_linking",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque3_equiposjugadores_transfer_flows",
+      "target": "db_4sports_schema_v4_diagramas_team_members",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque3_equiposjugadores_convocatoria_lineup",
+      "target": "hitos_hito_3_techdoc",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "guest_identity_lifecycle",
+      "label": "Guest Profile Identity Lifecycle",
+      "nodes": [
+        "agent_docs_prd_guest_player_profile",
+        "agent_docs_prd_identity_linking",
+        "use_cases_4sports_uc_bloque3_equiposjugadores_guest_claim_flow",
+        "db_4sports_schema_v4_diagramas_players"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque3_EquiposJugadores.md"
+    }
+  ]
+}

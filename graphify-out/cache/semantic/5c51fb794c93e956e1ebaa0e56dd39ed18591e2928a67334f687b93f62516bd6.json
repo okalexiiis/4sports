@@ -1,0 +1,29 @@
+{
+  "nodes": [
+    {
+      "id": "datasources_loki_loki_datasource",
+      "label": "Grafana Loki Datasource Provisioning",
+      "file_type": "code",
+      "source_file": "docker/observability/grafana/provisioning/datasources/loki.yaml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Provisioned as the default datasource (isDefault: true) pointing at http://loki:3100 so Grafana is query-ready on first boot with no manual setup."
+    }
+  ],
+  "edges": [
+    {
+      "source": "datasources_loki_loki_datasource",
+      "target": "observability_docker_compose_loki_service",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/observability/grafana/provisioning/datasources/loki.yaml",
+      "source_location": "url: http://loki:3100",
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": []
+}

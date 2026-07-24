@@ -1,0 +1,109 @@
+{
+  "nodes": [
+    {
+      "id": "observability_docker_compose_loki_service",
+      "label": "Loki Service (4sports-loki, port 3100)",
+      "file_type": "code",
+      "source_file": "docker/observability/docker-compose.yml",
+      "source_location": "services.loki",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "observability_docker_compose_promtail_service",
+      "label": "Promtail Service (4sports-promtail)",
+      "file_type": "code",
+      "source_file": "docker/observability/docker-compose.yml",
+      "source_location": "services.promtail",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Mounts ../../apps/api/logs read-only into /logs/api so log scraping needs no Docker socket and no agent inside the API process."
+    },
+    {
+      "id": "observability_docker_compose_grafana_service",
+      "label": "Grafana Service (4sports-grafana, host port 3001)",
+      "file_type": "code",
+      "source_file": "docker/observability/docker-compose.yml",
+      "source_location": "services.grafana",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Anonymous access is enabled with Admin org role (GF_AUTH_ANONYMOUS_*) so local developers query logs without login; host port 3001 avoids clashing with the web app on 3000."
+    }
+  ],
+  "edges": [
+    {
+      "source": "observability_docker_compose_promtail_service",
+      "target": "observability_docker_compose_loki_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/observability/docker-compose.yml",
+      "source_location": "services.promtail.depends_on",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_docker_compose_grafana_service",
+      "target": "observability_docker_compose_loki_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/observability/docker-compose.yml",
+      "source_location": "services.grafana.depends_on",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_docker_compose_loki_service",
+      "target": "observability_loki_config_loki_config",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/observability/docker-compose.yml",
+      "source_location": "services.loki.volumes",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_docker_compose_promtail_service",
+      "target": "observability_promtail_config_api_logs_scrape",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/observability/docker-compose.yml",
+      "source_location": "services.promtail.volumes",
+      "weight": 1.0
+    },
+    {
+      "source": "observability_docker_compose_grafana_service",
+      "target": "datasources_loki_loki_datasource",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/observability/docker-compose.yml",
+      "source_location": "services.grafana.volumes (./grafana/provisioning mount)",
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "local_observability_stack",
+      "label": "Local Observability Stack (Loki + Promtail + Grafana)",
+      "nodes": [
+        "observability_docker_compose_loki_service",
+        "observability_docker_compose_promtail_service",
+        "observability_docker_compose_grafana_service",
+        "observability_loki_config_loki_config",
+        "observability_promtail_config_api_logs_scrape",
+        "datasources_loki_loki_datasource"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/observability/docker-compose.yml"
+    }
+  ]
+}

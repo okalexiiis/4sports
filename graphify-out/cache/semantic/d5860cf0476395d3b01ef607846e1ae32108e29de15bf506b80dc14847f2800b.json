@@ -1,0 +1,99 @@
+{
+  "nodes": [
+    {
+      "id": "agent_docs_gaps_vs_uc_identidad_hito1_gap_analysis",
+      "label": "Identity UC Gap Analysis (Hito 1)",
+      "file_type": "document",
+      "source_file": "agent_docs/gaps-vs-uc-identidad-hito1.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_docs_gaps_vs_uc_identidad_hito1_r2_upload_gap",
+      "label": "R2 Presigned Upload Gap (blocking UC-002/003)",
+      "file_type": "concept",
+      "source_file": "agent_docs/gaps-vs-uc-identidad-hito1.md",
+      "source_location": "Gaps adicionales",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "agent_docs_gaps_vs_uc_identidad_hito1_gap_analysis",
+      "target": "use_cases_4sports_uc_bloque1_identidad_uc_bloque1",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/gaps-vs-uc-identidad-hito1.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_gaps_vs_uc_identidad_hito1_gap_analysis",
+      "target": "hitos_hitos_1_y_2_techdoc",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/gaps-vs-uc-identidad-hito1.md",
+      "source_location": "UC-006 section cites hitos-1-y-2.md linea 303",
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_gaps_vs_uc_identidad_hito1_gap_analysis",
+      "target": "agent_docs_api_routes_reference_routes_reference",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agent_docs/gaps-vs-uc-identidad-hito1.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_gaps_vs_uc_identidad_hito1_gap_analysis",
+      "target": "agent_docs_gaps_vs_uc_identidad_hito1_r2_upload_gap",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/gaps-vs-uc-identidad-hito1.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_gaps_vs_uc_identidad_hito1_r2_upload_gap",
+      "target": "hitos_hitos_1_y_2_r2_presigned_upload",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/gaps-vs-uc-identidad-hito1.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_gaps_vs_uc_identidad_hito1_gap_analysis",
+      "target": "use_cases_4sports_uc_bloque1_identidad_member_management",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/gaps-vs-uc-identidad-hito1.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_docs_gaps_vs_uc_identidad_hito1_gap_analysis",
+      "target": "use_cases_4sports_uc_bloque1_identidad_onboarding_flows",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/gaps-vs-uc-identidad-hito1.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": []
+}

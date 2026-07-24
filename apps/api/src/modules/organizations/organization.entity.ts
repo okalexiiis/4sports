@@ -61,6 +61,15 @@ export interface UpdateRoleInput {
   tournament_ids: string[]
 }
 
+export interface UpdateOrgInput {
+  name?: string
+  description?: string | null
+  logo_url?: string | null
+  website_url?: string | null
+  city?: string | null
+  country_code?: string | null
+}
+
 export interface CreateOrgInput {
   name: string
   slug?: string

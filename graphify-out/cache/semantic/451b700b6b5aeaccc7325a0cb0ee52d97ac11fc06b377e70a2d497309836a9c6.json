@@ -1,0 +1,18 @@
+{
+  "nodes": [
+    {
+      "id": "pnpm_workspace_workspace_packages",
+      "label": "pnpm Workspace Definition (apps/*, packages/*)",
+      "file_type": "code",
+      "source_file": "pnpm-workspace.yaml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Workspaces span apps/* and packages/*; build scripts are explicitly allowlisted (esbuild, msgpackr-extract, sharp) under allowBuilds instead of allowing arbitrary postinstall scripts."
+    }
+  ],
+  "edges": [],
+  "hyperedges": []
+}

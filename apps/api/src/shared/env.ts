@@ -16,4 +16,9 @@ export const env = {
   WEB_URL: requireEnv('WEB_URL'),
   PORT: process.env.PORT ?? '4000',
   MOBILE_URL: process.env.MOBILE_URL ?? 'exp://',
+  R2_ACCOUNT_ID: requireEnv('R2_ACCOUNT_ID'),
+  R2_ACCESS_KEY_ID: requireEnv('R2_ACCESS_KEY_ID'),
+  R2_SECRET_ACCESS_KEY: requireEnv('R2_SECRET_ACCESS_KEY'),
+  R2_BUCKET_NAME: requireEnv('R2_BUCKET_NAME'),
+  R2_PUBLIC_URL: requireEnv('R2_PUBLIC_URL'),
 }

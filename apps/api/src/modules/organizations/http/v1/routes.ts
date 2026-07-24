@@ -12,6 +12,7 @@ import { removeMember } from '../../use-cases/remove-member.use-case'
 import { suspendMember } from '../../use-cases/suspend-member.use-case'
 import { transferOwnership } from '../../use-cases/transfer-ownership.use-case'
 import { updateMemberRole } from '../../use-cases/update-member-role.use-case'
+import { updateOrganization } from '../../use-cases/update-organization.use-case'
 import {
   createOrganizationDetail,
   getOrganizationDetail,
@@ -22,6 +23,7 @@ import {
   suspendMemberDetail,
   transferOwnershipDetail,
   updateMemberRoleDetail,
+  updateOrganizationDetail,
 } from './docs'
 import {
   CreateOrgBodySchema,
@@ -29,6 +31,7 @@ import {
   MembersQuerySchema,
   TransferOwnershipBodySchema,
   UpdateMemberRoleBodySchema,
+  UpdateOrgBodySchema,
 } from './schemas'
 
 const repo = new DrizzleOrganizationRepository()
@@ -65,6 +68,32 @@ export const organizationsV1Routes = new Elysia({ tags: ['Organizations'] })
       )
     },
     { beforeHandle: [authGuard, orgGuard('viewer')], detail: getOrganizationDetail },
+  )
+  .patch(
+    '/organizations/:orgId',
+    async (ctx) => {
+      const { user } = ctx.store as AuthStore
+      return toApiResponse(
+        ctx,
+        await updateOrganization(repo, {
+          orgId: ctx.params.orgId,
+          requestingUserId: user.id,
+          data: {
+            name: ctx.body.name,
+            description: ctx.body.description,
+            logo_url: ctx.body.logo_url,
+            website_url: ctx.body.website_url,
+            city: ctx.body.city,
+            country_code: ctx.body.country_code,
+          },
+        }),
+      )
+    },
+    {
+      beforeHandle: [authGuard, orgGuard('admin')],
+      body: UpdateOrgBodySchema,
+      detail: updateOrganizationDetail,
+    },
   )
   .get(
     '/organizations/:orgId/members',

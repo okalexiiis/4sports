@@ -1,0 +1,39 @@
+{
+  "nodes": [
+    {
+      "id": "docker_readme_docker_services",
+      "label": "Docker Compose Dev Services Index",
+      "file_type": "document",
+      "source_file": "docker/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Each dev service ships as a standalone compose file with a named volume for persistence, so services can be started and stopped independently."
+    }
+  ],
+  "edges": [
+    {
+      "source": "docker_readme_docker_services",
+      "target": "postgres_docker_compose_postgres_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/README.md",
+      "source_location": "Available services",
+      "weight": 1.0
+    },
+    {
+      "source": "docker_readme_docker_services",
+      "target": "redis_docker_compose_redis_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docker/README.md",
+      "source_location": "Available services",
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": []
+}

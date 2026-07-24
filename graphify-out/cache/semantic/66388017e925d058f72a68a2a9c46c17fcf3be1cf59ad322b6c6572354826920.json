@@ -1,0 +1,153 @@
+{
+  "nodes": [
+    {
+      "id": "use_cases_4sports_uc_bloque1_identidad_uc_bloque1",
+      "label": "UC Block 1: Identity, Organizations & Roles",
+      "file_type": "document",
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque1_Identidad.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "use_cases_4sports_uc_bloque1_identidad_betterauth_flows",
+      "label": "BetterAuth Flows (UC-001/001B/001C/001D)",
+      "file_type": "concept",
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque1_Identidad.md",
+      "source_location": "UC-001..UC-001D",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "use_cases_4sports_uc_bloque1_identidad_onboarding_flows",
+      "label": "Onboarding Flows (UC-002 Player / UC-003 Organizer)",
+      "file_type": "concept",
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque1_Identidad.md",
+      "source_location": "UC-002/UC-003",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "use_cases_4sports_uc_bloque1_identidad_context_switching",
+      "label": "Multitenant Context Switching (UC-005)",
+      "file_type": "concept",
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque1_Identidad.md",
+      "source_location": "UC-005",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Active context lives in Redis session, never localStorage; every backend request validates membership status and resource scope, returning 403 outside scope."
+    },
+    {
+      "id": "use_cases_4sports_uc_bloque1_identidad_member_management",
+      "label": "Org Member Management (UC-006..UC-010)",
+      "file_type": "concept",
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque1_Identidad.md",
+      "source_location": "UC-006..UC-010",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "use_cases_4sports_uc_bloque1_identidad_uc_bloque1",
+      "target": "use_cases_4sports_uc_bloque1_identidad_onboarding_flows",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque1_Identidad.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque1_identidad_uc_bloque1",
+      "target": "use_cases_4sports_uc_bloque1_identidad_context_switching",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque1_Identidad.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque1_identidad_uc_bloque1",
+      "target": "use_cases_4sports_uc_bloque1_identidad_member_management",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque1_Identidad.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque1_identidad_uc_bloque1",
+      "target": "use_cases_4sports_uc_bloque1_identidad_betterauth_flows",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque1_Identidad.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque1_identidad_onboarding_flows",
+      "target": "db_4sports_schema_v4_diagramas_profiles",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque1_Identidad.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque1_identidad_member_management",
+      "target": "db_4sports_schema_v4_diagramas_organization_members",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque1_Identidad.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque1_identidad_member_management",
+      "target": "db_4sports_schema_v4_diagramas_audit_logs",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque1_Identidad.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque1_identidad_context_switching",
+      "target": "agent_docs_api_routes_reference_active_context",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque1_Identidad.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "use_cases_4sports_uc_bloque1_identidad_betterauth_flows",
+      "target": "agent_docs_api_routes_reference_auth_guard",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agent_docs/use_cases/4Sports_UC_Bloque1_Identidad.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": []
+}

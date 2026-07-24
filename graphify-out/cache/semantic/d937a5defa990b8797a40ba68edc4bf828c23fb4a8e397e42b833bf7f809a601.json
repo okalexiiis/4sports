@@ -1,0 +1,247 @@
+{
+  "nodes": [
+    {
+      "id": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "label": "Josue Dev Guide (API)",
+      "file_type": "document",
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_authguard",
+      "label": "authGuard Middleware",
+      "file_type": "concept",
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "sections 3, 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Every private route must apply authGuard as an Elysia plugin before the handler; it lives at src/shared/middleware/auth.guard.ts."
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_orgguard",
+      "label": "orgGuard(minRole) Middleware",
+      "file_type": "concept",
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "sections 3, 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Routes operating on an organization apply orgGuard with a minimum role (e.g. orgGuard('organizer')); lives at src/shared/middleware/org.guard.ts."
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_featureguard",
+      "label": "featureGuard(feature) Middleware",
+      "file_type": "concept",
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "sections 3, 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Routes gated behind a subscription plan apply featureGuard('feature_key'); lives at src/shared/middleware/feature.guard.ts."
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_thin_route_handler",
+      "label": "Thin Route Handler Rule",
+      "file_type": "rationale",
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "section 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Route handlers in routes.ts may only call a use case and pass the result to toApiResponse; business logic never lives in HTTP handlers so it stays testable and transport-agnostic."
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_use_case_result_pattern",
+      "label": "Use Case Result Pattern",
+      "file_type": "rationale",
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "section 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Business logic is a pure async function (repo, input) -> Promise<Result<T>> that never throws; it returns ok(data) or err(domainError) so error flow is explicit and type-checked under strict TypeScript (no any, no ! assertions)."
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_betterauth_openapi_reference",
+      "label": "BetterAuth OpenAPI Reference (/auth/reference)",
+      "file_type": "concept",
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "section 2.2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "BetterAuth self-generates OpenAPI docs for all /auth/* routes via the openAPI() plugin registered in src/shared/lib/auth.ts, so auth endpoints never need hand-written docs."
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_sandbox_note_template",
+      "label": "_sandbox/note Reference Module Template",
+      "file_type": "concept",
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "section 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "The _sandbox/note module is the complete reference implementation of the domain module layout (entity, repository, drizzle repository, errors, use-cases, http/v1) and is the mandated template for new modules."
+    },
+    {
+      "id": "dev_docs_josue_dev_guide_authenticated_requests",
+      "label": "Authenticated Request Flow (curl + session cookie)",
+      "file_type": "concept",
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "section 4",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "dev_docs_josue_dev_guide_authguard",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "sections 3, 5",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "dev_docs_josue_dev_guide_orgguard",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "sections 3, 5",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "dev_docs_josue_dev_guide_featureguard",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "sections 3, 5",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "dev_docs_josue_dev_guide_thin_route_handler",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "section 5, rule 1",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "dev_docs_josue_dev_guide_use_case_result_pattern",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "section 5, rule 2",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "dev_docs_josue_dev_guide_betterauth_openapi_reference",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "section 2.2",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "dev_docs_josue_dev_guide_sandbox_note_template",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "section 3",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "dev_docs_josue_dev_guide_authenticated_requests",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "section 4",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_sandbox_note_template",
+      "target": "dev_docs_josue_dev_guide_thin_route_handler",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "section 3 (module layout: routes.ts thin handlers)",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_sandbox_note_template",
+      "target": "dev_docs_josue_dev_guide_use_case_result_pattern",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "section 3 (module layout: use-cases/)",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "api_readme_elysia_bun_runtime",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.65,
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "both describe running the Elysia/Bun API in dev mode",
+      "weight": 1.0
+    },
+    {
+      "source": "dev_docs_josue_dev_guide_josue_dev_guide",
+      "target": "docker_readme_docker_services",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "dev_docs/josue-dev-guide.md",
+      "source_location": "section 1: pnpm run docker:up starts the Postgres + Redis compose services",
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "api_route_guard_chain",
+      "label": "Elysia Route Guard Plugins",
+      "nodes": [
+        "dev_docs_josue_dev_guide_authguard",
+        "dev_docs_josue_dev_guide_orgguard",
+        "dev_docs_josue_dev_guide_featureguard"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "dev_docs/josue-dev-guide.md"
+    }
+  ]
+}

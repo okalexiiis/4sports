@@ -6,13 +6,15 @@ import { addGuestPlayer, inviteUser } from '../../use-cases/add-player.use-case'
 import { createTeam } from '../../use-cases/create-team.use-case'
 import { listTeamMembers } from '../../use-cases/list-team-members.use-case'
 import { removeTeamMember } from '../../use-cases/remove-team-member.use-case'
+import { updateTeam } from '../../use-cases/update-team.use-case'
 import {
   addPlayerDetail,
   createTeamDetail,
   listTeamMembersDetail,
   removeTeamMemberDetail,
+  updateTeamDetail,
 } from './docs'
-import { AddPlayerBodySchema, CreateTeamBodySchema } from './schemas'
+import { AddPlayerBodySchema, CreateTeamBodySchema, UpdateTeamBodySchema } from './schemas'
 
 const repo = new DrizzleTeamRepository()
 
@@ -43,6 +45,31 @@ export const teamsV1Routes = new Elysia({ tags: ['Teams'] })
       return toApiResponse(ctx, result)
     },
     { beforeHandle: [authGuard], body: CreateTeamBodySchema, detail: createTeamDetail },
+  )
+  .patch(
+    '/teams/:teamId',
+    async (ctx) => {
+      const { user } = ctx.store as AuthStore
+      return toApiResponse(
+        ctx,
+        await updateTeam(repo, {
+          teamId: ctx.params.teamId,
+          actorUserId: user.id,
+          data: {
+            name: ctx.body.name,
+            short_name: ctx.body.short_name,
+            logo_url: ctx.body.logo_url,
+            primary_color: ctx.body.primary_color,
+            secondary_color: ctx.body.secondary_color,
+            city: ctx.body.city,
+            country_code: ctx.body.country_code,
+            gender_type: ctx.body.gender_type,
+            join_policy: ctx.body.join_policy,
+          },
+        }),
+      )
+    },
+    { beforeHandle: [authGuard], body: UpdateTeamBodySchema, detail: updateTeamDetail },
   )
   .get(
     '/teams/:teamId/members',

@@ -1,0 +1,283 @@
+{
+  "nodes": [
+    {
+      "id": "db_4sports_schema_v4_diagramas_schema_v4",
+      "label": "Schema v4 Module Diagrams",
+      "file_type": "document",
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "db_4sports_schema_v4_diagramas_profiles",
+      "label": "profiles table",
+      "file_type": "concept",
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": "Modulo 1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "db_4sports_schema_v4_diagramas_organizations",
+      "label": "organizations table",
+      "file_type": "concept",
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": "Modulo 1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "db_4sports_schema_v4_diagramas_organization_members",
+      "label": "organization_members table",
+      "file_type": "concept",
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": "Modulo 1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "db_4sports_schema_v4_diagramas_tournaments",
+      "label": "tournaments table",
+      "file_type": "concept",
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": "Modulo 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "db_4sports_schema_v4_diagramas_teams",
+      "label": "teams table",
+      "file_type": "concept",
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": "Modulo 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "db_4sports_schema_v4_diagramas_players",
+      "label": "players table (is_guest)",
+      "file_type": "concept",
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": "Modulo 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "db_4sports_schema_v4_diagramas_team_members",
+      "label": "team_members table",
+      "file_type": "concept",
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": "Modulo 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "db_4sports_schema_v4_diagramas_matches",
+      "label": "matches table",
+      "file_type": "concept",
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": "Modulo 9",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "db_4sports_schema_v4_diagramas_standings",
+      "label": "standings table (computed on the fly)",
+      "file_type": "concept",
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": "Modulo 10",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "db_4sports_schema_v4_diagramas_player_suspensions",
+      "label": "player_suspensions table (org-scoped)",
+      "file_type": "concept",
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": "Modulo 10",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "db_4sports_schema_v4_diagramas_fee_invoices",
+      "label": "fee_invoices table",
+      "file_type": "concept",
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": "Modulo 11",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "db_4sports_schema_v4_diagramas_payment_webhooks",
+      "label": "payment_webhooks table (dedupe by gateway+external_ref)",
+      "file_type": "concept",
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": "Modulo 11",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "db_4sports_schema_v4_diagramas_subscription_plans",
+      "label": "subscription_plans table (features JSONB)",
+      "file_type": "concept",
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": "Modulo 12",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "db_4sports_schema_v4_diagramas_audit_logs",
+      "label": "audit_logs table (append-only)",
+      "file_type": "concept",
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": "Modulo 14",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "db_4sports_schema_v4_diagramas_captain_invite_tokens",
+      "label": "captain_invite_tokens table",
+      "file_type": "concept",
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": "Modulo 6",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "db_4sports_schema_v4_diagramas_organization_members",
+      "target": "db_4sports_schema_v4_diagramas_organizations",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "db_4sports_schema_v4_diagramas_organization_members",
+      "target": "db_4sports_schema_v4_diagramas_profiles",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "db_4sports_schema_v4_diagramas_tournaments",
+      "target": "db_4sports_schema_v4_diagramas_organizations",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "db_4sports_schema_v4_diagramas_matches",
+      "target": "db_4sports_schema_v4_diagramas_tournaments",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "db_4sports_schema_v4_diagramas_team_members",
+      "target": "db_4sports_schema_v4_diagramas_teams",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "db_4sports_schema_v4_diagramas_team_members",
+      "target": "db_4sports_schema_v4_diagramas_players",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "db_4sports_schema_v4_diagramas_standings",
+      "target": "db_4sports_schema_v4_diagramas_tournaments",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "db_4sports_schema_v4_diagramas_player_suspensions",
+      "target": "db_4sports_schema_v4_diagramas_players",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "db_4sports_schema_v4_diagramas_fee_invoices",
+      "target": "db_4sports_schema_v4_diagramas_teams",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "db_4sports_schema_v4_diagramas_captain_invite_tokens",
+      "target": "db_4sports_schema_v4_diagramas_teams",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agent_docs/db/4Sports_Schema_v4_Diagramas.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": []
+}

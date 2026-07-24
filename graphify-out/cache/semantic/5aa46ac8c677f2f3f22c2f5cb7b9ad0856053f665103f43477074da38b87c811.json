@@ -1,0 +1,18 @@
+{
+  "nodes": [
+    {
+      "id": "agent_docs_project_project_context",
+      "label": "Project Context & Stack Decisions",
+      "file_type": "document",
+      "source_file": "agent_docs/project.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Bun over Node for performance/native TS; ElysiaJS for Bun-native TS inference and WebSockets; Drizzle over Prisma for SQL-first edge compatibility; JSONB in Postgres instead of MongoDB; R2 for zero egress fees; Railway for zero-ops deploys."
+    }
+  ],
+  "edges": [],
+  "hyperedges": []
+}

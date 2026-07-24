@@ -76,6 +76,24 @@ export const CreateTeamBodySchema = Type.Object({
   organization_id: Type.Optional(Type.Union([Type.String({ format: 'uuid' }), Type.Null()])),
 })
 
+export const UpdateTeamBodySchema = Type.Object({
+  name: Type.Optional(Type.String({ minLength: 2, maxLength: 80 })),
+  short_name: Type.Optional(Type.Union([Type.String({ maxLength: 10 }), Type.Null()])),
+  logo_url: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  primary_color: Type.Optional(Type.Union([Type.String({ maxLength: 7 }), Type.Null()])),
+  secondary_color: Type.Optional(Type.Union([Type.String({ maxLength: 7 }), Type.Null()])),
+  city: Type.Optional(Type.Union([Type.String({ maxLength: 80 }), Type.Null()])),
+  country_code: Type.Optional(
+    Type.Union([Type.String({ minLength: 2, maxLength: 2 }), Type.Null()]),
+  ),
+  gender_type: Type.Optional(
+    Type.Union([Type.Literal('male'), Type.Literal('female'), Type.Literal('mixed')]),
+  ),
+  join_policy: Type.Optional(
+    Type.Union([Type.Literal('open'), Type.Literal('request'), Type.Literal('invite_only')]),
+  ),
+})
+
 export const AddGuestPlayerBodySchema = Type.Object({
   type: Type.Literal('guest'),
   display_name: Type.String({ minLength: 2, maxLength: 80 }),

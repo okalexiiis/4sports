@@ -1,0 +1,289 @@
+{
+  "nodes": [
+    {
+      "id": "home_okalexiiis_dev_4sports_apps_web_tsconfig_json",
+      "label": "tsconfig.json",
+      "file_type": "code",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L1"
+    },
+    {
+      "id": "web_tsconfig_extends",
+      "label": "extends",
+      "file_type": "code",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L2"
+    },
+    {
+      "id": "web_tsconfig_compileroptions",
+      "label": "compilerOptions",
+      "file_type": "code",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L3"
+    },
+    {
+      "id": "web_tsconfig_compileroptions_plugins",
+      "label": "plugins",
+      "file_type": "code",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L4"
+    },
+    {
+      "id": "web_tsconfig_compileroptions_paths",
+      "label": "paths",
+      "file_type": "code",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L5"
+    },
+    {
+      "id": "web_tsconfig_paths",
+      "label": "@/*",
+      "file_type": "code",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L6"
+    },
+    {
+      "id": "web_tsconfig_paths_4sports_types",
+      "label": "@4sports/types",
+      "file_type": "code",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L7"
+    },
+    {
+      "id": "web_tsconfig_paths_4sports_utils",
+      "label": "@4sports/utils",
+      "file_type": "code",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L8"
+    },
+    {
+      "id": "web_tsconfig_paths_4sports_utils_logger",
+      "label": "@4sports/utils/logger",
+      "file_type": "code",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L9"
+    },
+    {
+      "id": "web_tsconfig_paths_4sports_ui",
+      "label": "@4sports/ui",
+      "file_type": "code",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L10"
+    },
+    {
+      "id": "web_tsconfig_include",
+      "label": "include",
+      "file_type": "code",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L13"
+    },
+    {
+      "id": "web_tsconfig_exclude",
+      "label": "exclude",
+      "file_type": "code",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L14"
+    }
+  ],
+  "edges": [
+    {
+      "source": "home_okalexiiis_dev_4sports_apps_web_tsconfig_json",
+      "target": "web_tsconfig_extends",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "home_okalexiiis_dev_4sports_apps_web_tsconfig_json",
+      "target": "ref_packages_config_tsconfig_react_json",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "home_okalexiiis_dev_4sports_apps_web_tsconfig_json",
+      "target": "web_tsconfig_compileroptions",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "web_tsconfig_compileroptions",
+      "target": "web_tsconfig_compileroptions_plugins",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "web_tsconfig_compileroptions",
+      "target": "web_tsconfig_compileroptions_paths",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "web_tsconfig_compileroptions_paths",
+      "target": "web_tsconfig_paths",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "web_tsconfig_paths",
+      "target": "ref_src",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "web_tsconfig_compileroptions_paths",
+      "target": "web_tsconfig_paths_4sports_types",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "web_tsconfig_paths_4sports_types",
+      "target": "ref_packages_types_src",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "web_tsconfig_compileroptions_paths",
+      "target": "web_tsconfig_paths_4sports_utils",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "web_tsconfig_paths_4sports_utils",
+      "target": "ref_packages_utils_src",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "web_tsconfig_compileroptions_paths",
+      "target": "web_tsconfig_paths_4sports_utils_logger",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "web_tsconfig_paths_4sports_utils_logger",
+      "target": "ref_packages_utils_src_logger_index_ts",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "web_tsconfig_compileroptions_paths",
+      "target": "web_tsconfig_paths_4sports_ui",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "web_tsconfig_paths_4sports_ui",
+      "target": "ref_packages_ui_src",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L10",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "home_okalexiiis_dev_4sports_apps_web_tsconfig_json",
+      "target": "web_tsconfig_include",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "web_tsconfig_include",
+      "target": "ref_src",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "web_tsconfig_include",
+      "target": "ref_next_env_d_ts",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "web_tsconfig_include",
+      "target": "ref_next_types_ts",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "home_okalexiiis_dev_4sports_apps_web_tsconfig_json",
+      "target": "web_tsconfig_exclude",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "web_tsconfig_exclude",
+      "target": "ref_node_modules",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/tsconfig.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "context": "import"
+    }
+  ]
+}
