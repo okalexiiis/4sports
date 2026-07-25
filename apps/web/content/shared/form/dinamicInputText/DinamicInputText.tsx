@@ -12,6 +12,7 @@ export function DinamicInputText<T extends FieldValues>({
   placeholder,
   rules,
   type = 'text',
+  twMarginBottom,
 }: DinamicInputTextProps<T>) {
   const {
     control,
@@ -21,7 +22,7 @@ export function DinamicInputText<T extends FieldValues>({
   const error = errors[name]
 
   return (
-    <div className="flex flex-col gap-2 mb-4">
+    <div className={`flex flex-col gap-2 ${twMarginBottom ? twMarginBottom : 'mb-4'}`}>
       {label && <p>{label}</p>}
 
       <Controller
@@ -34,12 +35,12 @@ export function DinamicInputText<T extends FieldValues>({
             id={name}
             type={type}
             placeholder={placeholder}
-            className="w-full text-sm h-fit px-4 py-2 bg-background outline-none border border-line rounded-xl hover:bg-surface transition-all duration-300 placeholder:text-faint focus:ring-2 focus:ring-lucide"
+            className="w-full px-4 py-2 text-sm transition-all duration-300 border outline-none h-fit bg-background border-line rounded-xl hover:bg-surface placeholder:text-faint focus:ring-2 focus:ring-lucide"
           />
         )}
       />
 
-      {error?.message && <p className="text-danger text-sm">{String(error.message)}</p>}
+      {error?.message && <p className="text-sm text-danger">{String(error.message)}</p>}
     </div>
   )
 }

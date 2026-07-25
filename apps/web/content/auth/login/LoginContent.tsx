@@ -93,7 +93,7 @@ export function LoginContent() {
         <FourSportsIcon />
       </div>
 
-      <h1 className="mb-2 text-lg font-medium text-center">Ingresa a tu cuenta</h1>
+      <h1 className="mb-2 text-lg font-medium text-center text-ink">Ingresa a tu cuenta</h1>
 
       <DinamicInputText<LoginForm>
         name="email"

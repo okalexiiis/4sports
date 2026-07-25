@@ -29,9 +29,7 @@ export default function OrganizerLayout({ children }: { children: React.ReactNod
   const router = useRouter()
 
   const { expanded } = useSidebarStore()
-  const initialize = useAuthStore((s) => s.initialize)
-  const status = useAuthStore((s) => s.status)
-  const user = useAuthStore((s) => s.data)
+  const { initialize, status, data } = useAuthStore()
 
   useEffect(() => {
     initialize()

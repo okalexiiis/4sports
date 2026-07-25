@@ -111,7 +111,7 @@ export function RegisterContent() {
         <FourSportsIcon />
       </div>
 
-      <h1 className="mb-2 text-lg font-medium text-center">Crear una cuenta nueva</h1>
+      <h1 className="mb-2 text-lg font-medium text-center text-ink">Crear una cuenta nueva</h1>
 
       <DinamicInputText<RegisterForm>
         name="name"
@@ -119,6 +119,7 @@ export function RegisterContent() {
         type="text"
         placeholder="María, Pedro, Juan..."
         rules={{}}
+        twMarginBottom="mb-0"
       />
 
       <DinamicInputText<RegisterForm>

@@ -3,7 +3,7 @@ import type { FieldValues, Path, RegisterOptions } from 'react-hook-form'
 
 export type DinamicInputFileProps<T extends FieldValues> = {
   label?: string
-  variant?: 'avatar' | 'select-photo' | 'default'
+  variant?: 'avatar' | 'select-photo' | 'default' | 'mini-avatar'
   accept?: string
   rules?: RegisterOptions<T, Path<T>>
   name: Path<T>
