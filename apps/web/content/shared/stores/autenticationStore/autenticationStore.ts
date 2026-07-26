@@ -4,11 +4,11 @@ import { MeData } from '../../../../../api/src/modules/auth/auth.entity'
 
 interface AuthState {
   data: MeData | null
-  status: 'empty' | 'authenticated' | 'unauthenticated' | 'error'
+  status: 'empty' | 'authenticated' | 'unauthenticated' | 'error' | 'onboarding'
 
   setUser: (
     user: MeData | null,
-    status: 'empty' | 'authenticated' | 'unauthenticated' | 'error',
+    status: 'empty' | 'authenticated' | 'unauthenticated' | 'error' | 'onboarding',
   ) => void
   initialize: () => Promise<void>
   logout: () => Promise<void>
@@ -25,34 +25,41 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     if (get().status !== 'empty') return
 
     try {
-      const res = await fetch(`${PORT}/v1/me`, {
+      const request = await fetch(`${PORT}/v1/me`, {
         credentials: 'include',
       })
 
-      if (res.ok) {
-        const data = await res.json()
+      if (request.ok) {
+        const response = await request.json()
 
-        set({
-          data,
-          status: 'authenticated',
-        })
+        if (!response.data.onboarding_pending) {
+          set({
+            data: response.data,
+            status: 'authenticated',
+          })
 
-        console.log('Sesión iniciada')
+          console.log('Sesión iniciada')
+          console.log(response.data)
+        } else {
+          set({
+            data: response.data,
+            status: 'onboarding',
+          })
+
+          console.log('Sesión iniciada, falta onboarding')
+          console.log(response.data)
+        }
       } else {
         set({
           data: null,
           status: 'unauthenticated',
         })
-
-        console.log('Sesión no iniciada')
       }
     } catch {
       set({
         data: null,
         status: 'error',
       })
-
-      console.log('Error al iniciar sesión')
     }
   },
 
@@ -69,23 +76,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           data: null,
           status: 'unauthenticated',
         })
-
-        console.log('Sesión cerrada')
       } else {
         set({
           data: null,
           status: 'error',
         })
-
-        console.log('Error al cerrar sesión')
       }
     } catch {
       set({
         data: null,
         status: 'error',
       })
-
-      console.log('Error al cerrar sesión')
     }
   },
 }))

@@ -1,67 +1,77 @@
+'use client'
+
 /* COMPONENTS */
-import { SectionContainer } from "@/content/shared/ui/sectionContainer/SectionContainer";
-import { MatchCard } from "./components/matchCard/MatchCard";
+import { SectionContainer } from '@/content/shared/ui/sectionContainer/SectionContainer'
+import { MatchCard } from './components/matchCard/MatchCard'
 
 /* IMAGES */
-import team1 from "./images/team1.jpg";
-import team2 from "./images/team2.jpg";
-import team3 from "./images/team3.jpg";
-import team4 from "./images/team4.jpg";
-import team5 from "./images/team5.jpg";
-import team6 from "./images/team6.jpg";
-import tournament1 from "./images/tournament1.png";
+import team1 from './images/team1.jpg'
+import team2 from './images/team2.jpg'
+import team3 from './images/team3.jpg'
+import team4 from './images/team4.jpg'
+import team5 from './images/team5.jpg'
+import team6 from './images/team6.jpg'
+import tournament1 from './images/tournament1.png'
+
+/* STORES */
+import { useAuthStore } from '@/content/shared/stores/autenticationStore/autenticationStore'
 
 /* TYPES */
-import { MatchCardType } from "./components/matchCard/types/matchCardType";
+import { MatchCardType } from './components/matchCard/types/matchCardType'
 
 const matches: MatchCardType[] = [
   {
     team1Img: team1,
-    team1Name: "Danzantes",
+    team1Name: 'Danzantes',
     team2Img: team2,
-    team2Name: "Las Avispas",
-    hora: "6:00 PM",
-    cancha: "La Vista",
-    tournament: "Torneo Verano II",
+    team2Name: 'Las Avispas',
+    hora: '6:00 PM',
+    cancha: 'La Vista',
+    tournament: 'Torneo Verano II',
     tournament_image: tournament1,
-    tournament_location: "Nogales, Sonora. México",
+    tournament_location: 'Nogales, Sonora. México',
   },
   {
     team1Img: team3,
-    team1Name: "TRIPLE X",
+    team1Name: 'TRIPLE X',
     team2Img: team4,
-    team2Name: "Mariposas Z",
-    hora: "7:00 PM",
-    cancha: "La Vista",
-    tournament: "Torneo Verano II",
+    team2Name: 'Mariposas Z',
+    hora: '7:00 PM',
+    cancha: 'La Vista',
+    tournament: 'Torneo Verano II',
     tournament_image: tournament1,
-    tournament_location: "Nogales, Sonora. México",
+    tournament_location: 'Nogales, Sonora. México',
   },
   {
     team1Img: team5,
-    team1Name: "Los Grandes",
+    team1Name: 'Los Grandes',
     team2Img: team6,
-    team2Name: "Amazonas",
-    hora: "8:00 PM",
-    cancha: "La Vista",
-    tournament: "Torneo Verano II",
+    team2Name: 'Amazonas',
+    hora: '8:00 PM',
+    cancha: 'La Vista',
+    tournament: 'Torneo Verano II',
     tournament_image: tournament1,
-    tournament_location: "Nogales, Sonora. México",
+    tournament_location: 'Nogales, Sonora. México',
   },
-];
+]
 
 export function OrganizerHomeContent() {
+  const data = useAuthStore((s) => s.data)
+
   return (
     <SectionContainer>
-      <div className="p-6 flex flex-col">
-        <h1 className="text-5xl font-extralight font-bebas mb-2 text-ink">
-          Hola <span className="text-primary font-normal">Julián Lopez</span>
+      <div className="flex flex-col p-6">
+        <h1 className="mb-2 text-5xl font-extralight font-bebas text-ink">
+          Hola{' '}
+          <span className="font-normal text-primary">
+            {data && data.user.name ? data.user.name : '...'}
+          </span>
         </h1>
 
         <div className="flex flex-col">
-          <p className="text-xl font-extralight mb-6">Partidos para hoy</p>
+          <p className="mb-6 text-xl font-extralight">Partidos para hoy</p>
 
-          <div className="grid gap-6 grid-cols-3">
+          <div className="grid grid-cols-3 gap-6">
             {matches.map((m, i) => (
               <MatchCard
                 key={i}
@@ -80,5 +90,5 @@ export function OrganizerHomeContent() {
         </div>
       </div>
     </SectionContainer>
-  );
+  )
 }

@@ -7,9 +7,6 @@ import Image from 'next/image'
 /* HOOKS */
 import { useState, useEffect } from 'react'
 
-/* IMAGES */
-import user1 from './images/user1.jpg'
-
 /* ICONS */
 import { LogOut, ChevronsLeft, ChevronsRight, UserRound, ChevronsUpDown } from 'lucide-react'
 import { FourSportsIcon } from '@/content/shared/icons/fourSports/FourSportsIcon'
@@ -44,11 +41,7 @@ export function Sidebar({ links }: { links: LinkSidebar[] }) {
   const [open, setOpen] = useState(false)
 
   const logout = useAuthStore((s) => s.logout)
-
-  const [user] = useState({
-    name: 'Julián López',
-    email: 'julian@gmail.com',
-  })
+  const data = useAuthStore((s) => s.data)
 
   const linkClasses = (path: string) => {
     const isActive = pathname === path || pathname?.startsWith(`${path}/`)
@@ -184,21 +177,28 @@ export function Sidebar({ links }: { links: LinkSidebar[] }) {
               <div
                 className={`rounded-full w-10 h-10 min-w-10 min-h-10 flex justify-center items-center bg-surface border relative ${pathname === '/organizer/profile' ? 'border-primary' : 'border-line'}`}
               >
-                {/* <UserRound className="size-4" /> */}
-                <Image
-                  alt="Banner"
-                  src={user1}
-                  quality={70}
-                  fill
-                  loading="eager"
-                  className="object-cover object-center rounded-full"
-                />
+                {data && data.profile?.avatar_url ? (
+                  <Image
+                    alt="Banner"
+                    src={data.profile.avatar_url}
+                    quality={70}
+                    fill
+                    loading="eager"
+                    className="object-cover object-center rounded-full"
+                  />
+                ) : (
+                  <UserRound className="size-4" />
+                )}
               </div>
 
               <div className="flex flex-col flex-1 min-w-0 text-left">
-                <span className="text-sm font-semibold truncate">{user.name}</span>
+                <span className="text-sm font-semibold truncate">
+                  {data && data.user.name ? data.user.name : '...'}
+                </span>
 
-                <span className="text-xs truncate text-neutral-400">{user.email}</span>
+                <span className="text-xs truncate text-neutral-400">
+                  {data && data.user.email ? data.user.email : '...'}
+                </span>
               </div>
 
               <div className="shrink-0">

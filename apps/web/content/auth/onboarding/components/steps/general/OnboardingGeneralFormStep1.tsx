@@ -1,62 +1,102 @@
-"use client";
+'use client'
 
 /* COMPONENTS */
-import { DinamicInputText } from "@/content/shared/form/dinamicInputText/DinamicInputText";
-import { DinamicInputFile } from "@/content/shared/form/dinamicInputFile/DinamicInputFile";
+import { InputTextUsername } from '../../inputTextUsername/InputTextUsername'
+import { DinamicCombobox } from '@/content/shared/form/dinamicComboBox/DinamicCombobox'
+
+/* HOOKS */
+import { useEffect, useMemo } from 'react'
+import { useFormContext, useWatch } from 'react-hook-form'
 
 /* TYPES */
-import { OnboardingForm } from "@/content/auth/onboarding/types/onboardingForm";
+import { OnboardingForm } from '@/content/auth/onboarding/types/onboardingForm'
+
+/* UTILS */
+import { Country, State, City } from 'country-state-city'
 
 export function OnboardingGeneralFormStep1() {
+  const { setValue, control } = useFormContext<OnboardingForm>()
+
+  const selectedCountry = useWatch({
+    control: control,
+    name: 'country',
+  })
+  const selectedState = useWatch({
+    control: control,
+    name: 'state',
+  })
+
+  // Obtener países
+  const countries = useMemo(() => {
+    return Country.getAllCountries()
+  }, [])
+
+  // Obtener estados según país
+  const states = useMemo(() => {
+    if (!selectedCountry) return []
+
+    return State.getStatesOfCountry(selectedCountry)
+  }, [selectedCountry])
+
+  // Obtener ciudades según estado
+  const cities = useMemo(() => {
+    if (!selectedCountry || !selectedState) return []
+
+    return City.getCitiesOfState(selectedCountry, selectedState)
+  }, [selectedCountry, selectedState])
+
+  // Reiniciar estado y ciudad cuando cambia país
+  useEffect(() => {
+    setValue('state', '')
+    setValue('city', '')
+  }, [selectedCountry, setValue])
+
+  // Reiniciar ciudad cuando cambia estado
+  useEffect(() => {
+    setValue('city', '')
+  }, [selectedState, setValue])
+
   return (
-    <div className="w-full h-fit flex md:flex-row flex-col md:gap-6 gap-2 md:items-center">
-      {/* FOTO DE PERFIL */}
-      <DinamicInputFile<OnboardingForm>
-        name="fotoPerfil"
-        variant="avatar"
-        rules={{
-          validate: (file) => {
-            if (!(file instanceof File)) return true;
-
-            if (file.size > 5_000_000) {
-              return "El archivo debe pesar menos de 5MB";
-            }
-
-            return true;
-          },
-        }}
-      />
-
-      <div className="flex flex-col w-full">
+    <div className="flex justify-center w-full p-6 h-fit">
+      <div className="flex flex-col w-full lg:w-1/2 h-fit">
         {/* USERNAME */}
-        <DinamicInputText<OnboardingForm>
-          name="username"
-          label="Apodo de usuario"
-          type="text"
-          placeholder="Apodo cool"
-          rules={{}}
-        />
+        <InputTextUsername />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 w-full h-fit">
-          {/* NOMBRES */}
-          <DinamicInputText<OnboardingForm>
-            name="nombres"
-            label="Nombres"
-            type="text"
-            placeholder="Ingresa tus nombres"
-            rules={{}}
+        <div className="grid w-full grid-cols-1 md:grid-cols-3 md:gap-4 h-fit">
+          {/* COUNTRY */}
+          <DinamicCombobox<OnboardingForm>
+            name="country"
+            items={countries.map((c) => {
+              return { value: c.isoCode, label: c.name }
+            })}
+            label="País"
+            placeholder="Seleccionar país"
+            rules={{ required: { message: 'El país es requerido', value: true } }}
           />
 
-          {/* APELLIDOS */}
-          <DinamicInputText<OnboardingForm>
-            name="apellidos"
-            label="Apellidos"
-            type="text"
-            placeholder="Ingresa tus apellidos"
-            rules={{}}
+          {/* STATE */}
+          <DinamicCombobox<OnboardingForm>
+            name="state"
+            items={states.map((s) => {
+              return { value: s.isoCode, label: s.name }
+            })}
+            label="Estado"
+            placeholder="Seleccionar estado"
+            rules={{ required: { message: 'El estado es requerido', value: true } }}
+          />
+
+          {/* CITY */}
+          <DinamicCombobox<OnboardingForm>
+            name="city"
+            items={cities.map((c) => {
+              return { value: c.name, label: c.name }
+            })}
+            label="Ciudad"
+            placeholder="Seleccionar ciudad"
+            rules={{ required: { message: 'La ciudad es requerida', value: true } }}
           />
         </div>
       </div>
     </div>
-  );
+  )
 }
