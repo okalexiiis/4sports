@@ -226,8 +226,7 @@ async function handleInvitationSent(payload: {
   const orgName = orgRow?.name ?? 'una organización'
   const inviterName = inviterRow?.name ?? 'Un administrador'
 
-  // Resolve recipient email — invited_email for non-registered users,
-  // or look up via user_id for existing accounts
+  // Resolve recipient email
   let emailTo = memberRow.invited_email
   if (!emailTo && memberRow.user_id) {
     const [userRow] = await db
@@ -238,15 +237,7 @@ async function handleInvitationSent(payload: {
     emailTo = userRow?.email ?? null
   }
 
-  if (emailTo) {
-    await resendClient.emails.send({
-      from: 'invitaciones@4sports.app',
-      to: emailTo,
-      subject: `${inviterName} te invitó a ${orgName}`,
-      html: `<p>Hola,</p><p><strong>${inviterName}</strong> te ha invitado a unirte a <strong>${orgName}</strong> como <strong>${memberRow.role}</strong>.</p><p>Ingresa a 4Sports para aceptar o rechazar la invitación.</p>`,
-    })
-  }
-
+  // In-app notification first — so retries don't duplicate email sends
   if (memberRow.user_id) {
     await insertNotifications([memberRow.user_id], {
       title: `Invitación a ${orgName}`,
@@ -255,6 +246,31 @@ async function handleInvitationSent(payload: {
       entity_type: 'organization',
       entity_id: payload.orgId,
     })
+  }
+
+  if (emailTo) {
+    const safe = (s: string) =>
+      s
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+    const from = process.env.RESEND_FROM_EMAIL ?? 'invitaciones@4sports.app'
+    const { error } = await resendClient.emails.send({
+      from,
+      to: emailTo,
+      subject: `${safe(inviterName)} te invitó a ${safe(orgName)}`,
+      html: `<p>Hola,</p><p><strong>${safe(inviterName)}</strong> te ha invitado a unirte a <strong>${safe(orgName)}</strong> como <strong>${memberRow.role}</strong>.</p><p>Ingresa a 4Sports para aceptar o rechazar la invitación.</p>`,
+    })
+    if (error) {
+      logger.error('resend email send failed', {
+        type: 'error',
+        error_code: 'RESEND_ERROR',
+        error_message: error.message,
+        // biome-ignore lint/suspicious/noExplicitAny: logger meta is typed loosely
+      } as any)
+    }
   }
 }
 
