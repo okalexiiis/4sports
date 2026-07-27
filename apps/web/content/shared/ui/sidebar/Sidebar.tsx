@@ -193,10 +193,10 @@ export function Sidebar({ links }: { links: LinkSidebar[] }) {
 
               <div className="flex flex-col flex-1 min-w-0 text-left">
                 <span className="text-sm font-semibold truncate">
-                  {data?.profile?.username ?? "..."}
+                  {data?.user?.name ?? '...'}
                 </span>
 
-                <span className="text-xs truncate text-neutral-400">
+                <span className="text-xs truncate text-muted">
                   {data?.user?.email ?? "..."}
                 </span>
               </div>

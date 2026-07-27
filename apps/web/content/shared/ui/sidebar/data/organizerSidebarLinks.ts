@@ -20,9 +20,9 @@ export const organizerSidebarLinks: LinkSidebar[] = [
     href: "/organizer/tournaments",
     icon: Trophy,
   },
-  {
+  /* {
     label: "Notificaciones",
     href: "",
     icon: Bell,
-  },
+  }, */
 ];

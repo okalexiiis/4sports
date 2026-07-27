@@ -146,7 +146,7 @@ export function OrganizerProfileContent() {
             </DropdownMenu.Root>
 
             <div className="flex flex-col gap-1 absolute bottom-0 left-60 translate-y-[calc(100%+1.5rem)]">
-              <h2 className="text-3xl font-bold text-ink">{data?.profile?.username ?? '...'}</h2>
+              <h2 className="text-3xl font-bold text-ink">{data?.user?.name ?? '...'}</h2>
               <h3 className="text-sm font-semibold text-primary">Organizador</h3>
             </div>
           </div>
