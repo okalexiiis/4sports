@@ -51,7 +51,7 @@ export function OrganizerOrganizationsContent() {
 
             <DinamicButton
               action={() => router.push('/organizer/organizations/add')}
-              twClassName="w-fit pt-1 pb-1 text-sm"
+              twClassName="w-fit py-1 text-sm"
               type={'filled'}
               label="Nueva organización"
               icon={<Plus className="size-4 min-h-4 min-w-4" />}
