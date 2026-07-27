@@ -194,12 +194,8 @@ export function OnboardingContent() {
 
             if (!responseMe.data.onboarding_pending) {
               setUser(responseMe.data, 'authenticated')
-              console.log('Sesión iniciada')
-              console.log(responseMe.data)
             } else {
               setUser(responseMe.data, 'onboarding')
-              console.log('Sesión iniciada, falta onboarding')
-              console.log(responseMe.data)
             }
           } else {
             setUser(null, 'authenticated')
@@ -210,12 +206,14 @@ export function OnboardingContent() {
             announceType: 'ok',
             message: 'Datos guardados correctamente',
           })
+          setSaving(false)
         } else {
           setAnnouncement({
             isActivated: true,
             announceType: 'error',
             message: 'Ocurrió un error al guardar los datos, intente nuevamente más tarde',
           })
+          setSaving(false)
         }
       } catch {
         setAnnouncement({
@@ -223,6 +221,7 @@ export function OnboardingContent() {
           announceType: 'error',
           message: 'Ocurrió un error al guardar los datos, intente nuevamente más tarde',
         })
+        setSaving(false)
       }
     }
   }

@@ -193,11 +193,11 @@ export function Sidebar({ links }: { links: LinkSidebar[] }) {
 
               <div className="flex flex-col flex-1 min-w-0 text-left">
                 <span className="text-sm font-semibold truncate">
-                  {data && data.user.name ? data.user.name : '...'}
+                  {data?.profile?.username ?? "..."}
                 </span>
 
                 <span className="text-xs truncate text-neutral-400">
-                  {data && data.user.email ? data.user.email : '...'}
+                  {data?.user?.email ?? "..."}
                 </span>
               </div>
 
@@ -229,7 +229,7 @@ export function Sidebar({ links }: { links: LinkSidebar[] }) {
                       className={`flex items-center gap-3 rounded-xl p-2 text-sm outline-none cursor-pointer mb-2 transition-colors duration-300 border ${pathname === '/organizer/profile' ? 'bg-surface/70 border-line text-primary' : 'hover:bg-surface border-transparent text-body'}`}
                     >
                       <UserRound className="size-4" />
-                      Ver perfil
+                      Perfil
                     </DropdownMenu.Item>
 
                     <ThemeToggleButtons />

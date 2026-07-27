@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '*.r2.cloudflarestorage.com',
       },
+      new URL("https://pub-61df3d7aef44471f940b494f12e49439.r2.dev/**"),
       new URL("https://res.cloudinary.com/dl7kp4avt/image/upload/v1728312797/fotos_perfil/**")
     ],
     qualities: [70, 75],

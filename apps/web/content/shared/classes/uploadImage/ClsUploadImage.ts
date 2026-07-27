@@ -90,6 +90,7 @@ export class ClsUploadImage {
     file: File,
   ): Promise<Omit<Message, 'data'>> {
     try {
+      console.log(file.type)
       const response = await fetch(uploadUrl, {
         method: 'PUT',
         headers: {
@@ -104,7 +105,7 @@ export class ClsUploadImage {
 
       return { message: 'Imagen subida correctamente', status: 200 }
     } catch {
-      return { message: 'Error al subir imagen, intente nuevamente más tarde', status: 500 }
+      return { message: 'Error al subir imagen desde el servidor, intente nuevamente más tarde', status: 500 }
     }
   }
 }

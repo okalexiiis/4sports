@@ -1,63 +1,60 @@
-"use client";
+'use client'
 
 /* COMPONENTS */
-import { SectionContainer } from "@/content/shared/ui/sectionContainer/SectionContainer";
-import Image from "next/image";
-import { DinamicButton } from "@/content/shared/form/dinamicButton/DinamicButton";
-import { ModalBodyUpdateProfilePhotoForm } from "./components/modalBodyUpdateProfilePhoto/ModalBodyUpdateProfilePhotoForm";
-import { ModalBodyUpdateProfileInfoForm } from "./components/modalBodyUpdateProfileInfo/ModalBodyUpdateProfileInfoForm";
+import { SectionContainer } from '@/content/shared/ui/sectionContainer/SectionContainer'
+import Image from 'next/image'
+import { DinamicButton } from '@/content/shared/form/dinamicButton/DinamicButton'
+import { ModalBodyUpdateProfilePhotoForm } from './components/modalBodyUpdateProfilePhoto/ModalBodyUpdateProfilePhotoForm'
+import { ModalBodyUpdateProfileInfoForm } from './components/modalBodyUpdateProfileInfo/ModalBodyUpdateProfileInfoForm'
 
 /* ICONS */
-import {
-  Calendar,
-  Mail,
-  MapPin,
-  Phone,
-  SquarePen,
-  UserRound,
-  VenusAndMars,
-} from "lucide-react";
+import { Calendar, Mail, MapPin, Phone, SquarePen, UserRound, VenusAndMars } from 'lucide-react'
 
 /* IMAGES */
-import user1 from "./images/user1.jpg";
-import banner1 from "./images/banner1.jpg";
+import banner from './images/banner.jpg'
 
 /* STORES */
-import { useModal } from "@/content/shared/ui/modal/stores/modalStore";
+import { useModal } from '@/content/shared/ui/modal/stores/modalStore'
+import { useAuthStore } from '@/content/shared/stores/autenticationStore/autenticationStore'
 
 export function OrganizerProfileContent() {
-  const { setModal } = useModal();
+  const data = useAuthStore((s) => s.data)
+  const { setModal } = useModal()
 
   return (
     <SectionContainer>
-      <div className="p-6 flex flex-col">
+      <div className="flex flex-col p-6">
         <div className="flex flex-col gap-6">
-          <div className="w-full h-54 rounded-xl bg-surface relative mb-22">
+          <div className="relative w-full h-54 rounded-xl bg-surface mb-22">
             <Image
               alt="Banner"
-              src={banner1}
+              src={banner}
               quality={70}
               fill
               loading="eager"
-              className="rounded-xl object-cover object-center"
+              className="object-cover object-center rounded-xl"
             />
 
-            <div className="w-48 h-48 min-w-48 min-h-48 absolute left-6 bottom-0 translate-y-1/2 bg-background rounded-full border-8 border-background">
-              <Image
-                alt="Usuario"
-                src={user1}
-                quality={70}
-                fill
-                className="rounded-full object-cover object-center"
-              />
+            <div className="absolute bottom-0 flex items-center justify-center w-48 h-48 translate-y-1/2 border-8 rounded-full min-w-48 min-h-48 left-6 bg-background border-background">
+              {data && data.profile?.avatar_url ? (
+                <Image
+                  alt="Banner"
+                  src={data.profile.avatar_url}
+                  quality={70}
+                  fill
+                  className="object-cover object-center rounded-full"
+                />
+              ) : (
+                <UserRound className="size-4" />
+              )}
 
-              <div className="absolute bottom-1 right-1 w-14 h-14 rounded-full bg-primary text-primary-text flex items-center justify-center border-6 border-background">
+              <div className="absolute flex items-center justify-center rounded-full bottom-1 right-1 w-14 h-14 bg-primary text-primary-text border-6 border-background">
                 <DinamicButton
                   action={() =>
                     setModal({
                       isActivated: true,
-                      title: "Cambiar foto",
-                      body: <ModalBodyUpdateProfilePhotoForm id="" />,
+                      title: 'Cambiar foto',
+                      body: <ModalBodyUpdateProfilePhotoForm />,
                     })
                   }
                   type="filled"
@@ -71,7 +68,7 @@ export function OrganizerProfileContent() {
               action={() =>
                 setModal({
                   isActivated: true,
-                  title: "Actualizar perfil",
+                  title: 'Actualizar perfil',
                   body: <ModalBodyUpdateProfileInfoForm id="" />,
                 })
               }
@@ -82,63 +79,46 @@ export function OrganizerProfileContent() {
             />
 
             <div className="flex flex-col gap-1 absolute bottom-0 left-60 translate-y-[calc(100%+1.5rem)]">
-              <h2 className="text-3xl font-bold text-ink">Julián López</h2>
-              <h3 className="text-primary text-sm font-semibold">
-                Organizador
-              </h3>
+              <h2 className="text-3xl font-bold text-ink">{data?.profile?.username ?? "..."}</h2>
+              <h3 className="text-sm font-semibold text-primary">Organizador</h3>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 w-full gap-6">
-            <div className="flex flex-col gap-6 bg-surface rounded-xl p-6 text-sm">
-              <p className="font-semibold text-lg">Información básica</p>
+          <div className="grid w-full grid-cols-2 gap-6">
+            <div className="flex flex-col gap-6 p-6 text-sm bg-surface rounded-xl">
+              <p className="text-lg font-semibold">Información básica</p>
 
               <div className="grid grid-cols-2 text-muted">
                 <div className="flex flex-col gap-6">
-                  <div className="flex gap-2 items-center">
+                  <div className="flex items-center gap-2">
                     <UserRound className="size-4 min-w-4 min-h-4 text-body" />
                     <p>Nombre completo</p>
                   </div>
-                  <div className="flex gap-2 items-center">
-                    <Calendar className="size-4 min-w-4 min-h-4 text-body" />
-                    <p>Fecha de nacimiento</p>
-                  </div>
-                  <div className="flex gap-2 items-center">
-                    <VenusAndMars className="size-4 min-w-4 min-h-4 text-body" />
-                    <p>Género</p>
-                  </div>
                 </div>
 
                 <div className="flex flex-col gap-6">
-                  <p>Julián López Garza</p>
-                  <p>27 de Marzo del 2002</p>
-                  <p>Masculino</p>
+                  <p>{data?.user?.name ?? "..."}</p>
                 </div>
               </div>
             </div>
-            <div className="flex flex-col gap-6 bg-surface rounded-xl p-6 text-sm">
-              <p className="font-semibold text-lg">Información de contacto</p>
+            <div className="flex flex-col gap-6 p-6 text-sm bg-surface rounded-xl">
+              <p className="text-lg font-semibold">Información de contacto</p>
 
               <div className="grid grid-cols-2 text-muted">
                 <div className="flex flex-col gap-6">
-                  <div className="flex gap-2 items-center">
-                    <Phone className="size-4 min-w-4 min-h-4 text-body" />
-                    <p>Teléfono</p>
-                  </div>
-                  <div className="flex gap-2 items-center">
+                  <div className="flex items-center gap-2">
                     <MapPin className="size-4 min-w-4 min-h-4 text-body" />
-                    <p>Ubicación</p>
+                    <p>Ciudad</p>
                   </div>
-                  <div className="flex gap-2 items-center">
+                  <div className="flex items-center gap-2">
                     <Mail className="size-4 min-w-4 min-h-4 text-body" />
                     <p>Correo</p>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-6">
-                  <p>+52 631 202 7089</p>
-                  <p>Nogales, Sonora. México</p>
-                  <p>julian@gmail.com</p>
+                  <p>{data?.profile?.city ?? "..."}</p>
+                  <p>{data?.user?.email ?? "..."}</p>
                 </div>
               </div>
             </div>
@@ -146,5 +126,5 @@ export function OrganizerProfileContent() {
         </div>
       </div>
     </SectionContainer>
-  );
+  )
 }

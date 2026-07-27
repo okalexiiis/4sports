@@ -64,7 +64,7 @@ export function OrganizerHomeContent() {
         <h1 className="mb-2 text-5xl font-extralight font-bebas text-ink">
           Hola{' '}
           <span className="font-normal text-primary">
-            {data && data.user.name ? data.user.name : '...'}
+            {data?.profile?.username ?? "..."}
           </span>
         </h1>
 
