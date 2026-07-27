@@ -1,5 +1,6 @@
 import { Worker } from 'bullmq'
 import { and, eq, inArray, isNotNull } from 'drizzle-orm'
+import { pgTable, text } from 'drizzle-orm/pg-core'
 import { db } from '@/shared/db/client'
 import {
   auditLogs,
@@ -7,12 +8,21 @@ import {
   matches,
   notifications,
   organizationMembers,
+  organizations,
   playerSuspensions,
   players,
   tournaments,
 } from '@/shared/db/schemas'
 import { logger } from '@/shared/logger'
 import type { AuditJobData, NotificationJobData } from './bullmq'
+import { resendClient } from './resend'
+
+// Minimal read-only reference to BetterAuth's user table for name lookups
+const betterAuthUsers = pgTable('user', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  email: text('email').notNull(),
+})
 
 // Reuses the same connection options as the queues in bullmq.ts
 function redisConnectionFromUrl(url: string) {
@@ -184,6 +194,86 @@ async function handleDisputeResolved(payload: { disputeId: string; openedBy: str
   })
 }
 
+async function handleInvitationSent(payload: {
+  memberId: string
+  orgId: string
+  invitedByUserId: string
+}) {
+  const [memberRow] = await db
+    .select({
+      user_id: organizationMembers.user_id,
+      invited_email: organizationMembers.invited_email,
+      role: organizationMembers.role,
+    })
+    .from(organizationMembers)
+    .where(eq(organizationMembers.id, payload.memberId))
+    .limit(1)
+
+  if (!memberRow) return
+
+  const [orgRow] = await db
+    .select({ name: organizations.name })
+    .from(organizations)
+    .where(eq(organizations.id, payload.orgId))
+    .limit(1)
+
+  const [inviterRow] = await db
+    .select({ name: betterAuthUsers.name })
+    .from(betterAuthUsers)
+    .where(eq(betterAuthUsers.id, payload.invitedByUserId))
+    .limit(1)
+
+  const orgName = orgRow?.name ?? 'una organización'
+  const inviterName = inviterRow?.name ?? 'Un administrador'
+
+  // Resolve recipient email
+  let emailTo = memberRow.invited_email
+  if (!emailTo && memberRow.user_id) {
+    const [userRow] = await db
+      .select({ email: betterAuthUsers.email })
+      .from(betterAuthUsers)
+      .where(eq(betterAuthUsers.id, memberRow.user_id))
+      .limit(1)
+    emailTo = userRow?.email ?? null
+  }
+
+  // In-app notification first — so retries don't duplicate email sends
+  if (memberRow.user_id) {
+    await insertNotifications([memberRow.user_id], {
+      title: `Invitación a ${orgName}`,
+      body: `${inviterName} te invitó como ${memberRow.role}.`,
+      type: 'invitation.sent',
+      entity_type: 'organization',
+      entity_id: payload.orgId,
+    })
+  }
+
+  if (emailTo) {
+    const safe = (s: string) =>
+      s
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+    const from = process.env.RESEND_FROM_EMAIL ?? 'invitaciones@4sports.app'
+    const { error } = await resendClient.emails.send({
+      from,
+      to: emailTo,
+      subject: `${inviterName} te invitó a ${orgName}`,
+      html: `<p>Hola,</p><p><strong>${safe(inviterName)}</strong> te ha invitado a unirte a <strong>${safe(orgName)}</strong> como <strong>${memberRow.role}</strong>.</p><p>Ingresa a 4Sports para aceptar o rechazar la invitación.</p>`,
+    })
+    if (error) {
+      logger.error('resend email send failed', {
+        type: 'error',
+        error_code: 'RESEND_ERROR',
+        error_message: error.message,
+        // biome-ignore lint/suspicious/noExplicitAny: logger meta is typed loosely
+      } as any)
+    }
+  }
+}
+
 // ── Audit handler ────────────────────────────────────────────────────────────
 
 async function handleAudit(data: AuditJobData) {
@@ -219,6 +309,9 @@ export function startWorkers() {
           break
         case 'dispute.resolved':
           await handleDisputeResolved(p as { disputeId: string; openedBy: string })
+          break
+        case 'invitation.sent':
+          await handleInvitationSent(job.data.payload)
           break
       }
     },

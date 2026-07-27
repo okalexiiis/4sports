@@ -17,15 +17,16 @@ function redisConnectionFromUrl(url: string) {
 const connection = redisConnectionFromUrl(env.REDIS_URL)
 
 // Job data shapes
-export interface NotificationJobData {
-  type:
-    | 'match.finished'
-    | 'match.rescheduled'
-    | 'suspension.confirmed'
-    | 'dispute.opened'
-    | 'dispute.resolved'
-  payload: Record<string, unknown>
-}
+export type NotificationJobData =
+  | { type: 'match.finished'; payload: { matchId: string } }
+  | { type: 'match.rescheduled'; payload: { matchId: string } }
+  | { type: 'suspension.confirmed'; payload: { suspensionId: string } }
+  | { type: 'dispute.opened'; payload: { disputeId: string; matchId: string; openedBy: string } }
+  | { type: 'dispute.resolved'; payload: { disputeId: string; openedBy: string } }
+  | {
+      type: 'invitation.sent'
+      payload: { memberId: string; orgId: string; invitedByUserId: string }
+    }
 
 export interface AuditJobData {
   action: string

@@ -19,6 +19,7 @@ import type {
   OrgWithRole,
   UpdateOrgInput,
   UpdateRoleInput,
+  UserInvitation,
 } from './organization.entity'
 import type { IOrganizationRepository } from './organization.repository'
 
@@ -590,6 +591,46 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
       .update(organizationMembers)
       .set({ status: 'left', left_at: new Date(), updated_at: new Date() })
       .where(eq(organizationMembers.id, memberId))
+  }
+
+  async listInvitationsForUser(userId: string): Promise<UserInvitation[]> {
+    const rows = await db
+      .select({
+        id: organizationMembers.id,
+        role: organizationMembers.role,
+        invited_at: organizationMembers.created_at,
+        expires_at: organizationMembers.invitation_expires_at,
+        org_id: organizations.id,
+        org_name: organizations.name,
+        org_slug: organizations.slug,
+        org_logo_url: organizations.logo_url,
+        inviter_name: betterAuthUsers.name,
+      })
+      .from(organizationMembers)
+      .innerJoin(organizations, eq(organizations.id, organizationMembers.organization_id))
+      .leftJoin(betterAuthUsers, sql`${betterAuthUsers.id} = ${organizationMembers.invited_by}`)
+      .where(
+        and(
+          sql`${organizationMembers.user_id} = ${userId}`,
+          eq(organizationMembers.status, 'invited'),
+          isNull(organizations.deleted_at),
+        ),
+      )
+      .orderBy(organizationMembers.created_at)
+
+    return rows.map((r) => ({
+      id: r.id,
+      organization: {
+        id: r.org_id,
+        name: r.org_name,
+        slug: r.org_slug,
+        logo_url: r.org_logo_url,
+      },
+      role: r.role,
+      invited_at: r.invited_at,
+      expires_at: r.expires_at,
+      invited_by_name: r.inviter_name ?? null,
+    }))
   }
 
   async updateOrganization(orgId: string, data: UpdateOrgInput): Promise<Organization> {

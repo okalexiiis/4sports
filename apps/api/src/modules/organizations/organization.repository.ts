@@ -9,6 +9,7 @@ import type {
   OrgWithRole,
   UpdateOrgInput,
   UpdateRoleInput,
+  UserInvitation,
 } from './organization.entity'
 
 export interface IOrganizationRepository {
@@ -36,4 +37,5 @@ export interface IOrganizationRepository {
   acceptInvitation(memberId: string, userId: string): Promise<OrgMember>
   rejectInvitation(memberId: string): Promise<void>
   updateOrganization(orgId: string, data: UpdateOrgInput): Promise<Organization>
+  listInvitationsForUser(userId: string): Promise<UserInvitation[]>
 }

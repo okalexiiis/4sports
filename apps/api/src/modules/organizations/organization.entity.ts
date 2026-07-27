@@ -89,3 +89,17 @@ export interface AuditLogInput {
   before_data?: Record<string, unknown>
   after_data?: Record<string, unknown>
 }
+
+export interface UserInvitation {
+  id: string
+  organization: {
+    id: string
+    name: string
+    slug: string
+    logo_url: string | null
+  }
+  role: string
+  invited_at: Date
+  expires_at: Date | null
+  invited_by_name: string | null
+}
