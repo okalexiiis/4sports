@@ -260,7 +260,7 @@ async function handleInvitationSent(payload: {
     const { error } = await resendClient.emails.send({
       from,
       to: emailTo,
-      subject: `${safe(inviterName)} te invitó a ${safe(orgName)}`,
+      subject: `${inviterName} te invitó a ${orgName}`,
       html: `<p>Hola,</p><p><strong>${safe(inviterName)}</strong> te ha invitado a unirte a <strong>${safe(orgName)}</strong> como <strong>${memberRow.role}</strong>.</p><p>Ingresa a 4Sports para aceptar o rechazar la invitación.</p>`,
     })
     if (error) {
