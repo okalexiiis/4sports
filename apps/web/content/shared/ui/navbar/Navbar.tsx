@@ -2,15 +2,21 @@
 
 /* COMPONENTS */
 import Link from 'next/link'
-/* NAVIGATION */
-import { usePathname } from 'next/navigation'
-import { useTheme } from 'next-themes'
-/* HOOKS */
-import { useEffect, useState } from 'react'
-/* ICONS */
-import { FourSportsIcon } from '@/content/shared/icons/fourSports/FourSportsIcon'
+
 /* DATA */
 import { navbarLinks } from '@/content/shared/ui/navbar/data/navbarLinks'
+
+/* HOOKS */
+import { useEffect, useState } from 'react'
+
+/* ICONS */
+import { FourSportsIcon } from '@/content/shared/icons/fourSports/FourSportsIcon'
+
+/* NAVIGATION */
+import { usePathname } from 'next/navigation'
+
+/* THEME */
+import { useTheme } from 'next-themes'
 
 export function Navbar() {
   const pathname = usePathname()
