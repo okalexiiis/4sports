@@ -14,53 +14,58 @@ import { useState } from 'react'
 /* STORES */
 import { useModal } from '@/content/shared/ui/modal/stores/modalStore'
 import { useAnnouncement } from '@/content/shared/ui/annoucement/stores/announcementStore'
-import { useAuthStore } from '@/content/shared/stores/autenticationStore/autenticationStore'
 
 /* TYPES */
-import { UpdateNameFormType } from './types/updateNameFormType'
+import { UpdatePasswordFormType } from './types/updatePasswordFormType'
 
-export function ModalBodyUpdateNameForm() {
-  const data = useAuthStore((s) => s.data)
-  const setUser = useAuthStore((s) => s.setUser)
+export function ModalBodyUpdatePasswordForm() {
   const { setModal, modal } = useModal()
   const { setAnnouncement } = useAnnouncement()
 
   const [saving, setSaving] = useState(false)
 
-  const methods = useForm<UpdateNameFormType>({
+  const methods = useForm<UpdatePasswordFormType>({
     defaultValues: {
-      name: data?.user?.name ?? '...',
+      current_password: '',
+      new_password: '',
+      new_password_confirm: '',
     },
   })
 
-  const onSubmit = async (data: UpdateNameFormType) => {
+  const onSubmit = async (data: UpdatePasswordFormType) => {
     try {
       setSaving(true)
 
-      const request = await fetch(PORT + '/auth/update-user', {
+      const new_password = data.new_password
+      const new_password_confirm = data.new_password_confirm
+
+      if (new_password.length < 8) {
+        methods.setError('new_password', {
+          message: 'La contraseña debe ser mayor de 8 caracteres',
+        })
+      }
+
+      if (new_password !== new_password_confirm) {
+        methods.setError('new_password_confirm', { message: 'La s contraseñas deben ser iguales' })
+      }
+
+      const request = await fetch(PORT + '/auth/change-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: data.name,
+          newPassword: new_password,
+          currentPassword: data.current_password,
+          revokeOtherSessions: false,
         }),
         credentials: 'include',
       })
 
       if (request.status === 200) {
-        const requestMe = await fetch(`${PORT}/v1/me`, {
-          credentials: 'include',
-        })
-
-        if (requestMe.ok) {
-          const responseMe = await requestMe.json()
-          setUser(responseMe.data, 'authenticated')
-        }
-
         setSaving(false)
         setAnnouncement({
           isActivated: true,
           announceType: 'ok',
-          message: 'Nombre de usuario actualizado correctamente',
+          message: 'Contraseña actualizada correctamente',
         })
         setModal({
           isActivated: false,
@@ -68,12 +73,13 @@ export function ModalBodyUpdateNameForm() {
           body: modal.body,
         })
       } else {
+        const response = await request.json()
+        console.log(response)
         setSaving(false)
         setAnnouncement({
           isActivated: true,
           announceType: 'error',
-          message:
-            'Algo salió mal al actualizar el nombre de usuario, intente nuevamente más tarde',
+          message: 'Algo salió mal al actualizar la contraseña, intente nuevamente más tarde',
         })
       }
     } catch {
@@ -81,7 +87,7 @@ export function ModalBodyUpdateNameForm() {
       setAnnouncement({
         isActivated: true,
         announceType: 'error',
-        message: 'Error al actualizar el nombre de usuario, intente nuevamente más tarde',
+        message: 'Error al actualizar la contraseña, intente nuevamente más tarde',
       })
     }
   }
@@ -90,13 +96,33 @@ export function ModalBodyUpdateNameForm() {
     <FormProvider {...methods}>
       <div className="flex flex-col w-full h-fit">
         <div className="w-full p-6 overflow-y-auto max-h-96">
-          {/* NAME */}
-          <DinamicInputText<UpdateNameFormType>
-            name="name"
-            label="Nombre"
-            placeholder="Ingrese su nombre"
-            rules={{ required: { message: 'El nombre es requerido', value: true } }}
+          {/* PASSWORD */}
+          <DinamicInputText<UpdatePasswordFormType>
+            name="current_password"
+            label="Contraseña actual"
+            placeholder="********"
+            type="password"
+            rules={{ required: { message: 'La contraseña actual es requerida', value: true } }}
           />
+
+          <div className="grid w-full grid-cols-2 gap-4 h-fit">
+            <DinamicInputText<UpdatePasswordFormType>
+              name="new_password"
+              label="Nueva contraseña"
+              type="password"
+              placeholder="********"
+              rules={{ required: { message: 'La contraseña es necesaria', value: true } }}
+            />
+            <DinamicInputText<UpdatePasswordFormType>
+              name="new_password_confirm"
+              label="Confirmar"
+              type="password"
+              placeholder="********"
+              rules={{
+                required: { message: 'La contraseña confirmada es necesaria', value: true },
+              }}
+            />
+          </div>
         </div>
 
         <div className="flex gap-6 px-6 pb-6">

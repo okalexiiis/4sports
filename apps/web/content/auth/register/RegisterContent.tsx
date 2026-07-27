@@ -58,7 +58,7 @@ export function RegisterContent() {
       }
 
       if (password !== password_confirm) {
-        methods.setError('password', { message: 'Las contraseñas deben ser iguales' })
+        methods.setError('password_confirm', { message: 'Las contraseñas deben ser iguales' })
         setSaving(false)
         return
       }

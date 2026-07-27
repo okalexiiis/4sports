@@ -5,6 +5,8 @@ import { SectionContainer } from '@/content/shared/ui/sectionContainer/SectionCo
 import Image from 'next/image'
 import { DinamicButton } from '@/content/shared/form/dinamicButton/DinamicButton'
 import { ModalBodyUpdateProfilePhotoForm } from './components/modalBodyUpdateProfilePhoto/ModalBodyUpdateProfilePhotoForm'
+import { ModalBodyUpdateNameForm } from './components/modalBodyUpdateName/ModalBodyUpdateNameForm'
+import { ModalBodyUpdatePasswordForm } from './components/modalBodyUpdatePassword/ModalBodyUpdatePasswordForm'
 
 /* HOOKS */
 import { useState } from 'react'
@@ -22,7 +24,6 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 /* STORES */
 import { useModal } from '@/content/shared/ui/modal/stores/modalStore'
 import { useAuthStore } from '@/content/shared/stores/autenticationStore/autenticationStore'
-import { ModalBodyUpdateNameForm } from './components/modalBodyUpdateName/ModalBodyUpdateNameForm'
 
 export function OrganizerProfileContent() {
   const data = useAuthStore((s) => s.data)
@@ -115,19 +116,6 @@ export function OrganizerProfileContent() {
                           onClick={() =>
                             setModal({
                               isActivated: true,
-                              title: 'Cambiar correo',
-                              body: <></>,
-                            })
-                          }
-                          className="p-2 mb-2 text-sm transition-colors duration-300 outline-none cursor-pointer rounded-xl hover:bg-surface"
-                        >
-                          Cambiar correo
-                        </DropdownMenu.Item>
-
-                        <DropdownMenu.Item
-                          onClick={() =>
-                            setModal({
-                              isActivated: true,
                               title: 'Cambiar ciudad',
                               body: <></>,
                             })
@@ -142,7 +130,7 @@ export function OrganizerProfileContent() {
                             setModal({
                               isActivated: true,
                               title: 'Cambiar contraseña',
-                              body: <></>,
+                              body: <ModalBodyUpdatePasswordForm />,
                             })
                           }
                           className="p-2 mb-2 text-sm transition-colors duration-300 outline-none cursor-pointer rounded-xl hover:bg-surface"

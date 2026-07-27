@@ -1,3 +1,3 @@
-export type UpdateProfileInfoFormType = {
+export type UpdateNameFormType = {
   name: string
 }
