@@ -1,5 +1,6 @@
+import { Type } from '@sinclair/typebox'
 import { ApiResponses } from '@/shared/openapi/responses'
-import { OrgMemberSchema } from './schemas'
+import { OrgMemberSchema, UserInvitationSchema } from './schemas'
 
 export const acceptInvitationDetail = {
   summary: 'Accept an invitation',
@@ -27,5 +28,16 @@ export const rejectInvitationDetail = {
     403: ApiResponses.forbidden('Invitation belongs to another user'),
     404: ApiResponses.notFound('Invitation not found'),
     409: ApiResponses.conflict('Invitation already processed'),
+  },
+}
+
+export const listUserInvitationsDetail = {
+  summary: 'List my pending invitations',
+  security: [{ cookieAuth: [] }],
+  description:
+    'Returns all pending (status=invited) organization invitations for the authenticated user. Only shows invitations linked to the user account (user_id match); email-only invitations become visible here after the user registers.',
+  responses: {
+    200: ApiResponses.success(Type.Array(UserInvitationSchema), 'List of pending invitations'),
+    401: ApiResponses.unauthorized('No active session'),
   },
 }

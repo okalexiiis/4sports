@@ -71,3 +71,17 @@ export const CreateOrgBodySchema = Type.Object({
     Type.Literal('elite'),
   ]),
 })
+
+export const UserInvitationSchema = Type.Object({
+  id: Type.String({ format: 'uuid' }),
+  organization: Type.Object({
+    id: Type.String({ format: 'uuid' }),
+    name: Type.String(),
+    slug: Type.String(),
+    logo_url: Type.Union([Type.String(), Type.Null()]),
+  }),
+  role: Type.String(),
+  invited_at: Type.String({ format: 'date-time' }),
+  expires_at: Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
+  invited_by_name: Type.Union([Type.String(), Type.Null()]),
+})

@@ -3,8 +3,13 @@ import { toApiResponse } from '@/shared/api-response'
 import { authGuard } from '@/shared/middleware/auth.guard'
 import { DrizzleOrganizationRepository } from '../../drizzle-organization.repository'
 import { acceptInvitation } from '../../use-cases/accept-invitation.use-case'
+import { listUserInvitations } from '../../use-cases/list-user-invitations.use-case'
 import { rejectInvitation } from '../../use-cases/reject-invitation.use-case'
-import { acceptInvitationDetail, rejectInvitationDetail } from './invitation-docs'
+import {
+  acceptInvitationDetail,
+  listUserInvitationsDetail,
+  rejectInvitationDetail,
+} from './invitation-docs'
 
 const repo = new DrizzleOrganizationRepository()
 
@@ -34,4 +39,12 @@ export const invitationsV1Routes = new Elysia({ tags: ['Invitations'] })
       ctx.set.status = 204
     },
     { beforeHandle: [authGuard], detail: rejectInvitationDetail },
+  )
+  .get(
+    '/me/invitations',
+    async (ctx) => {
+      const { user } = ctx.store as AuthStore
+      return toApiResponse(ctx, await listUserInvitations(repo, { userId: user.id }))
+    },
+    { beforeHandle: [authGuard], detail: listUserInvitationsDetail },
   )
