@@ -5,21 +5,30 @@ import { SectionContainer } from '@/content/shared/ui/sectionContainer/SectionCo
 import Image from 'next/image'
 import { DinamicButton } from '@/content/shared/form/dinamicButton/DinamicButton'
 import { ModalBodyUpdateProfilePhotoForm } from './components/modalBodyUpdateProfilePhoto/ModalBodyUpdateProfilePhotoForm'
-import { ModalBodyUpdateProfileInfoForm } from './components/modalBodyUpdateProfileInfo/ModalBodyUpdateProfileInfoForm'
+
+/* HOOKS */
+import { useState } from 'react'
 
 /* ICONS */
-import { Calendar, Mail, MapPin, Phone, SquarePen, UserRound, VenusAndMars } from 'lucide-react'
+import { Box, Mail, MapPin, SlidersHorizontal, SquarePen, UserRound } from 'lucide-react'
 
 /* IMAGES */
 import banner from './images/banner.jpg'
 
+/* LIBS */
+import { AnimatePresence, motion } from 'framer-motion'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+
 /* STORES */
 import { useModal } from '@/content/shared/ui/modal/stores/modalStore'
 import { useAuthStore } from '@/content/shared/stores/autenticationStore/autenticationStore'
+import { ModalBodyUpdateNameForm } from './components/modalBodyUpdateName/ModalBodyUpdateNameForm'
 
 export function OrganizerProfileContent() {
   const data = useAuthStore((s) => s.data)
   const { setModal } = useModal()
+
+  const [open, setOpen] = useState(false)
 
   return (
     <SectionContainer>
@@ -64,22 +73,91 @@ export function OrganizerProfileContent() {
               </div>
             </div>
 
-            <DinamicButton
-              action={() =>
-                setModal({
-                  isActivated: true,
-                  title: 'Actualizar perfil',
-                  body: <ModalBodyUpdateProfileInfoForm id="" />,
-                })
-              }
-              type="filled"
-              label="Actualizar perfil"
-              icon={<SquarePen className="size-4 min-w-4 min-h-4" />}
-              twClassName="w-fit text-sm py-1 absolute bottom-0 right-0 translate-y-[calc(100%+1.5rem)]"
-            />
+            <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+              <DropdownMenu.Trigger asChild>
+                <button className="w-fit h-fit flex items-center justify-center gap-2 text-sm py-1 absolute bottom-0 right-0 translate-y-[calc(100%+1.5rem)] bg-primary border-transparent border-2 text-primary-text font-semibold px-4 rounded-lg cursor-pointer hover:bg-primary-hover">
+                  <SlidersHorizontal className="size-4 min-w-4 min-h-4" />
+                  Acciones
+                </button>
+              </DropdownMenu.Trigger>
+
+              <AnimatePresence>
+                {open && (
+                  <DropdownMenu.Portal forceMount>
+                    <DropdownMenu.Content
+                      sideOffset={24}
+                      align="end"
+                      avoidCollisions
+                      side={'bottom'}
+                      asChild
+                    >
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95, y: -6 }}
+                        animate={{ opacity: 1, scale: 1, y: -12 }}
+                        exit={{ opacity: 0, scale: 0.95, y: -6 }}
+                        transition={{ duration: 0.15 }}
+                        className="p-2 border shadow-md z-100 min-w-56 rounded-2xl border-line bg-background"
+                      >
+                        <DropdownMenu.Item
+                          onClick={() =>
+                            setModal({
+                              isActivated: true,
+                              title: 'Cambiar nombre',
+                              body: <ModalBodyUpdateNameForm />,
+                            })
+                          }
+                          className="p-2 mb-2 text-sm transition-colors duration-300 outline-none cursor-pointer rounded-xl hover:bg-surface"
+                        >
+                          Cambiar nombre
+                        </DropdownMenu.Item>
+
+                        <DropdownMenu.Item
+                          onClick={() =>
+                            setModal({
+                              isActivated: true,
+                              title: 'Cambiar correo',
+                              body: <></>,
+                            })
+                          }
+                          className="p-2 mb-2 text-sm transition-colors duration-300 outline-none cursor-pointer rounded-xl hover:bg-surface"
+                        >
+                          Cambiar correo
+                        </DropdownMenu.Item>
+
+                        <DropdownMenu.Item
+                          onClick={() =>
+                            setModal({
+                              isActivated: true,
+                              title: 'Cambiar ciudad',
+                              body: <></>,
+                            })
+                          }
+                          className="p-2 mb-2 text-sm transition-colors duration-300 outline-none cursor-pointer rounded-xl hover:bg-surface"
+                        >
+                          Cambiar ciudad
+                        </DropdownMenu.Item>
+
+                        <DropdownMenu.Item
+                          onClick={() =>
+                            setModal({
+                              isActivated: true,
+                              title: 'Cambiar contraseña',
+                              body: <></>,
+                            })
+                          }
+                          className="p-2 mb-2 text-sm transition-colors duration-300 outline-none cursor-pointer rounded-xl hover:bg-surface"
+                        >
+                          Cambiar contraseña
+                        </DropdownMenu.Item>
+                      </motion.div>
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Portal>
+                )}
+              </AnimatePresence>
+            </DropdownMenu.Root>
 
             <div className="flex flex-col gap-1 absolute bottom-0 left-60 translate-y-[calc(100%+1.5rem)]">
-              <h2 className="text-3xl font-bold text-ink">{data?.profile?.username ?? "..."}</h2>
+              <h2 className="text-3xl font-bold text-ink">{data?.profile?.username ?? '...'}</h2>
               <h3 className="text-sm font-semibold text-primary">Organizador</h3>
             </div>
           </div>
@@ -94,10 +172,15 @@ export function OrganizerProfileContent() {
                     <UserRound className="size-4 min-w-4 min-h-4 text-body" />
                     <p>Nombre completo</p>
                   </div>
+                  <div className="flex items-center gap-2">
+                    <Box className="size-4 min-w-4 min-h-4 text-body" />
+                    <p>Tipo de usuario</p>
+                  </div>
                 </div>
 
                 <div className="flex flex-col gap-6">
-                  <p>{data?.user?.name ?? "..."}</p>
+                  <p>{data?.user?.name ?? '...'}</p>
+                  <p>Organizador</p>
                 </div>
               </div>
             </div>
@@ -117,8 +200,8 @@ export function OrganizerProfileContent() {
                 </div>
 
                 <div className="flex flex-col gap-6">
-                  <p>{data?.profile?.city ?? "..."}</p>
-                  <p>{data?.user?.email ?? "..."}</p>
+                  <p>{data?.profile?.city ?? '...'}</p>
+                  <p>{data?.user?.email ?? '...'}</p>
                 </div>
               </div>
             </div>
