@@ -1,5 +1,6 @@
 import { Elysia } from 'elysia'
 import { toApiResponse } from '@/shared/api-response'
+import { notificationsQueue } from '@/shared/lib/bullmq'
 import { authGuard } from '@/shared/middleware/auth.guard'
 import { orgGuard } from '@/shared/middleware/org.guard'
 import { DrizzleOrganizationRepository } from '../../drizzle-organization.repository'
@@ -119,17 +120,25 @@ export const organizationsV1Routes = new Elysia({ tags: ['Organizations'] })
     '/organizations/:orgId/members',
     async (ctx) => {
       const { user, membership } = ctx.store as AuthStore
-      return toApiResponse(
-        ctx,
-        await inviteMember(repo, {
-          orgId: ctx.params.orgId,
-          actorUserId: user.id,
-          actorRole: membership?.role ?? 'admin',
-          email: ctx.body.email,
-          role: ctx.body.role,
-          tournament_ids: ctx.body.tournament_ids,
-        }),
-      )
+      const result = await inviteMember(repo, {
+        orgId: ctx.params.orgId,
+        actorUserId: user.id,
+        actorRole: membership?.role ?? 'admin',
+        email: ctx.body.email,
+        role: ctx.body.role,
+        tournament_ids: ctx.body.tournament_ids,
+      })
+      if (result.ok) {
+        await notificationsQueue.add('invitation.sent', {
+          type: 'invitation.sent',
+          payload: {
+            memberId: result.value.id,
+            orgId: ctx.params.orgId,
+            invitedByUserId: user.id,
+          },
+        })
+      }
+      return toApiResponse(ctx, result)
     },
     {
       beforeHandle: [authGuard, orgGuard('admin')],
