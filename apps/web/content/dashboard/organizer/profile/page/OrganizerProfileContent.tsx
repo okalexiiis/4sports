@@ -7,6 +7,7 @@ import { DinamicButton } from '@/content/shared/form/dinamicButton/DinamicButton
 import { ModalBodyUpdateProfilePhotoForm } from './components/modalBodyUpdateProfilePhoto/ModalBodyUpdateProfilePhotoForm'
 import { ModalBodyUpdateNameForm } from './components/modalBodyUpdateName/ModalBodyUpdateNameForm'
 import { ModalBodyUpdatePasswordForm } from './components/modalBodyUpdatePassword/ModalBodyUpdatePasswordForm'
+import { ModalBodyUpdateCityForm } from './components/modalBodyUpdateCity/ModalBodyUpdateCityForm'
 
 /* HOOKS */
 import { useState } from 'react'
@@ -117,7 +118,7 @@ export function OrganizerProfileContent() {
                             setModal({
                               isActivated: true,
                               title: 'Cambiar ciudad',
-                              body: <></>,
+                              body: <ModalBodyUpdateCityForm />,
                             })
                           }
                           className="p-2 mb-2 text-sm transition-colors duration-300 outline-none cursor-pointer rounded-xl hover:bg-surface"
