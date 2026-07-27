@@ -19,7 +19,7 @@ import { useModal } from '@/content/shared/ui/modal/stores/modalStore'
 /* TYPES */
 import { OrganizationCardType } from './types/OrganizationCardType'
 
-export function OrganizationCard({ isSelected, name, role }: OrganizationCardType) {
+export function OrganizationCard({ id, isSelected, name, role }: OrganizationCardType) {
   const router = useRouter()
 
   const { setModal } = useModal()
@@ -98,7 +98,7 @@ export function OrganizationCard({ isSelected, name, role }: OrganizationCardTyp
               setModal({
                 isActivated: true,
                 title: 'Seleccionar Organización',
-                body: <ModalBodyUpdateOrganizationContext slug={''} orgName={name} />,
+                body: <ModalBodyUpdateOrganizationContext id={id} orgName={name} />,
               })
             }
             type="unfilled"

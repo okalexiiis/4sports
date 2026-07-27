@@ -5,6 +5,8 @@ import { SectionContainer } from '@/content/shared/ui/sectionContainer/SectionCo
 import { DinamicInputText } from '@/content/shared/form/dinamicInputText/DinamicInputText'
 import { InputTextOrganizationSlug } from '../components/inputTextOrganizationSlug/InputTextOrganizationSlug'
 import { DinamicButton } from '@/content/shared/form/dinamicButton/DinamicButton'
+import { DinamicCombobox } from '@/content/shared/form/dinamicComboBox/DinamicCombobox'
+import { DinamicTextArea } from '@/content/shared/form/dinamicTextArea/DinamicTextArea'
 
 /* CONSTS */
 import { PORT } from '@/content/shared/consts/PORT'
@@ -28,8 +30,6 @@ import { AddOrganizationFormType } from '../types/addOrganizationFormType'
 
 /* UTILS */
 import { Country, State, City } from 'country-state-city'
-import { DinamicCombobox } from '@/content/shared/form/dinamicComboBox/DinamicCombobox'
-import { DinamicTextArea } from '@/content/shared/form/dinamicTextArea/DinamicTextArea'
 
 export function OrganizerAddOrganizationContent() {
   const router = useRouter()

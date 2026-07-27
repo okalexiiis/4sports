@@ -65,7 +65,7 @@ export function OrganizerOrganizationsContent() {
 
         <div className="grid grid-cols-3 gap-6 p-6">
           {organizations.map((o, i) => (
-            <OrganizationCard key={i} name={o.name} isSelected={o.active} role={o.role} />
+            <OrganizationCard key={i} id={o.id} name={o.name} isSelected={o.active} role={o.role} />
           )) ?? <p>No se encontrarón organizaciones</p>}
         </div>
       </div>

@@ -1,54 +1,90 @@
-"use client";
+'use client'
 
 /* COMPONENTS */
-import { DinamicButton } from "@/content/shared/form/dinamicButton/DinamicButton";
+import { DinamicButton } from '@/content/shared/form/dinamicButton/DinamicButton'
+
+/* CONSTS */
+import { PORT } from '@/content/shared/consts/PORT'
+
+/* HOOKS */
+import { useState } from 'react'
 
 /* STORES */
-import { useAnnouncement } from "@/content/shared/ui/annoucement/stores/announcementStore";
-import { useModal } from "@/content/shared/ui/modal/stores/modalStore";
+import { useAnnouncement } from '@/content/shared/ui/annoucement/stores/announcementStore'
+import { useModal } from '@/content/shared/ui/modal/stores/modalStore'
+import { useAuthStore } from '@/content/shared/stores/autenticationStore/autenticationStore'
 
 export function ModalBodyUpdateOrganizationContext({
-  slug,
+  id,
   orgName,
 }: {
-  slug: string;
-  orgName: string;
+  id: string
+  orgName: string
 }) {
-  const { setAnnouncement } = useAnnouncement();
-  const { modal, setModal } = useModal();
+  const setUser = useAuthStore((s) => s.setUser)
+  const { setAnnouncement } = useAnnouncement()
+  const { modal, setModal } = useModal()
 
-  const onSubmit = () => {
+  const [changing, setChanging] = useState(false)
+
+  const onSubmit = async () => {
     try {
+      setChanging(true)
+
+      const request = await fetch(PORT + '/v1/context', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          organization_id: id,
+        }),
+        credentials: 'include',
+      })
+
+      if (request.status === 200) {
+        const requestMe = await fetch(`${PORT}/v1/me`, {
+          credentials: 'include',
+        })
+
+        if (requestMe.ok) {
+          const responseMe = await requestMe.json()
+          setUser(responseMe.data, 'authenticated')
+        }
+
+        setChanging(false)
+        setAnnouncement({
+          isActivated: true,
+          announceType: 'ok',
+          message: 'Ahora gestionarás los torneos de ' + orgName,
+        })
+        setModal({
+          isActivated: false,
+          title: modal.title ?? '',
+          body: modal.body,
+        })
+      } else {
+        setChanging(false)
+        setAnnouncement({
+          isActivated: true,
+          announceType: 'error',
+          message: 'Ocurrió un error al seleccionar la organización, intente nuevamente más tarde',
+        })
+      }
+    } catch {
+      setChanging(false)
       setAnnouncement({
         isActivated: true,
-        announceType: "ok",
-        message: "Ahora gestionarás los torneos de " + orgName,
-      });
-
-      setModal({
-        isActivated: false,
-        title: modal.title ?? "",
-        body: modal.body,
-      });
-    } catch (error) {
-      console.log("Error: ", error);
-
-      setAnnouncement({
-        isActivated: true,
-        announceType: "error",
-        message:
-          "Error interno al cambiar contexto de organización, intente nuevamente más tarde",
-      });
+        announceType: 'error',
+        message: 'Ocurrió un error al seleccionar la organización, intente nuevamente más tarde',
+      })
     }
-  };
+  }
 
   return (
     <div className="p-6">
       <p>
-        Al dar clic en{" "}
-        <span className="text-primary font-bold">Seleccionar</span>, empezará a
-        gestionar los torneos de la organización{" "}
-        <span className="text-primary font-bold">{orgName}</span>
+        Al dar clic en <span className="font-bold text-primary">Seleccionar</span>, empezará a
+        gestionar los torneos de la organización{' '}
+        <span className="font-bold text-primary">{orgName}</span>
       </p>
       <p>¿Desea Continuar?</p>
 
@@ -59,7 +95,7 @@ export function ModalBodyUpdateOrganizationContext({
           action={() =>
             setModal({
               isActivated: false,
-              title: modal.title ?? "",
+              title: modal.title ?? '',
               body: modal.body,
             })
           }
@@ -70,12 +106,13 @@ export function ModalBodyUpdateOrganizationContext({
         {/* CAMBIAR */}
         <DinamicButton
           action={onSubmit}
-          type={"filled"}
+          type={'filled'}
+          disabled={changing}
           disabledSpinner={true}
           spinFromText={true}
-          label={"Seleccionar"}
+          label={'Seleccionar'}
         />
       </div>
     </div>
-  );
+  )
 }
