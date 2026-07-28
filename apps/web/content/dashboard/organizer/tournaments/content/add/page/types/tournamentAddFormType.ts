@@ -3,17 +3,16 @@ import { DateRange } from "react-day-picker";
 
 export type TournamentAddFormType = {
   /* STEP 1 */
-  image: File;
   name: string;
+  banner_url: File;
   description: string;
-  sport: string;
+  sport_id: string
   tags: string[];
-  rules?: File;
   registrationInterval: DateRange;
   gameInterval: DateRange;
 
   /* STEP 2 */
-  type: "round-robin" | "direct-elimination";
+  format_id: "round_robin" | "single_elimination" | "double_elimination" | "world_cup";
 
   /* STEP 3 -> ROUND-ROBIN */
   teamsQuantityRoundRobin?: number;
@@ -25,10 +24,12 @@ export type TournamentAddFormType = {
   bestOfX?: string;
 
   /* STEP 4 */
-  sex: string;
-  ageGap: { min: number; max: number };
-  templateValidation: string;
-  eligibility: string;
+  gender_restriction: string;
+  validation_mode: string;
+  eligibility_mode: string;
+  is_public: boolean
+  total_players_team: {min: number; max: number}
+  total_teams: {min: number; max: number}
 
   /* STEP 5 */
   sexVR: { visible: boolean; required: boolean };

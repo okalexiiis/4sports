@@ -23,6 +23,7 @@ import { motion } from 'framer-motion'
 /* STORES */
 import { useSidebarStore } from '@/content/shared/ui/sidebar/stores/SidebarStore'
 import { useAuthStore } from '@/content/shared/stores/autenticationStore/autenticationStore'
+import { useOrganizationStore } from '@/content/dashboard/organizer/organizations/page/stores/organizationStore/organizationStore'
 
 export default function OrganizerLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
@@ -31,10 +32,12 @@ export default function OrganizerLayout({ children }: { children: React.ReactNod
   const initialize = useAuthStore((s) => s.initialize)
   const status = useAuthStore((s) => s.status)
   const data = useAuthStore((s) => s.data)
+  const initializeOrganization = useOrganizationStore((s) => s.initialize)
 
   useEffect(() => {
     initialize()
-  }, [initialize])
+    initializeOrganization(data?.active_context?.organization_id ?? '')
+  }, [initialize, initializeOrganization, data?.active_context?.organization_id])
 
   useEffect(() => {
     if (status === 'unauthenticated') {

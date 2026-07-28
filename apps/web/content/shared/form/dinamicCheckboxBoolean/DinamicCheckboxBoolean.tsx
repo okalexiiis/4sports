@@ -34,7 +34,7 @@ export function DinamicCheckboxBoolean<T extends FieldValues>({
         rules={rules}
         render={({ field: { value, onChange } }) => (
           <label
-            className={`flex items-center cursor-pointer ${label !== undefined && description !== undefined && 'gap-3'}`}
+            className={`flex items-center cursor-pointer ${label !== undefined && 'gap-3'}`}
           >
             {wantCustomCheck ? (
               <Switch checked={value} onCheckedChange={(checked) => onChange(Boolean(checked))} />
@@ -42,7 +42,7 @@ export function DinamicCheckboxBoolean<T extends FieldValues>({
               <Checkbox checked={value} onCheckedChange={(checked) => onChange(Boolean(checked))} />
             )}
 
-            <div className="flex flex-col justify-center items-center select-none">
+            <div className="flex flex-col items-center justify-center select-none">
               {label && <span className="text-sm">{label}</span>}
 
               {description && <span className="text-sm text-muted">{description}</span>}
@@ -51,7 +51,7 @@ export function DinamicCheckboxBoolean<T extends FieldValues>({
         )}
       />
 
-      {error?.message && <p className="text-danger text-sm">{String(error.message)}</p>}
+      {error?.message && <p className="text-sm text-danger">{String(error.message)}</p>}
     </div>
   )
 }

@@ -1,35 +1,42 @@
-"use client";
+'use client'
 
 /* COMPONENTS */
-import { DinamicInputText } from "@/content/shared/form/dinamicInputText/DinamicInputText";
-import { DinamicInputFile } from "@/content/shared/form/dinamicInputFile/DinamicInputFile";
-import { DinamicTextArea } from "@/content/shared/form/dinamicTextArea/DinamicTextArea";
-import { DinamicCheckboxOptions } from "@/content/shared/form/dinamicCheckboxOptions/DinamicCheckboxOptions";
-import { DinamicTagsGroup } from "@/content/shared/form/dinamicTagsGroup/DinamicTagsGroup";
-import { DinamicInputDate } from "@/content/shared/form/dinamicInputDate/DinamicInputDate";
-import { SpecificInputFileImage } from "../specificInputFileImage/SpecificInputFileImage";
+import { DinamicInputText } from '@/content/shared/form/dinamicInputText/DinamicInputText'
+import { DinamicTextArea } from '@/content/shared/form/dinamicTextArea/DinamicTextArea'
+import { DinamicCheckboxOptions } from '@/content/shared/form/dinamicCheckboxOptions/DinamicCheckboxOptions'
+import { DinamicTagsGroup } from '@/content/shared/form/dinamicTagsGroup/DinamicTagsGroup'
+import { DinamicInputDate } from '@/content/shared/form/dinamicInputDate/DinamicInputDate'
+import { SpecificInputFileImage } from '../specificInputFileImage/SpecificInputFileImage'
 
 /* TYPES */
-import { TournamentAddFormType } from "../../types/tournamentAddFormType";
+import { TournamentAddFormType } from '../../types/tournamentAddFormType'
+import { CheckboxOption } from '@/content/shared/form/dinamicCheckboxOptions/types/dinamicCheckboxOptionsProps'
 
-export function TournamentAddStep1({ preview }: { preview: string | null }) {
+export function TournamentAddStep1({
+  preview,
+  sports,
+}: {
+  preview: string | null
+  sports: CheckboxOption[] | null
+}) {
   return (
-    <div className="w-full h-fit p-10">
-      <div className="w-full h-fit flex md:flex-row flex-col md:gap-6 gap-2 md:items-center">
+    <div className="w-full p-10 h-fit">
+      <div className="flex flex-col w-full gap-2 h-fit md:flex-row md:gap-6 md:items-center">
         {/* FOTO */}
         <SpecificInputFileImage<TournamentAddFormType>
-          name="image"
+          name="banner_url"
           preview={preview}
           rules={{
             validate: (file) => {
-              if (!(file instanceof File)) return true;
+              if (!(file instanceof File)) return true
 
               if (file.size > 5_000_000) {
-                return "El archivo debe pesar menos de 5MB";
+                return 'El archivo debe pesar menos de 5MB'
               }
 
-              return true;
+              return true
             },
+            required: { message: 'El banner del torneo es requerido', value: true },
           }}
         />
 
@@ -40,7 +47,7 @@ export function TournamentAddStep1({ preview }: { preview: string | null }) {
             label="Nombre del torneo"
             type="text"
             placeholder="Ingrese el nombre"
-            rules={{}}
+            rules={{ required: { message: 'El nombre del torneo es requerido', value: true } }}
           />
 
           {/* DESCRIPTION */}
@@ -48,22 +55,21 @@ export function TournamentAddStep1({ preview }: { preview: string | null }) {
             name="description"
             label="Descripción"
             placeholder="Ingrese la descripción"
-            rules={{}}
+            rules={{ required: { message: 'La descripción del torneo es requerida', value: true } }}
             twHeight="h-24"
           />
         </div>
       </div>
 
-      <DinamicCheckboxOptions<TournamentAddFormType>
-        name="sport"
-        label="Deporte"
-        multiple={false}
-        options={[
-          { label: "Básquetbol", value: "basketball" },
-          { label: "Fútbol", value: "futball" },
-          { label: "Tochito", value: "tochito" },
-        ]}
-      />
+      {sports !== null && (
+        <DinamicCheckboxOptions<TournamentAddFormType>
+          name="sport_id"
+          label="Deporte"
+          multiple={false}
+          options={sports}
+          rules={{ required: { message: 'El deporte es requerido', value: true } }}
+        />
+      )}
 
       <DinamicTagsGroup<TournamentAddFormType>
         name="tags"
@@ -72,19 +78,11 @@ export function TournamentAddStep1({ preview }: { preview: string | null }) {
         rules={{}}
       />
 
-      <DinamicInputFile<TournamentAddFormType>
-        name="rules"
-        variant="default"
-        label="Reglamento (Opcional)"
-        placeholder="Agregar reglamento"
-        rules={{}}
-      />
-
       <DinamicInputDate<TournamentAddFormType>
         name="registrationInterval"
         label="Intervalo de registro"
         placeholder="Seleccione dos fechas"
-        rules={{}}
+        rules={{ required: { message: 'El intervalo de registro es requerido', value: true } }}
         mode="range"
       />
 
@@ -92,9 +90,9 @@ export function TournamentAddStep1({ preview }: { preview: string | null }) {
         name="gameInterval"
         label="Intervalo de juego"
         placeholder="Seleccione dos fechas"
-        rules={{}}
+        rules={{ required: { message: 'El intervalo de juego es requerido', value: true } }}
         mode="range"
       />
     </div>
-  );
+  )
 }

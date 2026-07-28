@@ -53,7 +53,7 @@ type Team = {
   name: string;
 };
 
-export function OrganizerTournamentsContent({ slug }: { slug: string }) {
+export function OrganizerTournamentsContent({ id }: { id: string }) {
   const { setModal } = useModal();
 
   const [open, setOpen] = useState(false);
@@ -71,28 +71,28 @@ export function OrganizerTournamentsContent({ slug }: { slug: string }) {
 
   return (
     <SectionContainer>
-      <div className="w-full h-fit p-6 flex flex-col gap-6">
-        <div className="w-full h-54 rounded-xl bg-surface relative mb-22">
+      <div className="flex flex-col w-full gap-6 p-6 h-fit">
+        <div className="relative w-full h-54 rounded-xl bg-surface mb-22">
           <Image
             alt="Banner"
             src={banner1}
             quality={70}
             fill
             loading="eager"
-            className="rounded-xl object-cover object-center"
+            className="object-cover object-center rounded-xl"
           />
 
-          <div className="w-48 h-48 min-w-48 min-h-48 absolute left-6 bottom-0 translate-y-1/2 rounded-full border-background border-8 bg-background">
+          <div className="absolute bottom-0 w-48 h-48 translate-y-1/2 border-8 rounded-full min-w-48 min-h-48 left-6 border-background bg-background">
             {/* FOTO */}
             <Image
               alt="Torneo"
               src={tournament1}
               quality={70}
               fill
-              className="rounded-full object-cover object-center"
+              className="object-cover object-center rounded-full"
             />
 
-            <div className="absolute bottom-1 right-1 w-14 h-14 rounded-full bg-primary text-primary-text flex items-center justify-center border-6 border-background">
+            <div className="absolute flex items-center justify-center rounded-full bottom-1 right-1 w-14 h-14 bg-primary text-primary-text border-6 border-background">
               <DinamicButton
                 action={() =>
                   setModal({
@@ -131,7 +131,7 @@ export function OrganizerTournamentsContent({ slug }: { slug: string }) {
                       animate={{ opacity: 1, scale: 1, y: -12 }}
                       exit={{ opacity: 0, scale: 0.95, y: -6 }}
                       transition={{ duration: 0.15 }}
-                      className="z-100 min-w-56 rounded-2xl border border-line p-2 shadow-md bg-background"
+                      className="p-2 border shadow-md z-100 min-w-56 rounded-2xl border-line bg-background"
                     >
                       <DropdownMenu.Item
                         onClick={() =>
@@ -141,7 +141,7 @@ export function OrganizerTournamentsContent({ slug }: { slug: string }) {
                             body: <ModalBodyUpdateTournament />,
                           })
                         }
-                        className="rounded-xl p-2 text-sm outline-none cursor-pointer mb-2 transition-colors duration-300 hover:bg-surface"
+                        className="p-2 mb-2 text-sm transition-colors duration-300 outline-none cursor-pointer rounded-xl hover:bg-surface"
                       >
                         Actualizar torneo
                       </DropdownMenu.Item>
@@ -154,7 +154,7 @@ export function OrganizerTournamentsContent({ slug }: { slug: string }) {
                             body: <ModalBodyCreateTeam />,
                           })
                         }
-                        className="rounded-xl p-2 text-sm outline-none cursor-pointer mb-2 transition-colors duration-300 hover:bg-surface"
+                        className="p-2 mb-2 text-sm transition-colors duration-300 outline-none cursor-pointer rounded-xl hover:bg-surface"
                       >
                         Crear equipo interno
                       </DropdownMenu.Item>
@@ -167,7 +167,7 @@ export function OrganizerTournamentsContent({ slug }: { slug: string }) {
                             body: <ModalBodyFinishTournament />,
                           })
                         }
-                        className="rounded-xl p-2 text-sm outline-none cursor-pointer mb-2 transition-colors duration-300 hover:bg-surface"
+                        className="p-2 mb-2 text-sm transition-colors duration-300 outline-none cursor-pointer rounded-xl hover:bg-surface"
                       >
                         Finalizar torneo
                       </DropdownMenu.Item>
@@ -180,7 +180,7 @@ export function OrganizerTournamentsContent({ slug }: { slug: string }) {
                             body: <ModalBodyDeleteTournament id={0} />,
                           })
                         }
-                        className="rounded-xl p-2 text-sm outline-none cursor-pointer mb-2 transition-colors duration-300 hover:bg-surface text-secondary"
+                        className="p-2 mb-2 text-sm transition-colors duration-300 outline-none cursor-pointer rounded-xl hover:bg-surface text-secondary"
                       >
                         Eliminar torneo
                       </DropdownMenu.Item>
@@ -194,28 +194,28 @@ export function OrganizerTournamentsContent({ slug }: { slug: string }) {
           <div className="flex flex-col gap-1 absolute bottom-0 left-60 translate-y-[calc(100%+1.5rem)]">
             <h2 className="text-3xl font-bold text-ink">Torneo Verano II</h2>
 
-            <div className="flex gap-2 items-center">
+            <div className="flex items-center gap-2">
               <Merge className="size-4 min-w-4 min-h-4" />
 
-              <h3 className="text-primary text-sm font-semibold">
+              <h3 className="text-sm font-semibold text-primary">
                 Eliminación directa
               </h3>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-rows-2 gap-10 rounded-xl p-10 bg-surface">
+        <div className="grid grid-rows-2 gap-10 p-10 rounded-xl bg-surface">
           <div className="grid grid-cols-3">
-            <div className="flex flex-col gap-2 justify-center items-center">
-              <div className="flex gap-2 items-center justify-center">
+            <div className="flex flex-col items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-2">
                 <UserRound className="size-4 min-w-4 min-h-4 text-ink" />
                 <p>Rango de edad</p>
               </div>
               <p className="text-sm text-muted">17 a 20 años</p>
             </div>
 
-            <div className="flex flex-col gap-2 justify-center items-center">
-              <div className="flex gap-2 items-center justify-center">
+            <div className="flex flex-col items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-2">
                 <ClockAlert className="size-4 min-w-4 min-h-4 text-ink" />
                 <p>Inscripciones</p>
               </div>
@@ -224,8 +224,8 @@ export function OrganizerTournamentsContent({ slug }: { slug: string }) {
               </p>
             </div>
 
-            <div className="flex flex-col gap-2 justify-center items-center">
-              <div className="flex gap-2 items-center justify-center">
+            <div className="flex flex-col items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-2">
                 <CalendarDays className="size-4 min-w-4 min-h-4 text-ink" />
                 <p>Duración</p>
               </div>
@@ -236,24 +236,24 @@ export function OrganizerTournamentsContent({ slug }: { slug: string }) {
           </div>
 
           <div className="grid grid-cols-3">
-            <div className="flex flex-col gap-2 justify-center items-center">
-              <div className="flex gap-2 items-center justify-center">
+            <div className="flex flex-col items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-2">
                 <Venus className="size-4 min-w-4 min-h-4 text-ink" />
                 <p>Tipo</p>
               </div>
               <p className="text-sm text-muted">Femenino</p>
             </div>
 
-            <div className="flex flex-col gap-2 justify-center items-center">
-              <div className="flex gap-2 items-center justify-center">
+            <div className="flex flex-col items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-2">
                 <LoaderPinwheel className="size-4 min-w-4 min-h-4 text-ink" />
                 <p>Deporte</p>
               </div>
               <p className="text-sm text-muted">Básketbol</p>
             </div>
 
-            <div className="flex flex-col gap-2 justify-center items-center">
-              <div className="flex gap-2 items-center justify-center">
+            <div className="flex flex-col items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-2">
                 <MapPin className="size-4 min-w-4 min-h-4 text-ink" />
                 <p>Ubicación</p>
               </div>
@@ -262,14 +262,14 @@ export function OrganizerTournamentsContent({ slug }: { slug: string }) {
           </div>
         </div>
 
-        <div className="flex gap-6 w-full">
-          <div className="flex flex-col gap-2 bg-surface rounded-xl p-10 w-full">
-            <p className="font-semibold text-lg">Descripción</p>
+        <div className="flex w-full gap-6">
+          <div className="flex flex-col w-full gap-2 p-10 bg-surface rounded-xl">
+            <p className="text-lg font-semibold">Descripción</p>
             <p className="text-muted">Torneo de verano en localidad la mesa</p>
           </div>
 
-          <div className="p-10 bg-surface rounded-xl flex flex-col gap-4 w-full">
-            <p className="font-semibold text-lg">Reglamento</p>
+          <div className="flex flex-col w-full gap-4 p-10 bg-surface rounded-xl">
+            <p className="text-lg font-semibold">Reglamento</p>
 
             <DinamicButton
               action={() => {}}
@@ -280,21 +280,21 @@ export function OrganizerTournamentsContent({ slug }: { slug: string }) {
             />
           </div>
 
-          <div className="flex flex-col gap-6 bg-surface rounded-xl p-10 w-full">
-            <p className="font-semibold text-lg">Organización</p>
+          <div className="flex flex-col w-full gap-6 p-10 bg-surface rounded-xl">
+            <p className="text-lg font-semibold">Organización</p>
 
-            <div className="flex gap-6 items-center">
+            <div className="flex items-center gap-6">
               <Image
                 alt="Organización"
                 src={organization1}
                 quality={70}
                 loading="lazy"
-                className="rounded-full object-cover object-center h-24 w-24 min-h-24 min-w-24"
+                className="object-cover object-center w-24 h-24 rounded-full min-h-24 min-w-24"
               />
 
               <div className="min-w-0">
-                <p className="text-lg text-ink font-bold">Sede Deportes</p>
-                <p className="text-sm mb-2 line-clamp-2">
+                <p className="text-lg font-bold text-ink">Sede Deportes</p>
+                <p className="mb-2 text-sm line-clamp-2">
                   La mejor sede de deportes en todo Sonora, México
                 </p>
                 <DinamicButton
@@ -308,20 +308,20 @@ export function OrganizerTournamentsContent({ slug }: { slug: string }) {
           </div>
         </div>
 
-        <div className="bg-surface p-10 w-full flex flex-col gap-6 rounded-xl">
-          <p className="font-semibold text-lg">Equipos</p>
+        <div className="flex flex-col w-full gap-6 p-10 bg-surface rounded-xl">
+          <p className="text-lg font-semibold">Equipos</p>
 
           <CarouselManual
             slides={teams.map((t, i) => (
-              <div key={i} className="flex flex-col gap-4 items-center">
+              <div key={i} className="flex flex-col items-center gap-4">
                 <Image
                   loading="lazy"
                   alt="Equipo"
                   src={t.image}
-                  className="w-22 h-22 min-w-22 min-h-22 rounded-full"
+                  className="rounded-full w-22 h-22 min-w-22 min-h-22"
                 />
 
-                <p className="line-clamp-1 text-center text-ink font-bold">
+                <p className="font-bold text-center line-clamp-1 text-ink">
                   {t.name}
                 </p>
               </div>
@@ -330,8 +330,8 @@ export function OrganizerTournamentsContent({ slug }: { slug: string }) {
           />
         </div>
 
-        <div className="bg-surface p-10 w-full flex flex-col gap-6 rounded-xl">
-          <p className="font-semibold text-lg">Hashtags</p>
+        <div className="flex flex-col w-full gap-6 p-10 bg-surface rounded-xl">
+          <p className="text-lg font-semibold">Hashtags</p>
           <div className="flex flex-wrap gap-6">
             {[
               "El mejor torneo",
