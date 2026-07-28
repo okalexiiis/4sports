@@ -22,13 +22,13 @@ export function Modal() {
 
   return (
     <div
-      className={`fixed top-0 left-0 z-70 flex items-center justify-center w-full h-full ${
+      className={`fixed top-0 left-0 z-100 flex items-center justify-center w-full h-full ${
         modal.isActivated ? "pointer-events-auto" : "pointer-events-none"
       }`}
     >
       {/* Modal Blanco con animación de rebote */}
       <motion.div
-        className="z-70 bg-background rounded-xl shadow-lg lg:w-150 md:w-125 w-[calc(100%-2rem)] border border-line"
+        className="z-100 bg-background rounded-xl shadow-lg lg:w-150 md:w-125 w-[calc(100%-2rem)] border border-line"
         initial={{ opacity: 0, y: 30 }} // Comienza un poco abajo
         animate={{
           opacity: modal.isActivated ? 1 : 0,
@@ -47,7 +47,7 @@ export function Modal() {
         }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 text-ink border-b border-line">
+        <div className="flex items-center justify-between p-6 border-b text-ink border-line">
           <h2 className="text-xl font-extralight">{modal.title}</h2>
           <button
             onClick={setModalClosed}
@@ -62,7 +62,7 @@ export function Modal() {
 
       {/* Fondo negro con animación */}
       <motion.div
-        className={`absolute top-0 left-0 w-full h-full bg-black/50 z-60`}
+        className={`absolute top-0 left-0 w-full h-full bg-black/50 z-90`}
         initial={{ opacity: 0 }}
         animate={{ opacity: modal.isActivated ? 1 : 0 }}
         exit={{ opacity: 0 }}

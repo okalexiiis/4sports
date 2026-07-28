@@ -7,7 +7,7 @@ export const getRole = (role: 'owner' | 'admin' | 'viewer' | 'organizer' | 'coac
       return 'Administrador'
 
     case 'viewer':
-      return 'Solo ver'
+      return 'Espectador'
 
     case 'organizer':
       return 'Organizador'

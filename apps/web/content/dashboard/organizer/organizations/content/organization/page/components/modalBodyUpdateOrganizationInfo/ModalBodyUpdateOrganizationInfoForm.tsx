@@ -20,6 +20,7 @@ import { MapPin } from 'lucide-react'
 import { useModal } from '@/content/shared/ui/modal/stores/modalStore'
 import { useAnnouncement } from '@/content/shared/ui/annoucement/stores/announcementStore'
 import { useOrganizationStore } from '@/content/dashboard/organizer/organizations/page/stores/organizationStore/organizationStore'
+import { useAuthStore } from '@/content/shared/stores/autenticationStore/autenticationStore'
 
 /* TYPES */
 import { UpdateOrganizationInfoFormType } from './types/updateOrganizationInfoFormType'
@@ -30,6 +31,7 @@ import { Country, State, City } from 'country-state-city'
 export function ModalBodyUpdateOrganizationInfoForm({ id }: { id: string }) {
   const setOrganization = useOrganizationStore((s) => s.setOrganization)
   const organization = useOrganizationStore((s) => s.organization)
+  const setUser = useAuthStore((s) => s.setUser)
   const { setModal, modal } = useModal()
   const { setAnnouncement } = useAnnouncement()
 
@@ -76,6 +78,15 @@ export function ModalBodyUpdateOrganizationInfoForm({ id }: { id: string }) {
       if (request.status === 200) {
         const response = await request.json()
         setOrganization({ ...response.data, role: organization?.role ?? 'Miembro' }, 'finished')
+
+        const requestMe = await fetch(`${PORT}/v1/me`, {
+          credentials: 'include',
+        })
+
+        if (requestMe.ok) {
+          const responseMe = await requestMe.json()
+          setUser(responseMe.data, 'authenticated')
+        }
 
         setSaving(false)
         setAnnouncement({

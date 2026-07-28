@@ -138,19 +138,22 @@ export function OrganizationMembersTable() {
             <p className="text-xl font-extralight text-ink">Miembros</p>
 
             <div className="flex items-center gap-4">
-              <DinamicButton
-                action={() =>
-                  setModal({
-                    isActivated: true,
-                    title: 'Invitar miembro',
-                    body: <ModalBodyInviteMemberForm />,
-                  })
-                }
-                type="filled"
-                label="Invitar"
-                icon={<Plus className="size-4 min-w-4 min-h-4" />}
-                twClassName="text-sm w-fit py-1"
-              />
+              {(organization?.role ?? 'Miembro') === 'owner' && (
+                <DinamicButton
+                  action={() =>
+                    setModal({
+                      isActivated: true,
+                      title: 'Invitar miembro',
+                      body: <ModalBodyInviteMemberForm />,
+                    })
+                  }
+                  type="filled"
+                  label="Invitar"
+                  icon={<Plus className="size-4 min-w-4 min-h-4" />}
+                  twClassName="text-sm w-fit py-1"
+                />
+              )}
+
               {/* <DinamicButton
                 action={filterAction}
                 type="filled"

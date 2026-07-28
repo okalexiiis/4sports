@@ -8,7 +8,7 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 
 /* ICONS */
-import { LogOut, ChevronsLeft, ChevronsRight, UserRound, ChevronsUpDown } from 'lucide-react'
+import { LogOut, ChevronsLeft, ChevronsRight, UserRound, ChevronsUpDown, Bell } from 'lucide-react'
 import { FourSportsIcon } from '@/content/shared/icons/fourSports/FourSportsIcon'
 
 /* NAVIGATION */
@@ -230,6 +230,14 @@ export function Sidebar({ links }: { links: LinkSidebar[] }) {
                     >
                       <UserRound className="size-4" />
                       Perfil
+                    </DropdownMenu.Item>
+
+                    <DropdownMenu.Item
+                      onClick={toggleNotificationsSidebar}
+                      className={`flex items-center gap-3 rounded-xl p-2 text-sm outline-none cursor-pointer mb-2 transition-colors duration-300 border hover:bg-surface border-transparent text-body`}
+                    >
+                      <Bell className="size-4" />
+                      Notificaciones
                     </DropdownMenu.Item>
 
                     <ThemeToggleButtons />

@@ -13,6 +13,7 @@ import { Crown, Mail, Power, PowerOff, SquarePen, Trash2, X } from 'lucide-react
 /* STORES */
 import { useModal } from '@/content/shared/ui/modal/stores/modalStore'
 import { useAuthStore } from '@/content/shared/stores/autenticationStore/autenticationStore'
+import { useOrganizationStore } from '@/content/dashboard/organizer/organizations/page/stores/organizationStore/organizationStore'
 
 /* TYPES */
 import { OrgMember } from '../../../../../../../../../../../api/src/modules/organizations/organization.entity'
@@ -24,6 +25,7 @@ import { getRole } from '@/content/dashboard/organizer/organizations/page/utils/
 export function MemberRow({ member, twBgColor }: { member: OrgMember; twBgColor: string }) {
   const { setModal } = useModal()
   const data = useAuthStore((s) => s.data)
+  const organization = useOrganizationStore((s) => s.organization)
 
   const getStatus = (status: 'invited' | 'left' | 'active' | 'suspended' | string) => {
     switch (status) {
@@ -47,9 +49,21 @@ export function MemberRow({ member, twBgColor }: { member: OrgMember; twBgColor:
   return (
     <DinamicRow twBgColor={twBgColor}>
       <DinamicTd twClassName="text-nowrap">
-        {member.user.email === data?.user.email ? (
+        {member.role === 'owner' ? (
           <div className="p-1 border-2 rounded-full bg-surface border-line w-fit h-fit">
             <Crown className="size-4 min-w-4 min-h-4" />
+          </div>
+        ) : (organization?.role ?? 'Miembro') !== 'owner' ? (
+          <div className="p-1 border-2 rounded-full bg-surface border-line w-fit h-fit">
+            {member.status === 'active' ? (
+              <Power className="size-4 min-w-4 min-h-4" />
+            ) : member.status === 'suspended' ? (
+              <PowerOff className="size-4 min-w-4 min-h-4" />
+            ) : member.status === 'invited' ? (
+              <Mail className="size-4 min-w-4 min-h-4" />
+            ) : (
+              <X className="size-4 min-w-4 min-h-4" />
+            )}
           </div>
         ) : member.status === 'active' || member.status === 'suspended' ? (
           <DinamicButton
@@ -119,25 +133,27 @@ export function MemberRow({ member, twBgColor }: { member: OrgMember; twBgColor:
       </DinamicTd> */}
 
       <DinamicTd twClassName="text-nowrap">
-        {member.user.email !== data?.user.email && member.status !== 'left' && (
-          <DinamicButton
-            action={() =>
-              setModal({
-                isActivated: true,
-                title: 'Remover miembro',
-                body: (
-                  <ModalBodyRemoveMember
-                    complete_name={member?.user?.name ?? 'Error'}
-                    id={member.id}
-                  />
-                ),
-              })
-            }
-            type={'destructive'}
-            icon={<Trash2 className="size-4 min-w-4 min-h-4" />}
-            twClassName="w-fit rounded-full p-1"
-          />
-        )}
+        {member.role !== 'owner' &&
+          member.status !== 'left' &&
+          (organization?.role ?? 'Miembro') === 'owner' && (
+            <DinamicButton
+              action={() =>
+                setModal({
+                  isActivated: true,
+                  title: 'Remover miembro',
+                  body: (
+                    <ModalBodyRemoveMember
+                      complete_name={member?.user?.name ?? 'Error'}
+                      id={member.id}
+                    />
+                  ),
+                })
+              }
+              type={'destructive'}
+              icon={<Trash2 className="size-4 min-w-4 min-h-4" />}
+              twClassName="w-fit rounded-full p-1"
+            />
+          )}
       </DinamicTd>
     </DinamicRow>
   )

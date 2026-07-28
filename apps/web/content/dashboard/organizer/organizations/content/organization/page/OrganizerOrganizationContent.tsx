@@ -205,65 +205,69 @@ export function OrganizerOrganizationContent({ id }: { id: string }) {
                 </div>
               )}
 
-              <div className="absolute flex items-center justify-center rounded-full bottom-1 right-1 w-14 h-14 bg-primary text-primary-text border-6 border-background">
-                <DinamicButton
-                  action={() =>
-                    setModal({
-                      isActivated: true,
-                      title: 'Cambiar foto',
-                      body: <ModalBodyUpdateOrganizationPhotoForm id={id} />,
-                    })
-                  }
-                  type="filled"
-                  icon={<SquarePen className="size-5 min-w-5 min-h-5" />}
-                  twClassName="w-full h-full p-0 rounded-full"
-                />
-              </div>
+              {organization !== null && organization.role === "owner" && (
+                <div className="absolute flex items-center justify-center rounded-full bottom-1 right-1 w-14 h-14 bg-primary text-primary-text border-6 border-background">
+                  <DinamicButton
+                    action={() =>
+                      setModal({
+                        isActivated: true,
+                        title: 'Cambiar foto',
+                        body: <ModalBodyUpdateOrganizationPhotoForm id={id} />,
+                      })
+                    }
+                    type="filled"
+                    icon={<SquarePen className="size-5 min-w-5 min-h-5" />}
+                    twClassName="w-full h-full p-0 rounded-full"
+                  />
+                </div>
+              )}
             </div>
 
-            <DropdownMenu.Root open={open} onOpenChange={setOpen}>
-              <DropdownMenu.Trigger asChild>
-                <button className="w-fit h-fit flex items-center justify-center gap-2 text-sm py-1 absolute bottom-0 right-0 translate-y-[calc(100%+1.5rem)] bg-primary border-transparent border-2 text-primary-text font-semibold px-4 rounded-lg cursor-pointer hover:bg-primary-hover">
-                  <SlidersHorizontal className="size-4 min-w-4 min-h-4" />
-                  Acciones
-                </button>
-              </DropdownMenu.Trigger>
+            {organization?.role === 'owner' && (
+              <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+                <DropdownMenu.Trigger asChild>
+                  <button className="w-fit h-fit flex items-center justify-center gap-2 text-sm py-1 absolute bottom-0 right-0 translate-y-[calc(100%+1.5rem)] bg-primary border-transparent border-2 text-primary-text font-semibold px-4 rounded-lg cursor-pointer hover:bg-primary-hover">
+                    <SlidersHorizontal className="size-4 min-w-4 min-h-4" />
+                    Acciones
+                  </button>
+                </DropdownMenu.Trigger>
 
-              <AnimatePresence>
-                {open && (
-                  <DropdownMenu.Portal forceMount>
-                    <DropdownMenu.Content
-                      sideOffset={24}
-                      align="end"
-                      avoidCollisions
-                      side={'bottom'}
-                      asChild
-                    >
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: -6 }}
-                        animate={{ opacity: 1, scale: 1, y: -12 }}
-                        exit={{ opacity: 0, scale: 0.95, y: -6 }}
-                        transition={{ duration: 0.15 }}
-                        className="p-2 border shadow-md z-100 min-w-56 rounded-2xl border-line bg-background"
+                <AnimatePresence>
+                  {open && (
+                    <DropdownMenu.Portal forceMount>
+                      <DropdownMenu.Content
+                        sideOffset={24}
+                        align="end"
+                        avoidCollisions
+                        side={'bottom'}
+                        asChild
                       >
-                        <DropdownMenu.Item
-                          onClick={() =>
-                            setModal({
-                              isActivated: true,
-                              title: 'Actualizar organización',
-                              body: <ModalBodyUpdateOrganizationInfoForm id={id} />,
-                            })
-                          }
-                          className="p-2 text-sm transition-colors duration-300 outline-none cursor-pointer rounded-xl hover:bg-surface"
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.95, y: -6 }}
+                          animate={{ opacity: 1, scale: 1, y: -12 }}
+                          exit={{ opacity: 0, scale: 0.95, y: -6 }}
+                          transition={{ duration: 0.15 }}
+                          className="p-2 border shadow-md z-100 min-w-56 rounded-2xl border-line bg-background"
                         >
-                          Actualizar organización
-                        </DropdownMenu.Item>
-                      </motion.div>
-                    </DropdownMenu.Content>
-                  </DropdownMenu.Portal>
-                )}
-              </AnimatePresence>
-            </DropdownMenu.Root>
+                          <DropdownMenu.Item
+                            onClick={() =>
+                              setModal({
+                                isActivated: true,
+                                title: 'Actualizar organización',
+                                body: <ModalBodyUpdateOrganizationInfoForm id={id} />,
+                              })
+                            }
+                            className="p-2 text-sm transition-colors duration-300 outline-none cursor-pointer rounded-xl hover:bg-surface"
+                          >
+                            Actualizar organización
+                          </DropdownMenu.Item>
+                        </motion.div>
+                      </DropdownMenu.Content>
+                    </DropdownMenu.Portal>
+                  )}
+                </AnimatePresence>
+              </DropdownMenu.Root>
+            )}
 
             <div className="flex flex-col gap-1 absolute bottom-0 left-60 translate-y-[calc(100%+1.5rem)]">
               <h2 className="text-3xl font-bold text-ink">{organization?.name ?? '...'}</h2>
