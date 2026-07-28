@@ -119,7 +119,6 @@ export function RegisterContent() {
         type="text"
         placeholder="María, Pedro, Juan..."
         rules={{}}
-        twMarginBottom="mb-0"
       />
 
       <DinamicInputText<RegisterForm>

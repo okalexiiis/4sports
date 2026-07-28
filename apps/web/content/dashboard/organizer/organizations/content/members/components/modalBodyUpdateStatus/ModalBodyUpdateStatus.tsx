@@ -1,106 +1,141 @@
-"use client";
+'use client'
 
 /* COMPONENTS */
-import { DinamicButton } from "@/content/shared/form/dinamicButton/DinamicButton";
+import { DinamicButton } from '@/content/shared/form/dinamicButton/DinamicButton'
+
+/* CONSTS */
+import { PORT } from '@/content/shared/consts/PORT'
 
 /* HOOKS */
-import { FormProvider, useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState } from 'react'
 
 /* STORES */
-import { useAnnouncement } from "@/content/shared/ui/annoucement/stores/announcementStore";
-import { useMembersFilter } from "../membersTable/stores/membersStore";
-import { useModal } from "@/content/shared/ui/modal/stores/modalStore";
-
-/* TYPES */
-import { UpdateStatusFormType } from "./types/updateStatusFormType";
+import { useAnnouncement } from '@/content/shared/ui/annoucement/stores/announcementStore'
+import { useMembersFilter } from '../membersTable/stores/membersStore'
+import { useModal } from '@/content/shared/ui/modal/stores/modalStore'
+import { useAuthStore } from '@/content/shared/stores/autenticationStore/autenticationStore'
 
 export function ModalBodyUpdateStatus({
   id,
   actualStatus,
   complete_name,
 }: {
-  id: number;
-  actualStatus: "active" | "inactive";
-  complete_name: string;
+  id: string
+  actualStatus: 'active' | 'suspended' | string
+  complete_name: string
 }) {
-  const { setAnnouncement } = useAnnouncement();
-  const { modal, setModal } = useModal();
-  const { setFilter, filter } = useMembersFilter();
+  const { setAnnouncement } = useAnnouncement()
+  const { modal, setModal } = useModal()
+  const { setFilter, filter } = useMembersFilter()
+  const context = useAuthStore((s) => s.data)
 
-  const [changingStatus, setChangingStatus] = useState(false);
+  const [changingStatus, setChangingStatus] = useState(false)
 
-  const methods = useForm<UpdateStatusFormType>({
-    defaultValues: {
-      id: id,
-      status: actualStatus,
-    },
-  });
-
-  const onSubmit = (data: UpdateStatusFormType) => {
+  const onSubmit = async () => {
     try {
-      setChangingStatus(true);
+      setChangingStatus(true)
 
-      setFilter({
-        page: 0,
-        perPage: filter?.perPage ?? 25,
-        order: filter?.order ?? "asc",
-        orderBy: filter?.orderBy ?? "id",
-      });
+      if (actualStatus === 'active') {
+        const request = await fetch(
+          PORT +
+            `/v1/organizations/${context?.active_context?.organization_id ?? 'error'}/members/${id}/suspend`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+          },
+        )
 
+        if (request.status === 200) {
+          setFilter({
+            page: 0,
+            perPage: filter?.perPage ?? 10,
+          })
+          setAnnouncement({
+            isActivated: true,
+            announceType: 'ok',
+            message: 'Estatus cambiado correctamente',
+          })
+          setModal({
+            isActivated: false,
+            title: modal.title ?? '',
+            body: modal.body,
+          })
+          setChangingStatus(false)
+        } else {
+          setAnnouncement({
+            isActivated: true,
+            announceType: 'error',
+            message: 'Ocurrió un error al cambiar el estatus, intente nuevamente más tarde',
+          })
+          setChangingStatus(false)
+        }
+      } else if (actualStatus === 'suspended') {
+        const request = await fetch(
+          PORT +
+            `/v1/organizations/${context?.active_context?.organization_id ?? 'error'}/members/${id}/reactivate`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+          },
+        )
+
+        if (request.status === 200) {
+          setFilter({
+            page: 0,
+            perPage: filter?.perPage ?? 10,
+          })
+          setAnnouncement({
+            isActivated: true,
+            announceType: 'ok',
+            message: 'Estatus cambiado correctamente',
+          })
+          setModal({
+            isActivated: false,
+            title: modal.title ?? '',
+            body: modal.body,
+          })
+          setChangingStatus(false)
+        } else {
+          setAnnouncement({
+            isActivated: true,
+            announceType: 'error',
+            message: 'Ocurrió un error al cambiar el estatus, intente nuevamente más tarde',
+          })
+          setChangingStatus(false)
+        }
+      }
+    } catch {
       setAnnouncement({
         isActivated: true,
-        announceType: "ok",
-        message: "Estatus cambiado correctamente",
-      });
-
-      setModal({
-        isActivated: false,
-        title: modal.title ?? "",
-        body: modal.body,
-      });
-
-      setChangingStatus(false);
-    } catch (error) {
-      console.log("Error: ", error);
-
-      setChangingStatus(false);
-
-      setAnnouncement({
-        isActivated: true,
-        announceType: "error",
-        message:
-          "Error interno al cambiar el estatus, intente nuevamente más tarde",
-      });
+        announceType: 'error',
+        message: 'Ocurrió un error al cambiar el estatus, intente nuevamente más tarde',
+      })
+      setChangingStatus(false)
     }
-  };
+  }
 
   return (
-    <FormProvider {...methods}>
+    <>
       <div className="p-6 overflow-y-auto lg:max-h-3/4 max-h-40">
-        {actualStatus === "active" ? (
+        {actualStatus === 'active' ? (
           <>
             <p>
-              Al dar clic en{" "}
-              <span className="text-danger font-bold">Suspender</span>, el
-              estatus del miembro {complete_name}, será cambiado a{" "}
-              <span className="text-danger font-bold">Suspendido</span>
+              Al dar clic en <span className="font-bold text-danger">Suspender</span>, el estatus
+              del miembro {complete_name}, será cambiado a{' '}
+              <span className="font-bold text-danger">Suspendido</span>
             </p>
-            <p>
-              ¿Desea Continuar? (Puede cambiar el estatus nuevamente más tarde)
-            </p>
+            <p>¿Desea Continuar? (Puede cambiar el estatus nuevamente más tarde)</p>
           </>
         ) : (
           <>
             <p>
-              Al dar clic en{" "}
-              <span className="text-primary font-bold">Activar</span>, el
-              estatus del miembro {complete_name}, será cambiado a{" "}
-              <span className="text-primary font-bold">Activado</span>
+              Al dar clic en <span className="font-bold text-primary">Activar</span>, el estatus del
+              miembro {complete_name}, será cambiado a{' '}
+              <span className="font-bold text-primary">Activado</span>
             </p>
-            <p>
-              ¿Desea Continuar? (Puede cambiar el estatus nuevamente más tarde)
-            </p>
+            <p>¿Desea Continuar? (Puede cambiar el estatus nuevamente más tarde)</p>
           </>
         )}
       </div>
@@ -112,7 +147,7 @@ export function ModalBodyUpdateStatus({
           action={() =>
             setModal({
               isActivated: false,
-              title: modal.title ?? "",
+              title: modal.title ?? '',
               body: modal.body,
             })
           }
@@ -122,20 +157,14 @@ export function ModalBodyUpdateStatus({
 
         {/* FILTRAR */}
         <DinamicButton
-          action={methods.handleSubmit(onSubmit)}
-          type={
-            changingStatus
-              ? "disabled"
-              : actualStatus === "active"
-                ? "destructive"
-                : "filled"
-          }
+          action={onSubmit}
+          type={changingStatus ? 'disabled' : actualStatus === 'active' ? 'destructive' : 'filled'}
           disabled={changingStatus}
           disabledSpinner={true}
           spinFromText={true}
-          label={actualStatus === "active" ? "Suspender" : "Activar"}
+          label={actualStatus === 'active' ? 'Suspender' : 'Activar'}
         />
       </div>
-    </FormProvider>
-  );
+    </>
+  )
 }

@@ -5,7 +5,7 @@ import { OrganizationMembersTable } from "../components/membersTable/Organizatio
 export function OrganizerMembersContent() {
   return (
     <SectionContainer>
-      <div className="p-6 flex flex-col h-full">
+      <div className="flex flex-col h-full">
         <OrganizationMembersTable />
       </div>
     </SectionContainer>

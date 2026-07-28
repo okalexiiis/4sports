@@ -1,31 +1,17 @@
-import { create } from "zustand";
+import { create } from 'zustand'
 
 interface MembersFilterStore {
   filter: {
-    page: number;
-    perPage: number;
-    order: "asc" | "desc";
-    orderBy: "id" | "name";
-  } | null;
-  setFilter: (data: {
-    page: number;
-    perPage: number;
-    order: "asc" | "desc";
-    orderBy: "id" | "name";
-  }) => void;
+    page: number
+    perPage: number
+  } | null
+  setFilter: (data: { page: number; perPage: number }) => void
 }
 
 export const useMembersFilter = create<MembersFilterStore>((set) => ({
   filter: {
     page: 0,
-    perPage: 25,
-    order: "asc",
-    orderBy: "id",
+    perPage: 10,
   },
-  setFilter: (data: {
-    page: number;
-    perPage: number;
-    order: "asc" | "desc";
-    orderBy: "id" | "name";
-  }) => set({ filter: data }),
-}));
+  setFilter: (data: { page: number; perPage: number }) => set({ filter: data }),
+}))

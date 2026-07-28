@@ -32,10 +32,10 @@ export function InternalNavbarOrganization({ id }: { id: string }) {
       label: 'Gestionar',
       href: `/organizer/organizations/${id}`,
     },
-    {
+    /* {
       label: 'Pagos',
       href: `/organizer/organizations/${id}/payment-history`,
-    },
+    }, */
     {
       label: 'Miembros',
       href: `/organizer/organizations/${id}/members`,

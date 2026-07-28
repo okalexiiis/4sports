@@ -190,8 +190,7 @@ export function OnboardingContent() {
           })
 
           if (requestMe.ok) {
-            const responseMe = await request.json()
-
+            const responseMe = await requestMe.json()
             if (!responseMe.data.onboarding_pending) {
               setUser(responseMe.data, 'authenticated')
             } else {

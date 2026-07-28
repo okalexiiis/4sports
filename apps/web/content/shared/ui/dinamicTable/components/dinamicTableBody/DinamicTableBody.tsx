@@ -26,7 +26,7 @@ export function DinamicTableBody({
       transition={{ duration: 0.3, ease: "easeInOut" }}
       className="md:flex-1 md:min-h-0 md:overflow-auto"
     >
-      <div className="relative w-full flex-1 min-h-0">
+      <div className="relative flex-1 w-full min-h-0">
         <AnimatePresence mode="wait">
           {loading ? (
             <DinamicTableSkeleton />
@@ -37,6 +37,7 @@ export function DinamicTableBody({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="p-6"
             >
               No se encontraron {type}s
             </motion.p>
@@ -51,7 +52,7 @@ export function DinamicTableBody({
             >
               <table className="w-full table-auto">
                 <thead className="sticky top-0 z-20">
-                  <tr className="bg-surface relative">
+                  <tr className="relative bg-surface">
                     {theadColumns}
                   </tr>
                 </thead>

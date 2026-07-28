@@ -36,18 +36,18 @@ export function DinamicTableFooter({
     <AnimatePresence mode="wait">
       <motion.div
         key={loading ? "cargando" : "completado"}
-        className="flex flex-col justify-center items-center p-6 lg:justify-between md:justify-between lg:flex-row md:flex-row border-t border-line"
+        className="flex flex-col items-center justify-center p-6 border-t lg:justify-between md:justify-between lg:flex-row md:flex-row border-line"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
       >
-        <div className="flex gap-2 items-center">
+        <div className="flex items-center gap-2">
           <p>Total:</p>
           {loading ? (
             <Loader className="size-4 animate-spin text-primary" />
           ) : (
             <p>
-              <span className="text-primary font-semibold mr-2">{count}</span>
+              <span className="mr-2 font-semibold text-primary">{count}</span>
               <span>{type}</span>
               <span>{(count >= 1 || count === 0) && "s"}</span>
             </p>

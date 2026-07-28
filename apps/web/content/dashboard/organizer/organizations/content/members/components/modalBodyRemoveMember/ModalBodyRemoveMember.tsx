@@ -19,7 +19,7 @@ export function ModalBodyRemoveMember({
   id,
   complete_name,
 }: {
-  id: number;
+  id: string;
   complete_name: string;
 }) {
   const { setAnnouncement } = useAnnouncement();
@@ -76,7 +76,7 @@ export function ModalBodyRemoveMember({
     <FormProvider {...methods}>
       <div className="p-6 overflow-y-auto lg:max-h-3/4 max-h-40">
         <p>
-          Al dar clic en <span className="text-danger font-bold">Remover</span>,
+          Al dar clic en <span className="font-bold text-danger">Remover</span>,
           el miembro {complete_name}, será removido permanentemente de la
           organización
         </p>

@@ -1,4 +1,4 @@
 export type UpdateStatusFormType = {
-  id: number;
-  status: "active" | "inactive";
+  id: string;
+  status: "active" | "inactive" | string;
 };

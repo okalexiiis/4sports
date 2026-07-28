@@ -1,10 +1,9 @@
 export const membersColumns: string[] = [
   "",
-  "Apodo",
+  "Estado",
   "Nombre",
   "Rol",
   "Correo",
-  "Teléfono",
-  "",
+  /* "", */
   "",
 ];
