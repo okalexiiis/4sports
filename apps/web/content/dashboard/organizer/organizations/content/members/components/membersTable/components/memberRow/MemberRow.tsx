@@ -119,23 +119,25 @@ export function MemberRow({ member, twBgColor }: { member: OrgMember; twBgColor:
       </DinamicTd> */}
 
       <DinamicTd twClassName="text-nowrap">
-        <DinamicButton
-          action={() =>
-            setModal({
-              isActivated: true,
-              title: 'Remover miembro',
-              body: (
-                <ModalBodyRemoveMember
-                  complete_name={member?.user?.name ?? 'Error'}
-                  id={member.id}
-                />
-              ),
-            })
-          }
-          type={'destructive'}
-          icon={<Trash2 className="size-4 min-w-4 min-h-4" />}
-          twClassName="w-fit rounded-full p-1"
-        />
+        {member.user.email !== data?.user.email && member.status !== 'left' && (
+          <DinamicButton
+            action={() =>
+              setModal({
+                isActivated: true,
+                title: 'Remover miembro',
+                body: (
+                  <ModalBodyRemoveMember
+                    complete_name={member?.user?.name ?? 'Error'}
+                    id={member.id}
+                  />
+                ),
+              })
+            }
+            type={'destructive'}
+            icon={<Trash2 className="size-4 min-w-4 min-h-4" />}
+            twClassName="w-fit rounded-full p-1"
+          />
+        )}
       </DinamicTd>
     </DinamicRow>
   )
