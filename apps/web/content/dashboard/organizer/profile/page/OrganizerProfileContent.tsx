@@ -13,7 +13,15 @@ import { ModalBodyUpdateCityForm } from './components/modalBodyUpdateCity/ModalB
 import { useState } from 'react'
 
 /* ICONS */
-import { Box, Mail, MapPin, SlidersHorizontal, SquarePen, UserRound } from 'lucide-react'
+import {
+  Box,
+  Mail,
+  MapPin,
+  SlidersHorizontal,
+  SquarePen,
+  UserRound,
+  Image as Photo,
+} from 'lucide-react'
 
 /* IMAGES */
 import banner from './images/banner.jpg'
@@ -46,7 +54,7 @@ export function OrganizerProfileContent() {
               className="object-cover object-center rounded-xl"
             />
 
-            <div className="absolute bottom-0 flex items-center justify-center w-48 h-48 translate-y-1/2 border-8 rounded-full min-w-48 min-h-48 left-6 bg-background border-background">
+            <div className="absolute bottom-0 w-48 h-48 translate-y-1/2 border-8 rounded-full min-w-48 min-h-48 left-6 bg-background border-background">
               {data && data.profile?.avatar_url ? (
                 <Image
                   alt="Banner"
@@ -56,7 +64,9 @@ export function OrganizerProfileContent() {
                   className="object-cover object-center rounded-full"
                 />
               ) : (
-                <UserRound className="size-4" />
+                <div className="flex items-center justify-center w-full h-full rounded-full bg-surface">
+                  <Photo className="size-16 min-h-16 min-w-16" />
+                </div>
               )}
 
               <div className="absolute flex items-center justify-center rounded-full bottom-1 right-1 w-14 h-14 bg-primary text-primary-text border-6 border-background">

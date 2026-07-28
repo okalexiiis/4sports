@@ -4,10 +4,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
 
-/* IMAGES */
-import organization1 from './images/organization1.png'
-import tournament1 from './images/tournament1.png'
-
 /* ICONS */
 import { Image as Photo } from 'lucide-react'
 
@@ -25,7 +21,7 @@ type LinkType = {
   href: string
 }
 
-export function InternalNavbar({ to, id }: { to: 'organization' | 'tournament'; id: string }) {
+export function InternalNavbarOrganization({ id }: { id: string }) {
   const pathname = usePathname()
 
   const organization = useOrganizationStore((s) => s.organization)
@@ -45,31 +41,6 @@ export function InternalNavbar({ to, id }: { to: 'organization' | 'tournament'; 
       href: `/organizer/organizations/${id}/members`,
     },
   ]
-
-  const tournamentsLinks: LinkType[] = [
-    {
-      label: 'Gestionar',
-      href: `/organizer/tournaments/${id}`,
-    },
-    {
-      label: 'Solicitudes',
-      href: `/organizer/tournaments/${id}/registrations`,
-    },
-    {
-      label: 'Partidos',
-      href: `/organizer/tournaments/${id}/matches`,
-    },
-    {
-      label: 'Posiciones',
-      href: `/organizer/tournaments/${id}/positions`,
-    },
-    {
-      label: 'Equipos',
-      href: `/organizer/tournaments/${id}/teams`,
-    },
-  ]
-
-  const finalLinks = to === 'organization' ? organizationLinks : tournamentsLinks
 
   if (status === 'empty' || status === 'error') {
     return (
@@ -91,48 +62,29 @@ export function InternalNavbar({ to, id }: { to: 'organization' | 'tournament'; 
   return (
     <div className="flex items-end justify-between px-10 pt-6 border-b border-line">
       <div className="flex items-center gap-4 pb-6">
-        {to === 'organization' && (
-          <>
-            {organization?.logo_url ? (
-              <Image
-                alt="Organización"
-                src={organization.logo_url}
-                quality={70}
-                className="object-cover object-center w-12 h-12 border min-w-12 min-h-12 rounded-xl border-line"
-              />
-            ) : (
-              <div className="flex items-center justify-center w-12 h-12 rounded-xl border-line min-h-12 min-w-12 bg-surface">
-                <Photo className="size-6 min-h-6 min-w-6" />
-              </div>
-            )}
-
-            <div>
-              <p className="text-lg font-bold text-left text-ink">{organization?.name ?? '...'}</p>
-              <p className="text-sm font-semibold text-primary">
-                {getRole(organization?.role ?? '...')}
-              </p>
-            </div>
-          </>
+        {organization?.logo_url ? (
+          <Image
+            alt="Organización"
+            src={organization.logo_url}
+            quality={70}
+            className="object-cover object-center w-12 h-12 border min-w-12 min-h-12 rounded-xl border-line"
+          />
+        ) : (
+          <div className="flex items-center justify-center w-12 h-12 rounded-xl border-line min-h-12 min-w-12 bg-surface">
+            <Photo className="size-6 min-h-6 min-w-6" />
+          </div>
         )}
 
-        {to === 'tournament' && (
-          <>
-            <Image
-              alt="Torneo"
-              src={tournament1}
-              quality={70}
-              className="object-cover object-center w-12 h-12 border min-w-12 min-h-12 rounded-xl border-line"
-            />
-            <div>
-              <p className="text-lg font-bold text-left text-ink">Torneo Verano II</p>
-              <p className="text-sm font-semibold text-primary">Todos contra todos</p>
-            </div>
-          </>
-        )}
+        <div>
+          <p className="text-lg font-bold text-left text-ink">{organization?.name ?? '...'}</p>
+          <p className="text-sm font-semibold text-primary">
+            {getRole(organization?.role ?? '...')}
+          </p>
+        </div>
       </div>
 
       <nav className="flex justify-end gap-2 h-fit">
-        {finalLinks.map((link) => {
+        {organizationLinks.map((link) => {
           const active = pathname === link.href
 
           return (

@@ -19,32 +19,13 @@ import { useModal } from '@/content/shared/ui/modal/stores/modalStore'
 /* TYPES */
 import { OrganizationCardType } from './types/OrganizationCardType'
 
+/* UTILS */
+import { getRole } from '../../utils/getRole'
+
 export function OrganizationCard({ id, isSelected, name, role }: OrganizationCardType) {
   const router = useRouter()
 
   const { setModal } = useModal()
-
-  const getRole = (role: 'owner' | 'admin' | 'viewer' | 'organizer' | 'coach' | string) => {
-    switch (role) {
-      case 'owner':
-        return 'Dueño'
-
-      case 'admin':
-        return 'Administrador'
-
-      case 'viewer':
-        return 'Solo ver'
-
-      case 'organizer':
-        return 'Organizador'
-
-      case 'coach':
-        return 'Coach'
-
-      default:
-        return 'Miembro'
-    }
-  }
 
   return (
     <motion.div
@@ -108,13 +89,15 @@ export function OrganizationCard({ id, isSelected, name, role }: OrganizationCar
           />
         )}
 
-        <DinamicButton
-          action={() => router.push(`/organizer/organizations/123`)}
-          type="unfilled"
-          twClassName="py-1 text-sm"
-          icon={<SquarePen className="size-4 min-h-4 min-w-4" />}
-          label="Gestionar"
-        />
+        {isSelected && (
+          <DinamicButton
+            action={() => router.push(`/organizer/organizations/${id}`)}
+            type="unfilled"
+            twClassName="py-1 text-sm"
+            icon={<SquarePen className="size-4 min-h-4 min-w-4" />}
+            label="Gestionar"
+          />
+        )}
       </div>
     </motion.div>
   )
