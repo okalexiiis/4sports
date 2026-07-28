@@ -63,12 +63,16 @@ export function InternalNavbarOrganization({ id }: { id: string }) {
     <div className="flex items-end justify-between px-10 pt-6 border-b border-line">
       <div className="flex items-center gap-4 pb-6">
         {organization?.logo_url ? (
-          <Image
-            alt="Organización"
-            src={organization.logo_url}
-            quality={70}
-            className="object-cover object-center w-12 h-12 border min-w-12 min-h-12 rounded-xl border-line"
-          />
+          <div className='relative w-12 h-12 min-w-12 min-h-12'>
+            <Image
+              alt="Organización"
+              src={organization.logo_url}
+              quality={70}
+              fill
+              loading='eager'
+              className="object-cover object-center border rounded-xl border-line"
+            />
+          </div>
         ) : (
           <div className="flex items-center justify-center w-12 h-12 rounded-xl border-line min-h-12 min-w-12 bg-surface">
             <Photo className="size-6 min-h-6 min-w-6" />

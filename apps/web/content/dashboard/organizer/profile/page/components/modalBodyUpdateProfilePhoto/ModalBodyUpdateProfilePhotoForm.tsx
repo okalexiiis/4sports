@@ -95,6 +95,9 @@ export function ModalBodyUpdateProfilePhotoForm() {
           message: uploadImageRequest.message,
         })
       }
+    } else {
+      setSaving(false)
+      methods.setError('image', { message: 'Porfavor proporcione una imagen' })
     }
   }
 

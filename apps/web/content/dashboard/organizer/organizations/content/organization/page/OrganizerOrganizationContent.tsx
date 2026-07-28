@@ -177,10 +177,10 @@ export function OrganizerOrganizationContent({ id }: { id: string }) {
               className="object-cover object-center rounded-xl"
             />
 
-            <div className="absolute bottom-0 w-48 h-48 translate-y-1/2 border-8 rounded-full min-w-48 min-h-48 left-6 bg-background border-background">
+            <div className="absolute bottom-0 w-48 h-48 translate-y-1/2 border-8 rounded-full min-w-48 min-h-48 max-w-48 max-h-48 left-6 bg-background border-background">
               {organization?.logo_url ? (
                 <Image
-                  alt="Banner"
+                  alt="Foto de organización"
                   src={organization.logo_url}
                   quality={70}
                   fill
@@ -198,7 +198,7 @@ export function OrganizerOrganizationContent({ id }: { id: string }) {
                     setModal({
                       isActivated: true,
                       title: 'Cambiar foto',
-                      body: <ModalBodyUpdateOrganizationPhotoForm slug={id} />,
+                      body: <ModalBodyUpdateOrganizationPhotoForm id={id} />,
                     })
                   }
                   type="filled"
