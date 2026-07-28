@@ -143,7 +143,7 @@ export function OrganizationMembersTable() {
                   setModal({
                     isActivated: true,
                     title: 'Invitar miembro',
-                    body: <ModalBodyInviteMemberForm slug="" />,
+                    body: <ModalBodyInviteMemberForm />,
                   })
                 }
                 type="filled"
