@@ -1,100 +1,240 @@
-"use client";
+'use client'
 
 /* COMPONENTS */
-import { DinamicButton } from "@/content/shared/form/dinamicButton/DinamicButton";
-import { DinamicInputText } from "@/content/shared/form/dinamicInputText/DinamicInputText";
-import { DinamicTextArea } from "@/content/shared/form/dinamicTextArea/DinamicTextArea";
+import { DinamicButton } from '@/content/shared/form/dinamicButton/DinamicButton'
+import { DinamicInputText } from '@/content/shared/form/dinamicInputText/DinamicInputText'
+import { DinamicTextArea } from '@/content/shared/form/dinamicTextArea/DinamicTextArea'
+import { DinamicCombobox } from '@/content/shared/form/dinamicComboBox/DinamicCombobox'
+
+/* CONSTS */
+import { PORT } from '@/content/shared/consts/PORT'
 
 /* HOOKS */
-import { FormProvider, useForm } from "react-hook-form";
-import { useState } from "react";
+import { FormProvider, useForm, useWatch } from 'react-hook-form'
+import { useEffect, useMemo, useState } from 'react'
+
+/* ICONS */
+import { MapPin } from 'lucide-react'
 
 /* STORES */
-import { useModal } from "@/content/shared/ui/modal/stores/modalStore";
-import { useAnnouncement } from "@/content/shared/ui/annoucement/stores/announcementStore";
+import { useModal } from '@/content/shared/ui/modal/stores/modalStore'
+import { useAnnouncement } from '@/content/shared/ui/annoucement/stores/announcementStore'
+import { useOrganizationStore } from '@/content/dashboard/organizer/organizations/page/stores/organizationStore/organizationStore'
 
 /* TYPES */
-import { UpdateOrganizationInfoFormType } from "./types/updateOrganizationInfoFormType";
+import { UpdateOrganizationInfoFormType } from './types/updateOrganizationInfoFormType'
 
-export function ModalBodyUpdateOrganizationInfoForm({
-  slug,
-}: {
-  slug: string;
-}) {
-  const { setModal, modal } = useModal();
+/* UTILS */
+import { Country, State, City } from 'country-state-city'
 
-  const { setAnnouncement } = useAnnouncement();
-  const [saving, setSaving] = useState(false);
+export function ModalBodyUpdateOrganizationInfoForm({ id }: { id: string }) {
+  const setOrganization = useOrganizationStore((s) => s.setOrganization)
+  const organization = useOrganizationStore((s) => s.organization)
+  const { setModal, modal } = useModal()
+  const { setAnnouncement } = useAnnouncement()
 
-  const methods = useForm<UpdateOrganizationInfoFormType>();
+  const [saving, setSaving] = useState(false)
+
+  const methods = useForm<UpdateOrganizationInfoFormType>({
+    defaultValues: {
+      name: organization?.name ?? '',
+      description: organization?.description ?? '',
+      country: '',
+      state: '',
+      city: '',
+      website_url: organization?.website_url ?? '',
+    },
+  })
 
   const onSubmit = async (data: UpdateOrganizationInfoFormType) => {
     try {
-      setSaving(true);
+      setSaving(true)
 
-      console.log(data);
+      let objData: {
+        name: string
+        description: string
+        website_url: string
+        city?: string
+        country?: string
+      } = {
+        name: data.name,
+        description: data.description,
+        website_url: data.website_url,
+      }
 
-      setTimeout(() => {
-        setSaving(false);
+      if (data.country && data.state && data.city) {
+        objData = { ...objData, city: data.city, country: data.country }
+      }
+
+      const request = await fetch(PORT + '/v1/organizations/' + id, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(objData),
+        credentials: 'include',
+      })
+
+      if (request.status === 200) {
+        const response = await request.json()
+        setOrganization({ ...response.data, role: organization?.role ?? 'Miembro' }, 'finished')
+
+        setSaving(false)
         setAnnouncement({
           isActivated: true,
-          announceType: "ok",
-          message: "Información de la organización actualizada correctamente",
-        });
+          announceType: 'ok',
+          message: 'Foto de organización cambiada correctamente',
+        })
         setModal({
           isActivated: false,
-          title: modal.title ?? "",
+          title: modal.title ?? '',
           body: modal.body,
-        });
-      }, 1000);
-    } catch (error) {
-      setSaving(false);
-      console.log("Error", error);
+        })
+      } else {
+        setSaving(false)
+        setAnnouncement({
+          isActivated: true,
+          announceType: 'error',
+          message: 'Error al subir información al servidor, intente nuevamente más tarde',
+        })
+      }
+    } catch {
+      setSaving(false)
+      setAnnouncement({
+        isActivated: true,
+        announceType: 'error',
+        message: 'Error al subir información al servidor, intente nuevamente más tarde',
+      })
     }
-  };
+  }
+
+  const selectedCountry = useWatch({
+    control: methods.control,
+    name: 'country',
+  })
+  const selectedState = useWatch({
+    control: methods.control,
+    name: 'state',
+  })
+
+  // Obtener países
+  const countries = useMemo(() => {
+    return Country.getAllCountries()
+  }, [])
+
+  // Obtener estados según país
+  const states = useMemo(() => {
+    if (!selectedCountry) return []
+
+    return State.getStatesOfCountry(selectedCountry)
+  }, [selectedCountry])
+
+  // Obtener ciudades según estado
+  const cities = useMemo(() => {
+    if (!selectedCountry || !selectedState) return []
+
+    return City.getCitiesOfState(selectedCountry, selectedState)
+  }, [selectedCountry, selectedState])
+
+  // Reiniciar estado y ciudad cuando cambia país
+  useEffect(() => {
+    methods.setValue('state', '')
+    methods.setValue('city', '')
+  }, [selectedCountry, methods])
+
+  // Reiniciar ciudad cuando cambia estado
+  useEffect(() => {
+    methods.setValue('city', '')
+  }, [selectedState, methods])
 
   return (
     <FormProvider {...methods}>
-      <div className="w-full h-fit flex flex-col gap-6 p-6">
-        <div className="flex flex-col">
-          <DinamicInputText<UpdateOrganizationInfoFormType>
-            name="name"
-            label="Nombre"
-            placeholder="Ingrese el nombre de la organización"
+      <div className="flex flex-col w-full px-6 pt-6 overflow-y-auto h-fit max-h-96">
+        {/* NAME */}
+        <DinamicInputText<UpdateOrganizationInfoFormType>
+          name="name"
+          label="Nombre"
+          placeholder="Ingrese el nombre de la organización"
+          rules={{ required: { message: 'El nombre es requerido', value: true } }}
+        />
+
+        {/* DESCRIPTION */}
+        <DinamicTextArea<UpdateOrganizationInfoFormType>
+          name="description"
+          label="Descripción"
+          placeholder="Ingrese la descripción de la organización"
+          rules={{ required: { message: 'La descripción es requerida', value: true } }}
+        />
+
+        <p className="mb-2">Ciudad actual</p>
+        <div className="flex gap-2 mb-4 ml-2">
+          <MapPin className="size-4 min-w-4 min-h-4 text-ink" />
+          <p className="text-sm font-bold text-ink">{organization?.city ?? '...'}</p>
+        </div>
+
+        <div className="grid w-full grid-cols-1 md:grid-cols-3 md:gap-4 h-fit">
+          {/* COUNTRY */}
+          <DinamicCombobox<UpdateOrganizationInfoFormType>
+            name="country"
+            items={countries.map((c) => {
+              return { value: c.isoCode, label: c.name }
+            })}
+            label="País"
+            placeholder="Seleccionar país"
             rules={{}}
           />
 
-          <DinamicTextArea<UpdateOrganizationInfoFormType>
-            name="description"
-            label="Descripción"
-            placeholder="Ingrese la descripción de la organización"
+          {/* STATE */}
+          <DinamicCombobox<UpdateOrganizationInfoFormType>
+            name="state"
+            items={states.map((s) => {
+              return { value: s.isoCode, label: s.name }
+            })}
+            label="Estado"
+            placeholder="Seleccionar estado"
             rules={{}}
-            twMarginBottom="mb-0"
+          />
+
+          {/* CITY */}
+          <DinamicCombobox<UpdateOrganizationInfoFormType>
+            name="city"
+            items={cities.map((c) => {
+              return { value: c.name, label: c.name }
+            })}
+            label="Ciudad"
+            placeholder="Seleccionar ciudad"
+            rules={{}}
           />
         </div>
 
-        <div className="flex gap-6">
-          <DinamicButton
-            action={() =>
-              setModal({
-                isActivated: false,
-                title: modal.title ?? "",
-                body: modal.body,
-              })
-            }
-            type="unfilled"
-            label="Cancelar"
-          />
-          <DinamicButton
-            action={methods.handleSubmit(onSubmit)}
-            type={saving ? "disabled" : "filled"}
-            disabled={saving}
-            disabledSpinner={true}
-            spinFromText={true}
-            label="Actualizar"
-          />
-        </div>
+        {/* WEBSITE_URL */}
+        <DinamicInputText<UpdateOrganizationInfoFormType>
+          name="website_url"
+          label="Sitio web (Opcional)"
+          placeholder="Ingrese el sitio web de la organización"
+          rules={{}}
+        />
+      </div>
+
+      <div className="flex gap-6 p-6">
+        <DinamicButton
+          action={() =>
+            setModal({
+              isActivated: false,
+              title: modal.title ?? '',
+              body: modal.body,
+            })
+          }
+          type="unfilled"
+          label="Cancelar"
+        />
+        <DinamicButton
+          action={methods.handleSubmit(onSubmit)}
+          type={saving ? 'disabled' : 'filled'}
+          disabled={saving}
+          disabledSpinner={true}
+          spinFromText={true}
+          label="Actualizar"
+        />
       </div>
     </FormProvider>
-  );
+  )
 }

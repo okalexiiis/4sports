@@ -52,17 +52,8 @@ export function ModalBodyUpdateOrganizationPhotoForm({ id }: { id: string }) {
             })
 
             if (request.status === 200) {
-              const requestOrganization = await fetch(`${PORT}/v1/organizations/${id}`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-              })
-
-              if (requestOrganization.ok) {
-                const responseOrganization = await requestOrganization.json()
-                setOrganization(responseOrganization.data, 'finished')
-                console.log(responseOrganization.data)
-              }
+              const response = await request.json()
+              setOrganization(response.data, 'finished')
 
               setSaving(false)
               setAnnouncement({

@@ -4,11 +4,11 @@ import { OrgWithRole } from '../../../../../../../../api/src/modules/organizatio
 
 interface OrganizationState {
   organization: OrgWithRole | null
-  status: 'empty' | 'finished' | 'error'
+  status: 'empty' | 'finished' | 'error' | string
 
   setOrganization: (
     organization: OrgWithRole | null,
-    status: 'empty' | 'finished' | 'error',
+    status: 'empty' | 'finished' | 'error' | string,
   ) => void
   initialize: (id: string) => Promise<void>
 }

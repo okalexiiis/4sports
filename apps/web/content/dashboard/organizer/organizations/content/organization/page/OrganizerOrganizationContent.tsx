@@ -15,7 +15,7 @@ import { PORT } from '@/content/shared/consts/PORT'
 import { useState, useEffect } from 'react'
 
 /* ICONS */
-import { MapPin, SlidersHorizontal, SquarePen, Image as Photo } from 'lucide-react'
+import { MapPin, SlidersHorizontal, SquarePen, Image as Photo, Globe } from 'lucide-react'
 
 /* IMAGES */
 import banner from '../../../../profile/page/images/banner.jpg'
@@ -28,6 +28,10 @@ import team1 from './images/team1.jpg'
 import team2 from './images/team2.jpg'
 import team3 from './images/team3.jpg'
 import team4 from './images/team4.jpg'
+
+/* LIBS */
+import { AnimatePresence, motion } from 'framer-motion'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 /* NAVIGATION */
 import { useRouter } from 'next/navigation'
@@ -94,6 +98,8 @@ export function OrganizerOrganizationContent({ id }: { id: string }) {
   const organization = useOrganizationStore((s) => s.organization)
   const status = useOrganizationStore((s) => s.status)
 
+  const [open, setOpen] = useState(false)
+
   if (status === 'empty') {
     return (
       <SectionContainer>
@@ -113,16 +119,23 @@ export function OrganizerOrganizationContent({ id }: { id: string }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-3 gap-6">
             <div className="flex flex-col gap-2 p-6 bg-linear-to-r from-surface via-surface-hover to-surface bg-skeleton-gradient rounded-xl">
               <p className="text-lg font-semibold text-transparent">Descripción</p>
-              <p className="text-transparent">La mejor sede de deportes</p>
+              <p className="text-transparent">Texto</p>
             </div>
             <div className="flex flex-col gap-2 p-6 bg-linear-to-r from-surface via-surface-hover to-surface bg-skeleton-gradient rounded-xl">
               <p className="text-lg font-semibold text-transparent">Ciudad</p>
               <div className="flex items-center gap-2">
                 <MapPin className="text-transparent size-4 min-w-4 min-h-4" />
-                <p className="text-transparent">Nogales</p>
+                <p className="text-transparent">Lugar</p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 p-6 bg-linear-to-r from-surface via-surface-hover to-surface bg-skeleton-gradient rounded-xl">
+              <p className="text-lg font-semibold text-transparent">Sitio web</p>
+              <div className="flex items-center gap-2">
+                <Globe className="text-transparent size-4 min-w-4 min-h-4" />
+                <p className="text-transparent">Sitio</p>
               </div>
             </div>
           </div>
@@ -208,19 +221,49 @@ export function OrganizerOrganizationContent({ id }: { id: string }) {
               </div>
             </div>
 
-            <DinamicButton
-              action={() =>
-                setModal({
-                  isActivated: true,
-                  title: 'Accion',
-                  body: <ModalBodyUpdateOrganizationInfoForm slug={id} />,
-                })
-              }
-              type="filled"
-              label="Actualizar información"
-              icon={<SquarePen className="size-4 min-w-4 min-h-4" />}
-              twClassName="w-fit text-sm py-1 absolute bottom-0 right-0 translate-y-[calc(100%+1.5rem)]"
-            />
+            <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+              <DropdownMenu.Trigger asChild>
+                <button className="w-fit h-fit flex items-center justify-center gap-2 text-sm py-1 absolute bottom-0 right-0 translate-y-[calc(100%+1.5rem)] bg-primary border-transparent border-2 text-primary-text font-semibold px-4 rounded-lg cursor-pointer hover:bg-primary-hover">
+                  <SlidersHorizontal className="size-4 min-w-4 min-h-4" />
+                  Acciones
+                </button>
+              </DropdownMenu.Trigger>
+
+              <AnimatePresence>
+                {open && (
+                  <DropdownMenu.Portal forceMount>
+                    <DropdownMenu.Content
+                      sideOffset={24}
+                      align="end"
+                      avoidCollisions
+                      side={'bottom'}
+                      asChild
+                    >
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95, y: -6 }}
+                        animate={{ opacity: 1, scale: 1, y: -12 }}
+                        exit={{ opacity: 0, scale: 0.95, y: -6 }}
+                        transition={{ duration: 0.15 }}
+                        className="p-2 border shadow-md z-100 min-w-56 rounded-2xl border-line bg-background"
+                      >
+                        <DropdownMenu.Item
+                          onClick={() =>
+                            setModal({
+                              isActivated: true,
+                              title: 'Actualizar organización',
+                              body: <ModalBodyUpdateOrganizationInfoForm id={id} />,
+                            })
+                          }
+                          className="p-2 text-sm transition-colors duration-300 outline-none cursor-pointer rounded-xl hover:bg-surface"
+                        >
+                          Actualizar organización
+                        </DropdownMenu.Item>
+                      </motion.div>
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Portal>
+                )}
+              </AnimatePresence>
+            </DropdownMenu.Root>
 
             <div className="flex flex-col gap-1 absolute bottom-0 left-60 translate-y-[calc(100%+1.5rem)]">
               <h2 className="text-3xl font-bold text-ink">{organization?.name ?? '...'}</h2>
@@ -230,7 +273,7 @@ export function OrganizerOrganizationContent({ id }: { id: string }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-3 gap-6">
             <div className="flex flex-col gap-2 p-6 bg-surface rounded-xl">
               <p className="text-lg font-semibold">Descripción</p>
               <p className="text-muted">{organization?.description ?? '...'}</p>
@@ -240,6 +283,17 @@ export function OrganizerOrganizationContent({ id }: { id: string }) {
               <div className="flex items-center gap-2">
                 <MapPin className="size-4 min-w-4 min-h-4 text-ink" />
                 <p className="text-muted">{organization?.city ?? '...'}</p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 p-6 bg-surface rounded-xl">
+              <p className="text-lg font-semibold">Sitio web</p>
+              <div className="flex items-center gap-2">
+                <Globe className="size-4 min-w-4 min-h-4 text-ink" />
+                <p className="text-muted">
+                  {organization?.website_url !== ''
+                    ? (organization?.website_url ?? 'Sin sitio web')
+                    : 'Sin sitio web'}
+                </p>
               </div>
             </div>
           </div>
