@@ -30,6 +30,15 @@ export const OrgMemberSchema = Type.Object({
 export const MembersQuerySchema = Type.Object({
   page: Type.Optional(Type.String()),
   limit: Type.Optional(Type.String()),
+  status: Type.Optional(
+    Type.Union([
+      Type.Literal('active'),
+      Type.Literal('invited'),
+      Type.Literal('pending'),
+      Type.Literal('suspended'),
+      Type.Literal('left'),
+    ]),
+  ),
 })
 
 export const InviteMemberBodySchema = Type.Object({

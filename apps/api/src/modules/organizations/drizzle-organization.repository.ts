@@ -142,8 +142,20 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
     })
   }
 
-  async listMembers(orgId: string, page: number, limit: number): Promise<ListMembersResult> {
+  async listMembers(
+    orgId: string,
+    page: number,
+    limit: number,
+    status?: string,
+  ): Promise<ListMembersResult> {
     const offset = (page - 1) * limit
+    type MemberStatus = 'invited' | 'pending' | 'active' | 'suspended' | 'left'
+    const baseWhere = status
+      ? and(
+          eq(organizationMembers.organization_id, orgId),
+          eq(organizationMembers.status, status as MemberStatus),
+        )
+      : eq(organizationMembers.organization_id, orgId)
 
     const [members, [countRow]] = await Promise.all([
       db
@@ -160,14 +172,11 @@ export class DrizzleOrganizationRepository implements IOrganizationRepository {
         })
         .from(organizationMembers)
         .leftJoin(betterAuthUsers, sql`${betterAuthUsers.id} = ${organizationMembers.user_id}`)
-        .where(eq(organizationMembers.organization_id, orgId))
+        .where(baseWhere)
         .limit(limit)
         .offset(offset),
 
-      db
-        .select({ count: count() })
-        .from(organizationMembers)
-        .where(eq(organizationMembers.organization_id, orgId)),
+      db.select({ count: count() }).from(organizationMembers).where(baseWhere),
     ])
 
     const total = Number(countRow?.count ?? 0)

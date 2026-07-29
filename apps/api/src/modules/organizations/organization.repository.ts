@@ -17,7 +17,12 @@ export interface IOrganizationRepository {
   isSlugTaken(slug: string): Promise<boolean>
   findPlanIdBySlug(plan: string): Promise<string | null>
   createOrganization(userId: string, data: CreateOrgInput, planId: string): Promise<OrgWithRole>
-  listMembers(orgId: string, page: number, limit: number): Promise<ListMembersResult>
+  listMembers(
+    orgId: string,
+    page: number,
+    limit: number,
+    status?: string,
+  ): Promise<ListMembersResult>
   findMemberById(orgId: string, memberId: string): Promise<OrgMember | null>
   findMemberByEmail(orgId: string, email: string): Promise<{ status: string } | null>
   findUserByEmail(email: string): Promise<{ id: string } | null>

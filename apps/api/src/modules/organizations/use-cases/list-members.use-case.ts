@@ -5,8 +5,8 @@ import type { IOrganizationRepository } from '../organization.repository'
 
 export async function listMembers(
   repo: IOrganizationRepository,
-  input: { orgId: string; page: number; limit: number },
+  input: { orgId: string; page: number; limit: number; status?: string },
 ): Promise<Result<ListMembersResult>> {
-  const result = await repo.listMembers(input.orgId, input.page, input.limit)
+  const result = await repo.listMembers(input.orgId, input.page, input.limit, input.status)
   return ok(result)
 }

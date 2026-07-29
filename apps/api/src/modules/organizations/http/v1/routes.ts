@@ -102,7 +102,8 @@ export const organizationsV1Routes = new Elysia({ tags: ['Organizations'] })
     async (ctx) => {
       const page = Number(ctx.query.page ?? 1)
       const limit = Number(ctx.query.limit ?? 20)
-      const result = await listMembers(repo, { orgId: ctx.params.orgId, page, limit })
+      const status = ctx.query.status
+      const result = await listMembers(repo, { orgId: ctx.params.orgId, page, limit, status })
 
       if (!result.ok) {
         return toApiResponse(ctx, result)
