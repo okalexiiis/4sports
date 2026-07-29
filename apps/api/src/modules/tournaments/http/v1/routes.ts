@@ -4,6 +4,7 @@ import { toApiResponse } from '@/shared/api-response'
 import { activeOrgGuard } from '@/shared/middleware/active-org.guard'
 import { authGuard } from '@/shared/middleware/auth.guard'
 import { orgGuard } from '@/shared/middleware/org.guard'
+import { tryActiveOrgGuard } from '@/shared/middleware/try-active-org.guard'
 import { DrizzleTournamentRepository } from '../../drizzle-tournament.repository'
 import { createTournament } from '../../use-cases/create-tournament.use-case'
 import { getTournament } from '../../use-cases/get-tournament.use-case'
@@ -153,7 +154,7 @@ export const tournamentsV1Routes = new Elysia({ tags: ['Tournaments'] })
         }),
       )
     },
-    { detail: getTournamentDetail },
+    { beforeHandle: [tryActiveOrgGuard], detail: getTournamentDetail },
   )
   .get(
     '/organizations/:orgId/tournaments',
